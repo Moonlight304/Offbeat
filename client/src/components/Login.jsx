@@ -1,0 +1,54 @@
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { usernameState, isLoggedInState } from '../atoms'
+import axios from 'axios';
+import { useRecoilState } from 'recoil';
+
+export function Login() {
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [globalUsername, setGlobalUsername] = useRecoilState(usernameState);
+    const [globalIsLoggedIn, setGlobalIsLoggedIn] = useRecoilState(isLoggedInState);
+    const navigate = useNavigate();
+
+    async function handleSubmit(e) {
+        e.preventDefault();
+
+        const response = await axios.post('http://localhost:3000/login',
+            { username, password },
+            { withCredentials: true }
+        );
+        const data = response.data;
+        console.log(data);
+
+        if (data.status === 'success') {
+            setGlobalUsername(username);
+            setGlobalIsLoggedIn(true);
+            localStorage.setItem('isLoggedIn', 'true');
+            localStorage.setItem('username', username);
+            navigate('/');
+        }
+        else
+            navigate('/login');
+    }
+
+    return (
+        <>
+            <h1>Login</h1>
+
+            <form onSubmit={handleSubmit}>
+                <label htmlFor="username"> Enter username : </label>
+                <input type="text" name="username" id="username" required onChange={
+                    (e) => setUsername(e.target.value)
+                } />
+
+                <label htmlFor="password"> Enter password : </label>
+                <input type="text" name="password" id="password" required onChange={
+                    (e) => setPassword(e.target.value)
+                } />
+
+                <input type="submit" value="Login" />
+            </form>
+        </>
+    );
+}   
