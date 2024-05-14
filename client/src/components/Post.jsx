@@ -4,6 +4,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { formatDistanceToNow, parseISO } from 'date-fns';
 import { Comment } from './Comment';
 import { Link } from 'react-router-dom';
+import { usernameState, isLoggedInState } from '../atoms';
+import { useRecoilState } from 'recoil';
 
 export function Post() {
     const { postID } = useParams();
@@ -11,6 +13,7 @@ export function Post() {
     const [likeCount, setlikeCount] = useState(0);
     const [timeAgo, setTimeAgo] = useState('');
     const [newComment, setNewComment] = useState('');
+    const [globalUsername, setGlobalUsername] = useRecoilState(usernameState);
     const navigate = useNavigate();
 
     //fetching post with it's id
@@ -28,7 +31,7 @@ export function Post() {
                 console.log('Error fetching post : ' + e);
             }
         }
-        
+
         getPost();
     }, [postID]);
 
@@ -124,7 +127,11 @@ export function Post() {
     return (
         <>
             <h1> {post?.heading} </h1>
-            <button onClick={handleDelete}> Delete Post </button>
+
+            {globalUsername === post?.username &&
+                <button onClick={handleDelete}> Delete Post </button>
+            }
+
             <h4> Created By : <Link to={`/user/${post?.username}`}>{post?.username}</Link> </h4>
 
             <h5> Likes : {likeCount} </h5>

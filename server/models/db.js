@@ -71,6 +71,7 @@ const userSchema = new mongoose.Schema({
         default: '',
     },
     posts: [postSchema],
+    savedPosts: [postSchema],
 })
 
 const User = mongoose.model('User', userSchema);

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { usernameState, isLoggedInState } from '../atoms'
 import { useRecoilState } from "recoil";
 import default_avatar from '../assets/default_avatar.jpg'
@@ -9,9 +9,14 @@ export function Navbar() {
     const [globalUsername, setGlobalUsername] = useRecoilState(usernameState);
     const [globalIsLoggedIn, setGlobalIsLoggedIn] = useRecoilState(isLoggedInState);
     const [imageURL, setImageURL] = useState('');
+    const navigate = useNavigate();
 
     useEffect(() => {
+        
         async function fetchUser() {
+            if (globalUsername === 'ACCOUNT_DEFAULT') return;
+            console.log(globalUsername);
+
             try {
                 const response = await axios.get(`http://localhost:3000/user/${globalUsername}`,
                     { withCredentials: true },
@@ -32,7 +37,7 @@ export function Navbar() {
         }
 
         fetchUser();
-    }, [])
+    }, [globalUsername, navigate])
 
     return (
         <nav className="navbar navbar-expand-lg bg-body-tertiary">
