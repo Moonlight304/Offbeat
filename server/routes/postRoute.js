@@ -68,7 +68,7 @@ router.post('/newPost', authMiddle, async (req, res) => {
         const user = await User.findById(userID);
         user.posts.push(savedPost);
         await user.save();
-
+``
         return res.json({
             status: 'success',
             message: 'Post added successfully',

@@ -124,9 +124,46 @@ export function Post() {
         }
     }
 
+    async function handleSavePost() {
+        try {
+            const response = await axios.get(`http://localhost:3000/user/savePost/${postID}`,
+                { withCredentials: true },
+            )
+            const data = response.data;
+
+            if (data.status === 'success')
+                console.log('Saved Post');
+            else
+                console.log('Error : ' + data.message);
+        }
+        catch (e) {
+            console.log('Error saving post : ' + e);
+        }
+    }
+
+    async function handleDeleteSavePost() {
+        try {
+            const response = await axios.get(`http://localhost:3000/user/deleteSavedPost/${postID}`,
+                { withCredentials: true },
+            )
+            const data = response.data;
+
+            if (data.status === 'success')
+                console.log('Removed post from saved items');
+            else
+                console.log('Error : ' + data.message);
+        }
+        catch (e) {
+            console.log('Error saving post : ' + e);
+        }
+    }
+
     return (
         <>
             <h1> {post?.heading} </h1>
+
+            <button onClick={handleSavePost}> Save Post </button>
+            <button onClick={handleDeleteSavePost}> Remove from Saved </button>
 
             {globalUsername === post?.username &&
                 <button onClick={handleDelete}> Delete Post </button>
