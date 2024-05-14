@@ -98,10 +98,16 @@ app.post('/signup', async (req, res) => {
         })
     }
     catch (e) {
-        return res.json({
-            status: 'fail',
-            message: 'Error : ' + e,
-        })
+        if (error.name === 'ValidationError')
+            res.json({
+                status: 'fail',
+                message: 'Invalid username. Please provide a username with maximum 30 characters.',
+            })
+        else
+            return res.json({
+                status: 'fail',
+                message: 'Error : ' + e,
+            })
     }
 })
 

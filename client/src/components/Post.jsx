@@ -158,18 +158,40 @@ export function Post() {
         }
     }
 
+    function handleClipboard() {
+        if (!navigator.clipboard) {
+            console.log('Clipboard API not supported');
+            return;
+        }
+
+        try {
+            const postID = post?._id;
+            if (!postID) {
+                console.log('Post ID is not defined');
+                return;
+            }
+            const copyURL = `${window.location.origin}/post/${post?._id}`;
+            navigator.clipboard.writeText(copyURL);
+            console.log('Copied to clipboard');
+        }
+        catch (e) {
+            console.log('Error copying to clipboard : ' + e);
+        }
+    }
+
     return (
         <>
             <h1> {post?.heading} </h1>
 
             <button onClick={handleSavePost}> Save Post </button>
             <button onClick={handleDeleteSavePost}> Remove from Saved </button>
-
+            <br />
+            <button onClick={handleClipboard}> Copy to clipboard </button>
             {globalUsername === post?.username &&
                 <button onClick={handleDelete}> Delete Post </button>
             }
 
-            <h4> Created By : <Link to={`/user/${post?.username}`}>{post?.username}</Link> </h4>
+            <h4> <Link to={`/user/${post?.username}`}>{post?.username}</Link> </h4>
 
             <h5> Likes : {likeCount} </h5>
             <button onClick={handleLike}> Like Post </button>

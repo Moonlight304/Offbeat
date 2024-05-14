@@ -135,6 +135,43 @@ router.get('/deleteAvatar/:username', authMiddle, async (req, res) => {
     }
 })
 
+router.post('/editUser/:username', authMiddle, async (req, res) => {
+    try {
+        const { username } = req.params;
+        const { email, bio, gender } = req.body;
+
+        if (!username)
+            return res.json({
+                status: 'fail',
+                message: 'no username found',
+            })
+
+        const user = await User.findOne({ username });
+
+        if (!user)
+            return res.json({
+                status: 'fail',
+                message: 'user not found',
+            })
+
+        user.email = email;
+        user.bio = bio;
+        user.gender = gender;
+        await user.save();
+
+        return res.json({
+            status: 'success',
+            message: 'updated user profile',
+        })
+    }
+    catch (e) {
+        return res.json({
+            status: 'fail',
+            message: 'Error : ' + e,
+        })
+    }
+})
+
 router.get('/deleteUser/:username', authMiddle, async (req, res) => {
     try {
         const { username } = req.params;

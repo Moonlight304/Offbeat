@@ -27,7 +27,7 @@ export function PostCard({ postID }) {
         }
 
         getPost();
-    }, [postID]);
+    }, [likeCount, postID]);
 
     useEffect(() => {
         if (post?.createdAt) {
@@ -76,10 +76,32 @@ export function PostCard({ postID }) {
         }
     }
 
+    function handleClipboard() {
+        if (!navigator.clipboard) {
+            console.log('Clipboard API not supported');
+            return;
+        }
+
+        try {
+            const postID = post?._id;
+            if (!postID) {
+                console.log('Post ID is not defined');
+                return;
+            }
+            const copyURL = `${window.location.origin}/post/${post?._id}`;
+            navigator.clipboard.writeText(copyURL);
+            console.log('Copied to clipboard');
+        }
+        catch (e) {
+            console.log('Error copying to clipboard : ' + e);
+        }
+    }
+
     return (
         <div className='mb-5'>
             <h5> <Link to={`/user/${post?.username}`}>{post?.username}</Link> </h5>
-            <h1> <Link to={`/post/${post._id}`}> {post?.heading} </Link> </h1>
+            <h1> <Link to={`/post/${post?._id}`}> {post?.heading} </Link> </h1>
+            <button onClick={handleClipboard}> Copy to clipboard </button>
 
             <h5> {timeAgo} </h5>
 

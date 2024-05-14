@@ -36,7 +36,6 @@ export function Home() {
                 ? allPosts.map((post, index) => {
                     return <PostCard key={index} postID={post._id} />
                 })
-
                 :
                 <h1> No Posts </h1>
             }

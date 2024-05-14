@@ -9,6 +9,7 @@ import { Logout } from './components/Logout';
 import { Post } from './components/Post';
 import { NewPost } from './components/newPost';
 import { User } from './components/User'
+import { EditUser } from './components/EditUser';
 
 function App() {
 
@@ -25,6 +26,7 @@ function App() {
                     <Route path='/post/:postID' element={<Post />} />
                     <Route path='/post/newPost' element={<NewPost />} />
                     <Route path='/user/:username' element={<User />} />
+                    <Route path='/user/editUser/:username' element={<EditUser />} />
 
                     {/* <Route path='' element={} /> */}
                 </Routes>

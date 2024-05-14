@@ -66,13 +66,13 @@ router.post('/newPost', authMiddle, async (req, res) => {
         const savedPost = await newPost.save();
 
         const user = await User.findById(userID);
-        user.posts.push(savedPost);
+        user.posts.push(savedPost._id);
         await user.save();
-``
+
         return res.json({
             status: 'success',
             message: 'Post added successfully',
-            postID: savedPost._id
+            postID: savedPost._id,
         })
     }
     catch (e) {
@@ -112,7 +112,7 @@ router.get('/deletePost/:postID', authMiddle, async (req, res) => {
 
         await User.updateOne(
             { _id: userID },
-            { $pull: { posts: { _id: postID } } }
+            { $pull: { posts: postID } }
         );
 
         return res.json({
@@ -129,6 +129,7 @@ router.get('/deletePost/:postID', authMiddle, async (req, res) => {
 })
 
 router.get('/like/:postID', authMiddle, async (req, res) => {
+
     try {
         const userID = req.user.userID;
         const { postID } = req.params;
@@ -147,6 +148,7 @@ router.get('/like/:postID', authMiddle, async (req, res) => {
                 message: 'post not found',
             })
 
+
         if (post.likes.includes(userID))
             return res.json({
                 status: 'fail',
@@ -159,16 +161,6 @@ router.get('/like/:postID', authMiddle, async (req, res) => {
             {
                 $push: { likes: userID },
                 $inc: { likeCount: 1 },
-            }
-        );
-
-        //update likecount and like array in user's post
-        const user = await User.findById(userID);
-        await User.updateOne(
-            { _id: userID, 'posts._id': postID },
-            {
-                $inc: { 'posts.$.likeCount': 1 },
-                $push: { 'posts.$.likes': userID },
             }
         );
 
@@ -217,16 +209,6 @@ router.get('/dislike/:postID', authMiddle, async (req, res) => {
             {
                 $pull: { likes: userID },
                 $inc: { likeCount: -1 },
-            }
-        );
-
-        //update likecount and like array in user's post
-        const user = await User.findById(userID);
-        await User.updateOne(
-            { _id: userID, 'posts._id': postID },
-            {
-                $inc: { 'posts.$.likeCount': -1 },
-                $pull: { 'posts.$.likes': userID },
             }
         );
 
@@ -315,11 +297,6 @@ router.post('/:postID/newComment', authMiddle, async (req, res) => {
         post.comments.unshift(comment);
         await post.save();
 
-        await User.updateOne(
-            { _id: userID, 'posts._id': postID },
-            { $push: { 'posts.$.comments': { $each: [comment], $position: 0 } } }
-        );
-
         return res.json({
             status: 'success',
             message: 'Saved comment',
@@ -375,17 +352,6 @@ router.get('/:postID/deleteComment/:commentID', authMiddle, async (req, res) => 
             return res.json({
                 status: 'fail',
                 message: 'Failed to delete comment from post',
-            });
-        }
-
-        const deleteUserUpdateResult = await User.updateOne(
-            { _id: userID, 'posts._id': postID },
-            { $pull: { 'posts.$.comments': { _id: commentID } } }
-        );
-        if (deleteUserUpdateResult.modifiedCount === 0) {
-            return res.json({
-                status: 'fail',
-                message: 'Failed to delete comment from user data',
             });
         }
 

@@ -31,8 +31,7 @@ export function Logout() {
         handleLogout();
 
         const handleWindowClose = () => {
-            localStorage.removeItem('username');
-            localStorage.removeItem('isLoggedIn');
+            localStorage.clear();
         };
 
         window.addEventListener('unload', handleWindowClose);

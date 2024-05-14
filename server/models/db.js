@@ -61,6 +61,14 @@ const userSchema = new mongoose.Schema({
     username: {
         type: String,
         required: true,
+        unique: true,
+        minlength: 3,
+        maxlength: 30,
+    },
+    email: {
+        type: String,
+        unique: true,
+        match: [/.+@.+\..+/, 'Please enter a valid email address'],
     },
     passwordHash: {
         type: String,
@@ -70,7 +78,22 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: '',
     },
-    posts: [postSchema],
+    bio: {
+        type: String,
+        default: '',
+        maxlength: 500,
+    },
+    gender: {
+        type: String,
+        default: 'none',
+        enum: ['Male', 'Female', 'none'],
+    },
+    posts: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Post',
+        }
+    ],
     savedPosts: [
         {
             type: mongoose.Schema.Types.ObjectId,
@@ -78,6 +101,8 @@ const userSchema = new mongoose.Schema({
         }
     ],
 })
+userSchema.index({ username: 1 });
+
 
 const User = mongoose.model('User', userSchema);
 const Post = mongoose.model('Post', postSchema);
