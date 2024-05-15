@@ -1,6 +1,10 @@
+import axios from 'axios';
 import { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { imageToBase64 } from '../helpers/imageToBase64';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { Modal, Button } from "react-bootstrap";
+
 
 export function NewPost() {
     const [heading, setHeading] = useState('');
@@ -19,20 +23,6 @@ export function NewPost() {
         setImageURL(url);
     }
 
-    function imageToBase64(file) {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = () => {
-                const base64String = reader.result.split(',')[1];
-                resolve(base64String);
-            };
-            reader.onerror = error => {
-                reject(error);
-            };
-            reader.readAsDataURL(file);
-        });
-    }
-
     async function handleSubmit(e) {
         e.preventDefault();
 
@@ -41,7 +31,7 @@ export function NewPost() {
         if (imageURL) {
             const file = e.target.image.files[0];
             const base64String = await imageToBase64(file);
-            
+
             response = await axios.post('http://localhost:3000/post/newPost',
                 { heading, body, base64String },
                 { withCredentials: true },
@@ -61,9 +51,11 @@ export function NewPost() {
             navigate('/');
     }
 
+    
+
     return (
         <>
-            <form className="row g-3 needs-validation" onSubmit={handleSubmit}>
+            {/* <form className="row g-3 needs-validation" onSubmit={handleSubmit}>
                 <div className="col-md-4">
                     <div className="input-group has-validation mb-4">
                         <input name="heading" type="text" placeholder="Title" className="form-control" id="validationCustomUsername" aria-describedby="inputGroupPrepend" required
@@ -91,7 +83,7 @@ export function NewPost() {
                 <div className="col-12">
                     <button className="btn btn-primary" type="submit"> Post </button>
                 </div>
-            </form>
+            </form> */}
         </>
     );
 }

@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { isLoggedInState } from '../atoms';
 import { useRecoilState } from 'recoil';
 import { PostCard } from './PostCard';
+import '../index.css'
 
 export function Home() {
     const [allPosts, setAllPosts] = useState([]);
@@ -31,7 +32,7 @@ export function Home() {
     }, []);
 
     return (
-        <>
+        <div className='Home'>
             {postCount
                 ? allPosts.map((post, index) => {
                     return <PostCard key={index} postID={post._id} />
@@ -39,6 +40,6 @@ export function Home() {
                 :
                 <h1> No Posts </h1>
             }
-        </>
+        </div>
     );
 }

@@ -2,17 +2,69 @@ import axios from 'axios';
 import { Link, useNavigate } from "react-router-dom";
 import { usernameState, isLoggedInState } from '../atoms'
 import { useRecoilState } from "recoil";
-import default_avatar from '../assets/default_avatar.jpg'
 import { useEffect, useState } from "react";
+import { imageToBase64 } from '../helpers/imageToBase64';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUser, faPlus, faImage, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { Modal, Button } from "react-bootstrap";
+
+import '../index.css'
+
 
 export function Navbar() {
     const [globalUsername, setGlobalUsername] = useRecoilState(usernameState);
     const [globalIsLoggedIn, setGlobalIsLoggedIn] = useRecoilState(isLoggedInState);
-    const [imageURL, setImageURL] = useState('');
+    const [avatarURL, setavatarURL] = useState('');
+    const [show, setShow] = useState(false);
+    // const handleClose = () => ;
+    const handleShow = () => setShow(true);
+    const [heading, setHeading] = useState('');
+    const [body, setBody] = useState('');
+    const [imageURL, setImageURL] = useState(null);
     const navigate = useNavigate();
 
+    async function handleImageChange(e) {
+        e.preventDefault();
+
+        console.log(e.target.files[0]);
+
+        const file = e.target.files[0];
+
+        const url = URL.createObjectURL(file);
+        setImageURL(url);
+    }
+
+    async function handleSubmit(e) {
+        e.preventDefault();
+        setShow(false);
+
+        let response;
+        if (imageURL) {
+            const file = e.target.image.files[0];
+            const base64String = await imageToBase64(file);
+
+            response = await axios.post('http://localhost:3000/post/newPost',
+                { heading, body, base64String },
+                { withCredentials: true },
+            )
+        }
+        else {
+            response = await axios.post('http://localhost:3000/post/newPost',
+                { heading, body },
+                { withCredentials: true },
+            )
+        }
+        const data = response.data;
+        setImageURL('');
+
+        if (data.status === 'success')
+            navigate(`/post/${data.postID}`);
+        else
+            navigate('/');
+    }
+
     useEffect(() => {
-        
+
         async function fetchUser() {
             if (globalUsername === 'ACCOUNT_DEFAULT') return;
             console.log(globalUsername);
@@ -24,7 +76,7 @@ export function Navbar() {
                 const data = response.data;
 
                 if (data.status === 'success') {
-                    setImageURL(data.userData.avatarString);
+                    setavatarURL(data.userData.avatarString);
                 }
                 else {
                     console.log('error fetching user : ' + data.message);
@@ -39,43 +91,139 @@ export function Navbar() {
         fetchUser();
     }, [globalUsername, navigate])
 
+
+
     return (
-        <nav className="navbar navbar-expand-lg bg-body-tertiary">
-            <div className="container-fluid">
-                <Link to={'/'}> <h1> Offbeat </h1> </Link>
-                <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span className="navbar-toggler-icon"></span>
-                </button>
+        <>
+            <nav>
 
-                <div className="collapse navbar-collapse" id="navbarNav">
-                    <ul className="navbar-nav">
-                        {globalIsLoggedIn && <li>
-                            <Link className="nav-link active" aria-current="page" to={'/post/newPost'}> Add </Link>
-                        </li>}
+                <Link className='link' to={'/'}> <h1> Offbeat </h1> </Link>
 
-                        {!globalIsLoggedIn && <li className="nav-item">
-                            <Link className="nav-link active" aria-current="page" to={'/login'}> Login </Link>
-                        </li>}
+                {/* Navbar profile */}
+                {globalIsLoggedIn
+                    ?
+                    <div className="topRight">
+                        {/* Create Post button */}
+                        {/* <Link className='link' to={'/post/newPost'}> */}
+                        <button onClick={handleShow} className='btn profileButton' data-toggle="modal" data-target="#newPostModal">
+                            <FontAwesomeIcon className='plusIcon' icon={faPlus} />
+                            <h4> Create </h4>
+                        </button>
+                        {/* </Link> */}
 
-                        {!globalIsLoggedIn && <li className="nav-item">
-                            <Link className="nav-link active" aria-current="page" to={'/signup'}> Signup </Link>
-                        </li>}
+                        {/* go to user page */}
+                        <Link className='link' to={`/user/${globalUsername}`}>
+                            <button className='btn profileButton'>
+                                {avatarURL
+                                    ?
+                                    <img className='navbarImage' src={`data:image/jpeg;base64,${avatarURL}`} alt="profile avatar" />
+                                    :
+                                    <FontAwesomeIcon className='navbarIcon' icon={faUser} />
+                                }
+                                <h4>{globalUsername}</h4>
+                            </button>
+                        </Link>
+                    </div>
+                    :
+                    <div className='topRight'>
+                        <Link className='link' to={'/login'}>
+                            <button className='btn profileButton'> <h4>Login</h4> </button>
+                        </Link>
+                        <Link className='link' to={'/signup'}>
+                            <button className='btn profileButton' > <h4>Signup</h4> </button>
+                        </Link>
+                    </div>
+                }
+
+            </nav >
 
 
-                        {globalIsLoggedIn && <li className="nav-item">
-                            <Link className="nav-link active" aria-current="page" to={'/logout'}> Logout </Link>
-                        </li>}
-                    </ul>
-                </div>
-            </div>
+            {/* Create Post modal */}
+            <Modal show={show} onHide={() => { setShow(false); setImageURL('') }}
+                style={{
+                    paddingTop: '5rem',
+                    scale: '120%',
+                    backdropFilter: 'blur(3px)',
+                }}
+            >
+                <form className="row g-3 needs-validation" onSubmit={handleSubmit}>
+                    <Modal.Header> <h4>Whats on your mind...</h4> </Modal.Header>
+
+                    <Modal.Body className='m-0'>
+                        <div className='formInputs'>
+                            <div className="mb-2">
+                                <input name="heading" type="text" placeholder="Title" className="form-control" id="validationCustomUsername" aria-describedby="inputGroupPrepend" required
+                                    onChange={(e) => setHeading(e.target.value)} />
+                                <div className="invalid-feedback">
+                                    Give a title...
+                                </div>
+                            </div>
+
+                            <div className="mb-2">
+                                <textarea rows='3' name="body" className="form-control" id="validationTextarea" placeholder="Body" required
+                                    onChange={(e) => setBody(e.target.value)}
+                                ></textarea>
+                                <div className="invalid-feedback">
+                                    Enter something in body...
+                                </div>
+                            </div>
+                        </div>
+
+                        <input style={{ display: 'none' }} type="file" name="image" id="image" accept=".png, .jpg" onChange={handleImageChange} />
+
+                        {/* {imageURL && <label htmlFor="image"><img src={imageURL} alt="post image" /></label>} */}
+
+                        {imageURL
+                            ? <>
+                                <FontAwesomeIcon onClick={() => setImageURL('')}
+                                    style={{
+                                        position: 'relative',
+                                        right: '-440px',
+                                        top: '30px',
+                                        scale: '120%',
+                                        cursor: 'pointer',
+                                        color: 'white',
+                                    }} icon={faXmark} />
+                                <label
+                                    style={{
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                        cursor: 'pointer',
+                                    }}
+                                    htmlFor="image">
+                                    <img
+                                        style={{
+                                            maxWidth: '100%',
+                                            maxHeight: '250px',
+                                            borderRadius: '15px',
+                                        }} src={imageURL} alt="post image" />
+                                </label>
+                            </>
+                            : <label
+                                style={{
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    gap: '1rem',
+                                    cursor: 'pointer',
+                                }}
+
+                                htmlFor="image"><FontAwesomeIcon style={{ scale: '180%' }} icon={faImage} /> <h5>Upload Image</h5>
+                            </label>
+                        }
 
 
-            {/* Navbar profile */}
-            {globalIsLoggedIn
-                ? <Link to={`/user/${globalUsername}`}> {imageURL ? <img src={`data:image/jpeg;base64,${imageURL}`} alt="profile avatar" /> : globalUsername} </Link>
-                : <img src={default_avatar} alt="default_avatar" />
-            }
-
-        </nav>
+                    </Modal.Body>
+                    <Modal.Footer className='m-0'>
+                        <Button variant="dark" onClick={() => { setShow(false); setImageURL('') }}>
+                            Close
+                        </Button>
+                        <Button variant="warning" type='submit'>
+                            Post
+                        </Button>
+                    </Modal.Footer>
+                </form>
+            </Modal >
+        </>
     );
 }

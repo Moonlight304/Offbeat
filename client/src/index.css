@@ -1,0 +1,72 @@
+/* Navbar */
+.plusIcon, .navbarIcon {
+    width: 25px;
+    height: 25px;
+}
+.navbarImage {
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+}
+
+.link {
+    text-decoration: none;
+}
+
+nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 10px 10px 10px;
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+
+}
+
+.profileButton {
+    display: flex !important;
+    align-items: center;
+    border-radius: 15px !important;
+    gap: 1rem;
+    border: 2px solid black !important;
+    scale: 80%;
+}
+.topRight {
+    display: flex;
+    gap: 2rem;
+}
+.topRight button:hover {
+    color: black !important;
+    background-color: white !important;
+}
+
+
+/* Home */
+.Home {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* PostCard */
+.PostCard {
+    width: 800px;
+    /* height: 400px; */
+    max-width: 900px;
+    /* max-height: 500px; */
+    
+    border: 2px solid black;
+    border-radius: 15px;
+    box-shadow: 5px 5px black;
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+}
+
+.usernameText {
+    color: black;
+}
+.usernameText:hover {
+    color: rgb(25, 0, 150);
+}

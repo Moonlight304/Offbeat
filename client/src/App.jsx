@@ -14,7 +14,7 @@ import { EditUser } from './components/EditUser';
 function App() {
 
     return (
-        <>
+        <div className='App'>
             <BrowserRouter>
                 <Navbar />
 
@@ -26,12 +26,12 @@ function App() {
                     <Route path='/post/:postID' element={<Post />} />
                     <Route path='/post/newPost' element={<NewPost />} />
                     <Route path='/user/:username' element={<User />} />
-                    <Route path='/user/editUser/:username' element={<EditUser />} />
+                    <Route path='/user/editUser/:username' element={<EditUser />} />    
 
                     {/* <Route path='' element={} /> */}
                 </Routes>
             </BrowserRouter>
-        </>
+        </div>
     )
 }
 

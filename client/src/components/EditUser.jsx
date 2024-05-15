@@ -2,9 +2,11 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
-import default_avatar from '../assets/default_avatar.jpg';
 import { usernameState } from '../atoms';
 import { useRecoilState } from "recoil";
+import { imageToBase64 } from "../helpers/imageToBase64";
+import {FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {faUser} from '@fortawesome/free-solid-svg-icons';
 
 export function EditUser() {
     const { username } = useParams();
@@ -16,19 +18,6 @@ export function EditUser() {
     const [gender, setGender] = useState('none');
     const navigate = useNavigate();
 
-    function imageToBase64(file) {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = () => {
-                const base64String = reader.result.split(',')[1];
-                resolve(base64String);
-            };
-            reader.onerror = error => {
-                reject(error);
-            };
-            reader.readAsDataURL(file);
-        });
-    }
 
     async function handleAvatarChange(e) {
         e.preventDefault();
@@ -141,7 +130,7 @@ export function EditUser() {
                     <label htmlFor="avatar"> <img src={`data:image/jpeg;base64,${imageURL}`} alt="uploaded image" /> </label>
                     <button onClick={handleAvatarDelete}>Delete Avatar</button>
                 </>
-                : <label htmlFor="avatar"> <img src={default_avatar} alt="default_avatar" /> </label>
+                : <label htmlFor="avatar"> <FontAwesomeIcon className='navbarIcon'  icon={faUser} /> </label>
             }
 
             <form onSubmit={handleSubmit}>

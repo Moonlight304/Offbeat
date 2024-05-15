@@ -2,10 +2,13 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
-import default_avatar from '../assets/default_avatar.jpg'
 import { PostList } from "./PostList";
 import { usernameState } from '../atoms';
 import { useRecoilState } from "recoil";
+import {FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {faUser} from '@fortawesome/free-solid-svg-icons';
+
+import '../index.css'
 
 export function User() {
     const { username } = useParams();
@@ -113,10 +116,9 @@ export function User() {
 
     return (
         <>
-
             {imageURL
-                ? <img src={`data:image/jpeg;base64,${imageURL}`} alt="uploaded image" />
-                : <img src={default_avatar} alt="default_avatar" />
+                ? <img className='userIcon' src={`data:image/jpeg;base64,${imageURL}`} alt="uploaded image" />
+                : <FontAwesomeIcon className='navbarIcon'  icon={faUser} />
             }
 
             <h1> {username} </h1>

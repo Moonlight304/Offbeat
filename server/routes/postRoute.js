@@ -226,6 +226,51 @@ router.get('/dislike/:postID', authMiddle, async (req, res) => {
     }
 })
 
+router.get('/:postID/checkLiked', authMiddle, async (req, res) => {
+    try {
+        const { postID } = req.params;
+        const { userID } = req.user;
+
+        if (!postID)
+            return res.json({
+                status: 'fail',
+                message: 'postID not found',
+            })
+
+        if (!userID)
+            return res.json({
+                status: 'fail',
+                message: 'userID not found',
+            })
+
+        const post = await Post.findById(postID);
+
+        if (!post)
+            return res.json({
+                status: 'fail',
+                message: 'post not found',
+            })
+
+
+        if (post.likes.includes(userID))
+            return res.json({
+                status: 'success',
+                message: JSON.stringify(true),
+            })
+        else
+            return res.json({
+                status: 'success',
+                message: JSON.stringify(false),
+            })
+    }
+    catch (e) {
+        return res.json({
+            status: 'fail',
+            message: 'Error : ' + e,
+        })
+    }
+})
+
 router.get('/:postID/comments', authMiddle, async (req, res) => {
     try {
         const userID = req.user.userID;
