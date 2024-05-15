@@ -1,11 +1,29 @@
 import { atom } from 'recoil'
 
+function getItemWithExpiration(key) {
+    const itemStr = localStorage.getItem(key);
+    if (!itemStr) {
+        return null;
+    }
+    const item = JSON.parse(itemStr);
+    const now = new Date();
+    if (now.getTime() > item.expiry) {
+        localStorage.removeItem(key);
+        return null;
+    }
+    return item.value;
+}
+
+
+const usernameFromStorage = getItemWithExpiration('username');
+const isLoggedInFromStorage = getItemWithExpiration('isLoggedIn');
+
 export const usernameState = atom({
     key: 'usernameState',
-    default: localStorage.getItem('username') || 'ACCOUNT_DEFAULT'
-})
+    default: usernameFromStorage || 'ACCOUNT_DEFAULT',
+});
 
 export const isLoggedInState = atom({
     key: 'isLoggedInState',
-    default: JSON.parse(localStorage.getItem('isLoggedIn')) || false
-})
+    default: isLoggedInFromStorage !== null ? isLoggedInFromStorage : false,
+});

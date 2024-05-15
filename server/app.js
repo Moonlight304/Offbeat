@@ -89,25 +89,22 @@ app.post('/signup', async (req, res) => {
             username: savedUser.username,
         }, JWT_SECRET);
 
-        //sending cookie (HTTP-Only)
+        //send cookie
+        const oneHourFromNow = new Date(Date.now() + 60 * 60 * 1000);
         return res.cookie('jwt_token', jwt_token, {
             httpOnly: true,
+            secure: true,
+            expires: oneHourFromNow,
         }).json({
             status: 'success',
-            message: 'User and cookie saved',
+            message: 'Signed up',
         })
     }
     catch (e) {
-        if (error.name === 'ValidationError')
-            res.json({
-                status: 'fail',
-                message: 'Invalid username. Please provide a username with maximum 30 characters.',
-            })
-        else
-            return res.json({
-                status: 'fail',
-                message: 'Error : ' + e,
-            })
+        res.json({
+            status: 'fail',
+            message: 'Error : ' + e,
+        })
     }
 })
 
@@ -152,8 +149,11 @@ app.post('/login', async (req, res) => {
         }, JWT_SECRET);
 
         //send cookie
+        const oneHourFromNow = new Date(Date.now() + 60 * 60 * 1000);
         return res.cookie('jwt_token', jwt_token, {
             httpOnly: true,
+            secure: true,
+            expires: oneHourFromNow,
         }).json({
             status: 'success',
             message: 'user logged in',

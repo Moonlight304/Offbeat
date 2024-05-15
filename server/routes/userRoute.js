@@ -292,4 +292,109 @@ router.get('/deleteSavedPost/:postID', authMiddle, async (req, res) => {
     }
 })
 
+router.post('/follow', authMiddle, async (req, res) => {
+    try {
+        const { srcUsername, destUsername } = req.body;
+
+        if (!srcUsername || !destUsername)
+            return res.json({
+                status: 'fail',
+                message: 'no src or des username'
+            })
+
+        const srcUser = await User.findOne({ username: srcUsername });
+        const destUser = await User.findOne({ username: destUsername });
+
+        
+        if (destUser.followers !== undefined && destUser.followers.includes(srcUser._id))
+            return res.json({
+                status: 'fail',
+                message: 'already following user',
+            })
+
+
+        await User.updateOne(
+            { username: srcUsername },
+            {
+                $push: { following: destUser._id },
+                $inc: { followingCount: 1 }
+            }
+        )
+
+        await User.updateOne(
+            { username: destUsername },
+            {
+                $push: { followers: srcUser._id },
+                $inc: { followersCount: 1 }
+            }
+        )
+
+        res.json({
+            status: 'success',
+            message: 'followed user',
+        })
+    }
+    catch (e) {
+        res.json({
+            status: 'fail',
+            message: 'Error : ' + e,
+        })
+    }
+})
+
+router.post('/unfollow', authMiddle, async (req, res) => {
+    try {
+        const { srcUsername, destUsername } = req.body;
+
+        if (!srcUsername || !destUsername)
+            return res.json({
+                status: 'fail',
+                message: 'no src or des username'
+            })
+
+        const srcUser = await User.findOne({ username: srcUsername });
+        const destUser = await User.findOne({ username: destUsername });
+
+        if (destUser.followers === undefined)
+            return res.json({
+                status: 'fail',
+                message: 'already unfollowed',
+            })
+
+        if (!destUser.followers.includes(srcUser._id))
+            return res.json({
+                status: 'fail',
+                message: 'not following user',
+            })
+
+        await User.updateOne(
+            { username: destUsername },
+            {
+                $pull: { followers: srcUser._id },
+                $inc: { followersCount: -1 }    
+            }
+        )
+
+        await User.updateOne(
+            { username: srcUsername },
+            {
+                $pull: { following: destUser._id },
+                $inc: { followingCount: -1 }
+            }
+        )
+
+
+        res.json({
+            status: 'success',
+            message: 'followed user',
+        })
+    }
+    catch (e) {
+        res.json({
+            status: 'fail',
+            message: 'Error : ' + e,
+        })
+    }
+})
+
 module.exports = router;

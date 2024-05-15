@@ -62,13 +62,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
         unique: true,
-        minlength: 3,
-        maxlength: 30,
     },
     email: {
         type: String,
-        unique: true,
-        match: [/.+@.+\..+/, 'Please enter a valid email address'],
+        default: null,
     },
     passwordHash: {
         type: String,
@@ -98,6 +95,28 @@ const userSchema = new mongoose.Schema({
         {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Post',
+        }
+    ],
+    followersCount: {
+        type: Number,
+        default: 0,
+        required: true,
+    },
+    followers: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User',
+        }
+    ],
+    followingCount: {
+        type: Number,
+        default: 0,
+        required: true,
+    },
+    following: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User',
         }
     ],
 })

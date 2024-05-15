@@ -13,6 +13,8 @@ export function User() {
     const [imageURL, setImageURL] = useState('');
     const [isPosts, setIsPosts] = useState(true);
     const [globalUsername, setGlobalUsername] = useRecoilState(usernameState);
+    const [followersCount, setFollowersCount] = useState(0);
+    const [followingCount, setFollowingCount] = useState(0);
     const navigate = useNavigate();
 
 
@@ -41,6 +43,46 @@ export function User() {
         }
     }
 
+    async function handleFollow() {
+        try {
+            const response = await axios.post('http://localhost:3000/user/follow',
+                { srcUsername: globalUsername, destUsername: username },
+                { withCredentials: true },
+            )
+            const data = response.data;
+
+            if (data.status === 'success') {
+                setFollowersCount(followersCount + 1);
+                console.log('followed user');
+            }
+            else
+                console.log('Error : ' + data.message);
+        }
+        catch (e) {
+            console.log('Error : ' + e);
+        }
+    }
+
+    async function handleUnfollow() {
+        try {
+            const response = await axios.post('http://localhost:3000/user/unfollow',
+                { srcUsername: globalUsername, destUsername: username },
+                { withCredentials: true },
+            )
+            const data = response.data;
+
+            if (data.status === 'success') {
+                setFollowersCount(followersCount - 1);
+                console.log('unfollowed user');
+            }
+            else
+                console.log('Error : ' + data.message);
+        }
+        catch (e) {
+            console.log('Error : ' + e);
+        }
+    }
+
     useEffect(() => {
         async function fetchUser() {
             try {
@@ -52,6 +94,8 @@ export function User() {
                 if (data.status === 'success') {
                     setUserData(data.userData);
                     setImageURL(data.userData.avatarString);
+                    setFollowersCount(data.userData.followersCount);
+                    setFollowingCount(data.userData.followingCount);
                 }
                 else {
                     console.log('error fetching user : ' + data.message);
@@ -76,6 +120,16 @@ export function User() {
             }
 
             <h1> {username} </h1>
+
+            <h3> Followers {followersCount} </h3>
+            <h3> Following {followingCount} </h3>
+
+            {globalUsername !== username &&
+                <>
+                    <button onClick={handleFollow}>Follow</button>
+                    <button onClick={handleUnfollow}>Unfollow</button>
+                </>
+            }
 
             <h3> {userData?.bio} </h3>
 
