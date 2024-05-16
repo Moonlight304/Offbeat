@@ -84,3 +84,62 @@ nav {
 .dropdown-toggle::after {
     display: none !important;
 }
+
+.accountImage {
+    border-radius: 50%;
+    width: 20rem;
+    height: 20rem;
+    object-fit: cover;
+    border: 2px solid black;
+}
+.editUser {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5rem;
+}
+.editProfileInputs {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.accountImageSettings {
+    width: 100%;
+    margin-top: 3rem;
+    display: flex;
+    gap: 2rem;
+    /* border: 2px solid black; */
+}
+.accountImageSettings button, label {
+    border-radius: 10px;
+    scale: 110%;
+}
+
+.register {
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 2rem 2rem 2rem 2rem;
+    letter-spacing: 0.1rem;
+
+    border: 2px solid black;
+    border-radius: 15px;
+}
+#signupText {
+    font-size: 5rem;
+}
+#loginText {
+    font-size: 3rem;
+}
+
+.register div label {
+    margin-right: 1rem;
+}
+.register div input {
+    width: 22rem;
+    height: 2.5rem;
+    letter-spacing: 0.1rem;
+}

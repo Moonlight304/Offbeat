@@ -23,7 +23,7 @@ export function Navbar() {
     const [imageURL, setImageURL] = useState(null);
     const navigate = useNavigate();
     const handleShow = () => setShow(true);
-    
+
     async function handleImageChange(e) {
         e.preventDefault();
 
@@ -182,12 +182,16 @@ export function Navbar() {
                     </div>
                     :
                     <div className='topRight'>
-                        <Link className='link' to={'/login'}>
+                        <Link className='link' to={'/register'}>
+                            <button className='btn profileButton'> <h4> Login / Signup </h4> </button>
+                        </Link>
+
+                        {/* <Link className='link' to={'/login'}>
                             <button className='btn profileButton'> <h4>Login</h4> </button>
                         </Link>
                         <Link className='link' to={'/signup'}>
                             <button className='btn profileButton' > <h4>Signup</h4> </button>
-                        </Link>
+                        </Link> */}
                     </div>
                 }
 
@@ -195,7 +199,7 @@ export function Navbar() {
 
 
             {/* Create Post modal */}
-            <Modal show={show} onHide={() => { setShow(false); setImageURL('') }}
+            <Modal id='newPostModal' show={show} onHide={() => { setShow(false); setImageURL('') }}
                 style={{
                     paddingTop: '5rem',
                     scale: '120%',

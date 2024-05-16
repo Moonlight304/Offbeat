@@ -292,56 +292,6 @@ router.get('/deleteSavedPost/:postID', authMiddle, async (req, res) => {
     }
 })
 
-router.post('/follow', authMiddle, async (req, res) => {
-    try {
-        const { srcUsername, destUsername } = req.body;
-
-        if (!srcUsername || !destUsername)
-            return res.json({
-                status: 'fail',
-                message: 'no src or des username'
-            })
-
-        const srcUser = await User.findOne({ username: srcUsername });
-        const destUser = await User.findOne({ username: destUsername });
-
-
-        if (destUser.followers !== undefined && destUser.followers.includes(srcUser._id))
-            return res.json({
-                status: 'fail',
-                message: 'already following user',
-            })
-
-
-        await User.updateOne(
-            { username: srcUsername },
-            {
-                $push: { following: destUser._id },
-                $inc: { followingCount: 1 }
-            }
-        )
-
-        await User.updateOne(
-            { username: destUsername },
-            {
-                $push: { followers: srcUser._id },
-                $inc: { followersCount: 1 }
-            }
-        )
-
-        res.json({
-            status: 'success',
-            message: 'followed user',
-        })
-    }
-    catch (e) {
-        res.json({
-            status: 'fail',
-            message: 'Error : ' + e,
-        })
-    }
-})
-
 router.get('/checkSaved/:postID', authMiddle, async (req, res) => {
     try {
         const { postID } = req.params;
@@ -387,6 +337,56 @@ router.get('/checkSaved/:postID', authMiddle, async (req, res) => {
     }
     catch (e) {
         return res.json({
+            status: 'fail',
+            message: 'Error : ' + e,
+        })
+    }
+})
+
+router.post('/follow', authMiddle, async (req, res) => {
+    try {
+        const { srcUsername, destUsername } = req.body;
+
+        if (!srcUsername || !destUsername)
+            return res.json({
+                status: 'fail',
+                message: 'no src or des username'
+            })
+
+        const srcUser = await User.findOne({ username: srcUsername });
+        const destUser = await User.findOne({ username: destUsername });
+
+
+        if (destUser.followers !== undefined && destUser.followers.includes(srcUser._id))
+            return res.json({
+                status: 'fail',
+                message: 'already following user',
+            })
+
+
+        await User.updateOne(
+            { username: srcUsername },
+            {
+                $push: { following: destUser._id },
+                $inc: { followingCount: 1 }
+            }
+        )
+
+        await User.updateOne(
+            { username: destUsername },
+            {
+                $push: { followers: srcUser._id },
+                $inc: { followersCount: 1 }
+            }
+        )
+
+        res.json({
+            status: 'success',
+            message: 'followed user',
+        })
+    }
+    catch (e) {
+        res.json({
             status: 'fail',
             message: 'Error : ' + e,
         })
@@ -439,6 +439,38 @@ router.post('/unfollow', authMiddle, async (req, res) => {
             status: 'success',
             message: 'followed user',
         })
+    }
+    catch (e) {
+        res.json({
+            status: 'fail',
+            message: 'Error : ' + e,
+        })
+    }
+})
+
+router.post('/getIsFollowing', authMiddle, async (req, res) => {
+    try {
+        const { srcUsername, destUsername } = req.body;
+
+        if (!srcUsername || !destUsername)
+            return res.json({
+                status: 'fail',
+                message: 'no src or des username'
+            })
+
+        const srcUser = await User.findOne({ username: srcUsername });
+        const destUser = await User.findOne({ username: destUsername });
+
+        if (destUser.followers !== undefined && destUser.followers.includes(srcUser._id))
+            return res.json({
+                status: 'success',
+                message: JSON.stringify(true),
+            })
+        else 
+            return res.json({
+                status: 'success',
+                message: JSON.stringify(false),
+            })
     }
     catch (e) {
         res.json({

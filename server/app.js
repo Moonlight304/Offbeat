@@ -54,7 +54,7 @@ app.get('/', async (req, res) => {
 app.post('/signup', async (req, res) => {
     try {
 
-        const { username, password } = req.body;
+        const { username, password, confirmPassword } = req.body;
 
         if (!username)
             return res.json({
@@ -66,6 +66,18 @@ app.post('/signup', async (req, res) => {
             return res.json({
                 status: 'fail',
                 message: 'Password required',
+            })
+
+        if (!confirmPassword)
+            return res.json({
+                status: 'fail',
+                message: 'Confirm password required'
+            })
+
+        if (password !== confirmPassword)
+            return res.json({
+                status: 'fail',
+                message: 'Passwords do not match',
             })
 
         const existingUser = await User.findOne({ username });

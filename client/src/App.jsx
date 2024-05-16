@@ -10,6 +10,7 @@ import { Post } from './components/Post';
 import { User } from './components/User'
 import { EditUser } from './components/EditUser';
 import { NotFound } from './components/NotFound';
+import { Register } from './components/Register';
 
 function App() {
 
@@ -20,6 +21,7 @@ function App() {
 
                 <Routes>
                     <Route path='/' element={<Home />} />
+                    <Route path='/register' element={<Register />} />
                     <Route path='/login' element={<Login />} />
                     <Route path='/signup' element={<Signup />} />
                     <Route path='/logout' element={<Logout />} />

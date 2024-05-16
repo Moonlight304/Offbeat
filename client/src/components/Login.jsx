@@ -1,12 +1,14 @@
 import axios from 'axios';
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { usernameState, isLoggedInState } from '../atoms'
 import { useRecoilState } from 'recoil';
 import { Bounce, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-export function Login() {
+import '../index.css'
+
+export function Login({ setWantLogin }) {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [globalUsername, setGlobalUsername] = useRecoilState(usernameState);
@@ -72,23 +74,28 @@ export function Login() {
     }
 
     return (
-        <>
-            <h1>Login</h1>
+        <div className='d-flex justify-content-center align-items-center'>
+            <form className='register' onSubmit={handleSubmit}>
+                <div className='d-flex justify-content-between align-items-start'> <h1 id='signupText'>Hi 👋</h1> </div>
+                <h2 id='loginText'> Welcome back! </h2>
 
-            <form onSubmit={handleSubmit}>
-                <label htmlFor="username"> Enter username : </label>
-                <input type="text" name="username" id="username" required onChange={
-                    (e) => setUsername(e.target.value)
-                } />
+                <div className='d-flex flex-column align-items-start pe-5 gap-2'>
+                    <label htmlFor="username"> <h4> Username </h4> </label>
+                    <input placeholder='Username' type="text" name="username" id="username"
+                        onChange={(e) => setUsername(e.target.value)}
+                    />
+                </div>
 
-                <label htmlFor="password"> Enter password : </label>
-                <input type="text" name="password" id="password" required onChange={
-                    (e) => setPassword(e.target.value)
-                } />
+                <div className='d-flex flex-column align-items-start pe-5 gap-2'>
+                    <label htmlFor="password"> <h4> Password </h4> </label>
+                    <input placeholder='Password' type="text" name="password" id="password"
+                        onChange={(e) => setPassword(e.target.value)}
+                    />
+                </div>
 
-                <input type="submit" value="Login" />
+                <h6> Dont have an account? <Link onClick={() => setWantLogin(false)}> Signup </Link> </h6>
+                <input className='btn btn-warning' type="submit" value="Login" />
             </form>
-
-        </>
+        </div>
     );
 }   

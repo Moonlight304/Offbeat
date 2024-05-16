@@ -373,18 +373,33 @@ export function Post() {
                 console.log('Saved Post');
             }
             else {
-                toast.error('Error adding to saved posts', {
-                    position: "bottom-right",
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "dark",
-                    transition: Bounce,
-                });
-                console.log('Error : ' + data.message);
+                if (data.message === 'no token found') {
+                    toast.warn('Login to save post', {
+                        position: "bottom-right",
+                        autoClose: 2000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "dark",
+                        transition: Bounce,
+                    });
+                }
+                else {
+                    toast.error('Error adding to saved posts', {
+                        position: "bottom-right",
+                        autoClose: 2000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "dark",
+                        transition: Bounce,
+                    });
+                    console.log('Error : ' + data.message);
+                }
             }
         }
         catch (e) {

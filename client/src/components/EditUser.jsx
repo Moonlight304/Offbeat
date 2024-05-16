@@ -6,9 +6,11 @@ import { usernameState } from '../atoms';
 import { useRecoilState } from "recoil";
 import { imageToBase64 } from "../helpers/imageToBase64";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser } from '@fortawesome/free-solid-svg-icons';
+import { faPen, faTrash, faUser } from '@fortawesome/free-solid-svg-icons';
 import { Bounce, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+
+import '../index.css'
 
 export function EditUser() {
     const { username } = useParams();
@@ -224,40 +226,63 @@ export function EditUser() {
     }, [])
 
     return (
-        <>
-            {globalUsername === username && <input type="file" name="avatar" id="avatar" accept=".png, .jpg" onChange={handleAvatarChange} />}
-
-            {imageURL
-                ?
-                <>
-                    <label htmlFor="avatar"> <img src={`data:image/jpeg;base64,${imageURL}`} alt="uploaded image" /> </label>
-                    <button onClick={handleAvatarDelete}>Delete Avatar</button>
-                </>
-                : <label htmlFor="avatar"> <FontAwesomeIcon className='navbarIcon' icon={faUser} /> </label>
+        <div className="editUser">
+            {globalUsername === username &&
+                <input style={{ display: 'none' }} type="file" name="avatar" id="avatar" accept=".png, .jpg" onChange={handleAvatarChange} />
             }
 
-            <form onSubmit={handleSubmit}>
-                <label htmlFor="email"><h3> Edit email </h3></label>
-                <input type="email" name="email" id="email" value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                />
+            <div>
+                {imageURL
+                    ?
+                    <div className="d-flex flex-column align-items-center">
+                        <img className="accountImage" src={`data:image/jpeg;base64,${imageURL}`} alt="uploaded image" />
+                        <div className="accountImageSettings">
+                            <button className="w-50"><label style={{ cursor: 'pointer' }} htmlFor="avatar">
+                                <FontAwesomeIcon icon={faPen} /> Edit Avatar </label>
+                            </button>
 
-                <label htmlFor="bio"><h3> Edit bio </h3></label>
-                <input type="text" name="bio" id="bio" value={bio}
-                    onChange={(e) => setBio(e.target.value)}
-                />
+                            <button className="w-50" onClick={handleAvatarDelete}> <FontAwesomeIcon style={{ color: 'red' }} icon={faTrash} /> Delete Avatar</button>
+                        </div>
+                    </div>
+                    :
+                    <div>
+                        <FontAwesomeIcon style={{ border: '0px' }} className='navbarIcon accountImage' icon={faUser} />
+                        <div className="accountImageSettings">
+                            <button className="w-50"><label style={{ cursor: 'pointer' }} htmlFor="avatar">
+                                <FontAwesomeIcon icon={faPen} /> Edit Avatar </label>
+                            </button>
+                        </div>
+                    </div>
+                }
+            </div>
 
-                <label htmlFor="gender"> <h3> Gender </h3> </label>
-                <select name="gender" id="gender" value={gender}
-                    onChange={(e) => setGender(e.target.value)}
-                >
-                    <option value="none"> Dont say </option>
-                    <option value="Male"> Male </option>
-                    <option value="Female"> Female </option>
-                </select>
+            <form onSubmit={handleSubmit} className="d-flex flex-column gap-5">
+                <div className="editProfileInputs">
+                    <label htmlFor="email"><h4> Edit email </h4></label>
+                    <input type="email" name="email" id="email" value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                    />
+                </div>
 
-                <input type="submit" value="Save" />
+                <div className="editProfileInputs">
+                    <label htmlFor="gender"> <h4> Gender </h4> </label>
+                    <select name="gender" id="gender" value={gender}
+                        onChange={(e) => setGender(e.target.value)}
+                    >
+                        <option value="none"> Dont say </option>
+                        <option value="Male"> Male </option>
+                        <option value="Female"> Female </option>
+                    </select>
+                </div>
+
+                <div className="editProfileInputs">
+                    <label htmlFor="bio"><h4> Edit bio </h4></label>
+                    <textarea cols='25' name="bio" id="bio" value={bio} onChange={(e) => setBio(e.target.value)}
+                    ></textarea>
+                </div>
+
+                <input className="btn btn-warning" style={{ width: '50%', fontWeight: '600' }} type="submit" value="Save" />
             </form>
-        </>
+        </div>
     );
 }
