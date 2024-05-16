@@ -1,31 +1,36 @@
-import { atom } from 'recoil'
+import { atom } from 'recoil';
+import { jwtDecode } from 'jwt-decode';
 
-function getItemWithExpiration(key) {
-    const itemStr = localStorage.getItem(key);
-    if (!itemStr) {
-        return null;
+function getCookie(key) {
+    const cookieString = document.cookie;
+    const cookies = cookieString.split(';');
+    for (let cookie of cookies) {
+        const [name, value] = cookie.split('=').map(c => c.trim());
+        if (name === key)
+            return value;
     }
-    const item = JSON.parse(itemStr);
-    const now = new Date().getTime();
-
-    if (now > item.expiry) {
-        localStorage.removeItem(key);
-        return null;
-    }
-    
-    return item.value;
+    return null;
 }
 
-
-const usernameFromStorage = getItemWithExpiration('username');
-const isLoggedInFromStorage = getItemWithExpiration('isLoggedIn');
+function getKey() {
+    try {
+        const jwt_token = getCookie('jwt_token');
+        if (!jwt_token) {
+            return null;
+        }
+        const decodedObj = jwtDecode(jwt_token);
+        return decodedObj.username;
+    } catch (error) {
+        return null;
+    }
+}
 
 export const usernameState = atom({
     key: 'usernameState',
-    default: usernameFromStorage || 'ACCOUNT_DEFAULT',
+    default: getKey() || 'ACCOUNT_DEFAULT',
 });
 
 export const isLoggedInState = atom({
     key: 'isLoggedInState',
-    default: isLoggedInFromStorage !== null ? isLoggedInFromStorage : false,
+    default: getKey() ? true : false,
 });

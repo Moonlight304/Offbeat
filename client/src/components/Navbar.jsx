@@ -5,11 +5,11 @@ import { useRecoilState } from "recoil";
 import { useEffect, useState } from "react";
 import { imageToBase64 } from '../helpers/imageToBase64';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser, faPlus, faImage, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { faUser, faPlus, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { faImage } from '@fortawesome/free-regular-svg-icons';
 import { Modal, Button } from "react-bootstrap";
 
 import '../index.css'
-
 
 export function Navbar() {
     const [globalUsername, setGlobalUsername] = useRecoilState(usernameState);
@@ -67,7 +67,6 @@ export function Navbar() {
 
         async function fetchUser() {
             if (globalUsername === 'ACCOUNT_DEFAULT') return;
-            console.log(globalUsername);
 
             try {
                 const response = await axios.get(`http://localhost:3000/user/${globalUsername}`,
@@ -96,7 +95,6 @@ export function Navbar() {
     return (
         <>
             <nav>
-
                 <Link className='link' to={'/'}> <h1> Offbeat </h1> </Link>
 
                 {/* Navbar profile */}
@@ -104,12 +102,10 @@ export function Navbar() {
                     ?
                     <div className="topRight">
                         {/* Create Post button */}
-                        {/* <Link className='link' to={'/post/newPost'}> */}
                         <button onClick={handleShow} className='btn profileButton' data-toggle="modal" data-target="#newPostModal">
                             <FontAwesomeIcon className='plusIcon' icon={faPlus} />
                             <h4> Create </h4>
                         </button>
-                        {/* </Link> */}
 
                         {/* go to user page */}
                         <Link className='link' to={`/user/${globalUsername}`}>
@@ -215,7 +211,7 @@ export function Navbar() {
 
                     </Modal.Body>
                     <Modal.Footer className='m-0'>
-                        <Button variant="dark" onClick={() => { setShow(false); setImageURL('') }}>
+                        <Button variant="light" onClick={() => { setShow(false); setImageURL('') }}>
                             Close
                         </Button>
                         <Button variant="warning" type='submit'>

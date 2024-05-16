@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { imageToBase64 } from '../helpers/imageToBase64';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Modal, Button } from "react-bootstrap";
 
 
 export function NewPost() {

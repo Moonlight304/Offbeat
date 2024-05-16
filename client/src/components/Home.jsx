@@ -15,8 +15,6 @@ export function Home() {
         async function getPosts() {
             const response = await axios.get('http://localhost:3000/');
             const data = response.data;
-            console.log(data);
-            console.log('Global Login state : ' + globalIsLoggedIn);
 
             if (data.status === 'success') {
                 setAllPosts(data.allPosts);

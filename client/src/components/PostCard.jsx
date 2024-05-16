@@ -3,11 +3,10 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useEffect, useState } from "react";
 import { formatDistanceToNow, parseISO } from 'date-fns';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-// import { , faComment,  } from '@fortawesome/free-solid-svg-icons';
-import { faHeart as faHeartRegular, faMessage, faClipboard } from '@fortawesome/free-regular-svg-icons';
 import { faHeart as faHeartSolid } from '@fortawesome/free-solid-svg-icons';
-import '../index.css'
+import { faHeart as faHeartRegular, faMessage, faClipboard } from '@fortawesome/free-regular-svg-icons';
 
+import '../index.css'
 
 export function PostCard({ postID }) {
     const [post, setPost] = useState({});
@@ -53,16 +52,11 @@ export function PostCard({ postID }) {
     }, [postID]);
 
     useEffect(() => {
-
-    })
-
-    useEffect(() => {
         if (post?.createdAt) {
             const date = parseISO(post.createdAt);
             const formattedTime = formatDistanceToNow(date, { addSuffix: true });
             setTimeAgo(formattedTime);
         }
-
     }, [post]);
 
     async function handleLike() {
@@ -75,13 +69,16 @@ export function PostCard({ postID }) {
             if (data.status === 'success') {
                 console.log('Liked post');
                 setlikeCount(data.newLikeCount);
-                setLiked(true);
+                setLiked(true); 
             }
-            else
+            else {
                 console.log('ERROR : ' + data.message);
+                
+            }
         }
         catch (e) {
             console.log('Error during "like" operation : ' + e);
+            
         }
     }
 
@@ -96,18 +93,33 @@ export function PostCard({ postID }) {
                 console.log('disliked post');
                 setlikeCount(data.newLikeCount);
                 setLiked(false);
+                
             }
-            else
+            else {
                 console.log('ERROR : ' + data.message);
+                
+            }
         }
         catch (e) {
             console.log('Error during "dislike" operation : ' + e);
+            
         }
     }
 
     function handleClipboard() {
         if (!navigator.clipboard) {
             console.log('Clipboard API not supported');
+            toast.error('Clipboard API not supported', {
+                position: "bottom-right",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+                transition: Bounce,
+            });
             return;
         }
 
@@ -115,14 +127,47 @@ export function PostCard({ postID }) {
             const postID = post?._id;
             if (!postID) {
                 console.log('Post ID is not defined');
+                toast.error('No post found', {
+                    position: "bottom-right",
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                    transition: Bounce,
+                });
                 return;
             }
             const copyURL = `${window.location.origin}/post/${post?._id}`;
             navigator.clipboard.writeText(copyURL);
             console.log('Copied to clipboard');
+            toast.success('Copied to clipboard!', {
+                position: "bottom-right",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+                transition: Bounce,
+            });
         }
         catch (e) {
             console.log('Error copying to clipboard : ' + e);
+            toast.error('Error copying to clipboard', {
+                position: "bottom-right",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+                transition: Bounce,
+            });
         }
     }
 

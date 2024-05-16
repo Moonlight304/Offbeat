@@ -25,15 +25,6 @@ export function Signup() {
         if (data.status === 'success') {
             setGlobalUsername(username);
             setGlobalIsLoggedIn(true);
-
-            localStorage.setItem('isLoggedIn', JSON.stringify({
-                value: 'true',
-                expDate: Date.now() + 3600000,
-            }));
-            localStorage.setItem('username', JSON.stringify({
-                value: username,
-                expDate: Date.now() + 3600000,
-            }));
             
             navigate('/');
         }

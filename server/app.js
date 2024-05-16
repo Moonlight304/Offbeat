@@ -90,11 +90,10 @@ app.post('/signup', async (req, res) => {
         }, JWT_SECRET);
 
         //send cookie
-        const oneHourFromNow = new Date(Date.now() + 60 * 60 * 1000);
+        const twoHourFromNow = new Date(Date.now() + 2 * 60 * 60 * 1000);
         return res.cookie('jwt_token', jwt_token, {
-            httpOnly: true,
             secure: true,
-            expires: oneHourFromNow,
+            expires: twoHourFromNow,
         }).json({
             status: 'success',
             message: 'Signed up',
@@ -149,11 +148,10 @@ app.post('/login', async (req, res) => {
         }, JWT_SECRET);
 
         //send cookie
-        const oneHourFromNow = new Date(Date.now() + 60 * 60 * 1000);
+        const twoHourFromNow = new Date(Date.now() + 2 * 60 * 60 * 1000);
         return res.cookie('jwt_token', jwt_token, {
-            httpOnly: true,
             secure: true,
-            expires: oneHourFromNow,
+            expires: twoHourFromNow,
         }).json({
             status: 'success',
             message: 'user logged in',
@@ -170,6 +168,8 @@ app.post('/login', async (req, res) => {
 //log out
 app.get('/logout', (req, res) => {
     try {
+        console.log('Called logout');
+
         if (!req.cookies.jwt_token)
             return res.json({
                 status: 'fail',
