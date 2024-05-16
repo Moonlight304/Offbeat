@@ -6,13 +6,22 @@ import { Comment } from './Comment';
 import { Link } from 'react-router-dom';
 import { usernameState, isLoggedInState } from '../atoms';
 import { useRecoilState } from 'recoil';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHeart as faHeartSolid, faUser, faBookmark as faBookmarkSolid, faEllipsis, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faHeart as faHeartRegular, faBookmark as faBookmarkRegular, faClipboard } from '@fortawesome/free-regular-svg-icons'
 import { Bounce, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Dropdown from 'react-bootstrap/Dropdown';
 import { handleClipboard } from '../helpers/Clipboard';
+import '../index.css'
 
 export function Post() {
     const { postID } = useParams();
     const [post, setPost] = useState({});
+    const [username, setUsername] = useState('');
+    const [avatarURL, setAvatarURL] = useState('');
+    const [liked, setLiked] = useState(false);
+    const [saved, setSaved] = useState(false);
     const [likeCount, setlikeCount] = useState(0);
     const [timeAgo, setTimeAgo] = useState('');
     const [newComment, setNewComment] = useState('');
@@ -28,6 +37,7 @@ export function Post() {
                 console.log(data);
 
                 setPost(data.post);
+                setUsername(data.post.username);
                 setlikeCount(data.post.likeCount);
             }
             catch (e) {
@@ -46,7 +56,43 @@ export function Post() {
             }
         }
 
+        async function getLikeInclude() {
+            try {
+                const response = await axios.get(`http://localhost:3000/post/${postID}/checkLiked`,
+                    { withCredentials: true },
+                )
+                const data = response.data;
+
+                if (data.status === 'success')
+                    setLiked(JSON.parse(data.message));
+                else
+                    console.log('Error : ' + data.message);
+            }
+            catch (e) {
+                console.log('Error : ' + e);
+            }
+        }
+
+        async function getSaved() {
+            try {
+                const response = await axios.get(`http://localhost:3000/user/checkSaved/${postID}`,
+                    { withCredentials: true },
+                )
+                const data = response.data;
+
+                if (data.status === 'success')
+                    setSaved(JSON.parse(data.message));
+                else
+                    console.log('Error : ' + data.message);
+            }
+            catch (e) {
+                console.log('Error : ' + e);
+            }
+        }
+
         getPost();
+        getLikeInclude();
+        getSaved();
     }, [postID]);
 
     useEffect(() => {
@@ -56,6 +102,29 @@ export function Post() {
             setTimeAgo(formattedTime);
         }
 
+        async function fetchUser() {
+            try {
+                if (username === '') return;
+
+                const response = await axios.get(`http://localhost:3000/user/${username}`,
+                    { withCredentials: true },
+                )
+                const data = response.data;
+
+                if (data.status === 'success') {
+                    setAvatarURL(data.userData.avatarString);
+                }
+                else {
+                    console.log('Error : ' + data.message);
+                    setAvatarURL('');
+                }
+            }
+            catch (e) {
+                console.log('Error : ' + e);
+            }
+        }
+
+        fetchUser();
     }, [post]);
 
     async function handleLike() {
@@ -79,6 +148,7 @@ export function Post() {
                 });
                 console.log('Liked post');
                 setlikeCount(data.newLikeCount);
+                setLiked(true);
             }
             else {
                 if (data.message === 'no token found') {
@@ -147,6 +217,7 @@ export function Post() {
                 });
                 console.log('disliked post');
                 setlikeCount(data.newLikeCount);
+                setLiked(false);
             }
             else {
                 toast.error('Error disliking post', {
@@ -233,6 +304,7 @@ export function Post() {
         }
     }
 
+
     async function handleSubmit() {
         try {
             const response = await axios.post(`http://localhost:3000/post/${postID}/newComment`,
@@ -242,17 +314,6 @@ export function Post() {
             const data = response.data;
 
             if (data.status === 'success') {
-                toast.success('Posted comment', {
-                    position: "bottom-right",
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "dark",
-                    transition: Bounce,
-                });
                 console.log('comment added');
             }
             else {
@@ -308,6 +369,7 @@ export function Post() {
                     theme: "dark",
                     transition: Bounce,
                 });
+                setSaved(true);
                 console.log('Saved Post');
             }
             else {
@@ -360,6 +422,7 @@ export function Post() {
                     theme: "dark",
                     transition: Bounce,
                 });
+                setSaved(false);
                 console.log('Removed post from saved items');
             }
             else {
@@ -395,63 +458,162 @@ export function Post() {
 
 
     return (
-        <>
-            <h1> {post?.heading} </h1>
+        <div style={{
+            width: '70%',
+            marginLeft: '5rem',
+        }}>
+            <div className='d-flex align-items-center'>
+                {avatarURL === ''
+                    ? <FontAwesomeIcon style={{ marginRight: '1rem' }} icon={faUser} />
+                    : <img className='profileImage' src={`data:image/jpeg;base64,${avatarURL}`} alt="profile avatar" />
+                }
 
-            <button onClick={handleSavePost}> Save Post </button>
-            <button onClick={handleDeleteSavePost}> Remove from Saved </button>
-            <br />
+                <h5 className='usernameText'> <Link className='link' to={`/user/${post?.username}`}>{post?.username}</Link> </h5>
+            </div>
 
-            <button onClick={() => handleClipboard(post?._id)}> Copy to clipboard </button>
-            {globalUsername === post?.username &&
-                <button onClick={handleDelete}> Delete Post </button>
-            }
+            <div className="d-flex justify-content-between align-items-center">
+                <h1> {post?.heading} </h1>
 
-            <h4> <Link to={`/user/${post?.username}`}>{post?.username}</Link> </h4>
+                <Dropdown>
+                    <Dropdown.Toggle style={{
+                        scale: '75%',
+                        color: 'black',
+                        backgroundColor: 'transparent',
+                        borderRadius: '5px',
+                    }} id='dropdown'>
+                        <FontAwesomeIcon icon={faEllipsis} />
+                    </Dropdown.Toggle>
 
-            <h5> Likes : {likeCount} </h5>
-            <button onClick={handleLike}> Like Post </button>
-            <button onClick={handleDislike}> Dislike Post </button>
+                    <Dropdown.Menu>
+                        <Dropdown.Item >
+                            {saved
+                                ?
+                                <h6 onClick={handleDeleteSavePost}>
+                                    <FontAwesomeIcon className='icons'
+                                        style={{
+                                            paddingRight: '1rem',
+                                        }} icon={faBookmarkSolid}
+                                    />
+                                    Remove
+                                </h6>
+                                :
+                                <h6 onClick={handleSavePost}>
+                                    <FontAwesomeIcon className='icons'
+                                        style={{
+                                            paddingRight: '1rem',
+                                        }} icon={faBookmarkRegular}
+                                    />
+                                    Save
+                                </h6>
+                            }
+                        </Dropdown.Item>
+
+                        <Dropdown.Item>
+                            <h6 onClick={() => handleClipboard(post?._id)}>
+                                <FontAwesomeIcon className='icons'
+                                    style={{
+                                        paddingRight: '1rem',
+                                    }} icon={faClipboard}
+                                />
+                                Copy Link
+                            </h6>
+                        </Dropdown.Item>
+
+                        <Dropdown.Item>
+                            {globalUsername === post?.username &&
+                                <h6 onClick={handleDelete}>
+                                    <FontAwesomeIcon className='icons'
+                                        style={{
+                                            color: 'red',
+                                            paddingRight: '1rem',
+                                        }} icon={faTrash}
+                                    />
+                                    Delete Post
+                                </h6>
+                            }
+                        </Dropdown.Item>
+                    </Dropdown.Menu>
+                </Dropdown>
+            </div>
 
             <h5> {timeAgo} </h5>
+
+            <hr />
 
             <h4> {post?.body} </h4>
 
             {/* post image */}
-            {post?.base64String && <img src={`data:image/jpeg;base64,${post.base64String}`} alt="uploaded image" />}
-
-            <h4>Comments: </h4>
-
-            <form className="row g-3 needs-validation" onSubmit={handleSubmit}>
-                <div className="col-md-4">
-                    <div className="mb-3">
-                        <textarea name="newComment" className="form-control" id="validationTextarea" placeholder="share your thoughts..." required
-                            onChange={(e) => setNewComment(e.target.value)}
-                        ></textarea>
-                        <div className="invalid-feedback">
-                            cant be empty
-                        </div>
-                    </div>
-                </div>
-
-                <div className="col-12">
-                    <button className="btn btn-primary" type="submit"> Comment </button>
-                </div>
-            </form>
-
-            {post?.comments
-                ?
-                post.comments.map((comment, index) => {
-                    return <Comment
-                        key={index}
-                        comment={comment}
-                        postID={post._id}
-                    />
-                })
-                :
-                <h4> No comments </h4>
+            {post?.base64String &&
+                <img
+                    style={{
+                        borderRadius: '15px',
+                        width: '80%',
+                        maxHeight: '800px',
+                        margin: '2rem 0rem 2rem 0rem',
+                    }} src={`data:image/jpeg;base64,${post.base64String}`} alt="uploaded image"
+                />
             }
 
-        </>
+            {liked ? (
+                <h5 style={{ cursor: 'pointer' }} onClick={handleDislike}>
+                    {likeCount}
+                    <FontAwesomeIcon className='icons'
+                        style={{
+                            color: 'red',
+                            padding: '0rem 0.5rem 0rem 1rem',
+                        }}
+                        icon={faHeartSolid}
+                    />
+                    Dislike
+                </h5>
+            ) : (
+                <h5 style={{ cursor: 'pointer' }} onClick={handleLike}>
+                    {likeCount}
+                    <FontAwesomeIcon className='icons'
+                        style={{
+                            padding: '0rem 0.5rem 0rem 1rem',
+                        }}
+                        icon={faHeartRegular}
+                    />
+                    Like
+                </h5>
+            )}
+
+            <div className="d-flex flex-column gap-3 mt-5">
+                <h4> Comments </h4>
+
+                <form onSubmit={handleSubmit}>
+                    <div>
+                        <div>
+                            <textarea name="newComment" style={{ width: '50%' }} className="form-control" id="validationTextarea" placeholder="share your thoughts..." required
+                                onChange={(e) => setNewComment(e.target.value)}
+                            ></textarea>
+                            <div className="invalid-feedback">
+                                cant be empty
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="mt-2 mb-2">
+                        <button className="btn btn-warning" type="submit"> Comment </button>
+                    </div>
+                </form>
+
+                {post?.comments
+                    ?
+                    post.comments.map((comment, index) => {
+                        return <Comment
+                            key={index}
+                            comment={comment}
+                            username={comment.username}
+                            postID={post._id}
+                        />
+                    })
+                    :
+                    <h4> No comments </h4>
+                }
+            </div>
+
+        </div>
     );
 }

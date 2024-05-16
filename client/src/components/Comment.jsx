@@ -2,11 +2,21 @@ import axios from 'axios'
 import { useEffect, useState } from "react";
 import { formatDistanceToNow, parseISO } from 'date-fns';
 import { Link } from 'react-router-dom';
+import { usernameState, isLoggedInState } from '../atoms';
+import { useRecoilState } from 'recoil';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUser, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { Bounce, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-export function Comment({ index, comment, postID }) {
+import '../index.css'
+
+export function Comment({ index, comment, username, postID }) {
     const [timeAgo, setTimeAgo] = useState('');
+    const [avatarURL, setAvatarURL] = useState('');
+    const [globalUsername, setGlobalUsername] = useRecoilState(usernameState);
+
+    console.log(comment);
 
     useEffect(() => {
         if (comment?.createdAt) {
@@ -14,6 +24,32 @@ export function Comment({ index, comment, postID }) {
             const formattedTime = formatDistanceToNow(date, { addSuffix: true });
             setTimeAgo(formattedTime);
         }
+
+        async function fetchUser() {
+            try {
+                if (username === '') return;
+
+                const response = await axios.get(`http://localhost:3000/user/${username}`,
+                    { withCredentials: true },
+                )
+                const data = response.data;
+
+                // console.log(data);
+
+                if (data.status === 'success') {
+                    setAvatarURL(data.userData.avatarString);
+                }
+                else {
+                    console.log('Error : ' + data.message);
+                    setAvatarURL('');
+                }
+            }
+            catch (e) {
+                console.log('Error : ' + e);
+            }
+        }
+
+        fetchUser();
     }, [comment]);
 
     async function handleCommentDelete() {
@@ -61,13 +97,26 @@ export function Comment({ index, comment, postID }) {
     }
 
     return (
-        <div>
+        <div className='mb-3'>
+            <div className='d-flex align-items-center'>
+                {avatarURL === ''
+                    ? <FontAwesomeIcon className='icons' style={{ marginRight: '1rem' }} icon={faUser} />
+                    : <img className='profileImage' src={`data:image/jpeg;base64,${avatarURL}`} alt="profile avatar" />
+                }
 
-            <p> <Link to={`/user/${comment?.username}`}>{comment?.username}</Link> </p>
+                <div className='d-flex gap-3 mt-3'>
+                    <h5 className='usernameText'> <Link className='link' to={`/user/${username}`}>{username}</Link> </h5>
+                    <p> {timeAgo}</p>
+
+                </div>
+
+                {globalUsername === username &&
+                    <FontAwesomeIcon className='icons' style={{ color: 'red', cursor: 'pointer', marginLeft: '3rem' }} onClick={handleCommentDelete} icon={faTrash} />
+                }
+            </div>
+
             <p> {comment.content} </p>
-            <p> {timeAgo} </p>
 
-            <button onClick={handleCommentDelete}> Delete </button>
         </div>
     )
 }

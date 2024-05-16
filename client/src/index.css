@@ -1,9 +1,12 @@
 /* Navbar */
-.plusIcon, .navbarIcon {
+.plusIcon,
+.navbarIcon {
     width: 25px;
     height: 25px;
 }
-.navbarImage, .profileImage {
+
+.navbarImage,
+.profileImage {
     border-radius: 50%;
     width: 50px;
     height: 50px;
@@ -13,8 +16,8 @@
 .profileImage {
     margin-right: 0.5rem;
     margin-bottom: 0.3rem;
-    width: 35px;
-    height: 35px;
+    width: 40px;
+    height: 40px;
 }
 
 .link {
@@ -39,10 +42,12 @@ nav {
     border: 2px solid black !important;
     scale: 80%;
 }
+
 .topRight {
     display: flex;
     gap: 2rem;
 }
+
 .topRight button:hover {
     color: black !important;
     background-color: white !important;
@@ -63,7 +68,7 @@ nav {
     /* height: 400px; */
     max-width: 900px;
     /* max-height: 500px; */
-    
+
     border: 2px solid black;
     border-radius: 15px;
     box-shadow: 5px 5px black;
@@ -71,9 +76,11 @@ nav {
     padding: 1.5rem;
 }
 
-.usernameText {
-    color: black;
+
+.icons {
+    scale: 120%;
 }
-.usernameText:hover {
-    color: rgb(25, 0, 150);
+
+.dropdown-toggle::after {
+    display: none !important;
 }

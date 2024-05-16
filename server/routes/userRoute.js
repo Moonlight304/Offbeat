@@ -305,7 +305,7 @@ router.post('/follow', authMiddle, async (req, res) => {
         const srcUser = await User.findOne({ username: srcUsername });
         const destUser = await User.findOne({ username: destUsername });
 
-        
+
         if (destUser.followers !== undefined && destUser.followers.includes(srcUser._id))
             return res.json({
                 status: 'fail',
@@ -342,6 +342,57 @@ router.post('/follow', authMiddle, async (req, res) => {
     }
 })
 
+router.get('/checkSaved/:postID', authMiddle, async (req, res) => {
+    try {
+        const { postID } = req.params;
+        const { userID } = req.user;
+
+        if (!postID)
+            return res.json({
+                status: 'fail',
+                message: 'postID not found',
+            })
+
+        if (!userID)
+            return res.json({
+                status: 'fail',
+                message: 'userID not found',
+            })
+
+        const post = await Post.findById(postID);
+        const user = await User.findById(userID);
+
+        if (!post)
+            return res.json({
+                status: 'fail',
+                message: 'Post not found',
+            })
+
+        if (!user)
+            return res.json({
+                status: 'fail',
+                messge: 'User not found'
+            })
+
+        if (user.savedPosts.includes(postID))
+            return res.json({
+                status: 'success',
+                message: JSON.stringify(true),
+            })
+        else
+            return res.json({
+                status: 'success',
+                message: JSON.stringify(false),
+            })
+    }
+    catch (e) {
+        return res.json({
+            status: 'fail',
+            message: 'Error : ' + e,
+        })
+    }
+})
+
 router.post('/unfollow', authMiddle, async (req, res) => {
     try {
         const { srcUsername, destUsername } = req.body;
@@ -371,7 +422,7 @@ router.post('/unfollow', authMiddle, async (req, res) => {
             { username: destUsername },
             {
                 $pull: { followers: srcUser._id },
-                $inc: { followersCount: -1 }    
+                $inc: { followersCount: -1 }
             }
         )
 

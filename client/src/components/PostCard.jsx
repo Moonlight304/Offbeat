@@ -218,7 +218,7 @@ export function PostCard({ postID }) {
         <div className='PostCard'>
             <div className='d-flex align-items-center'>
                 {avatarURL === ''
-                    ? <FontAwesomeIcon icon={faUser} />
+                    ? <FontAwesomeIcon style={{ marginRight: '1rem' }} icon={faUser} />
                     : <img className='profileImage' src={`data:image/jpeg;base64,${avatarURL}`} alt="profile avatar" />
                 }
 
@@ -242,34 +242,30 @@ export function PostCard({ postID }) {
                     }} src={`data:image/jpeg;base64,${post?.base64String}`} alt="post image" />}
             </div>
 
-            <div className="d-flex justify-content-between align-items-center ps-5 pe-5">
+            <div className="d-flex justify-content-between align-items-center ps-3 pe-3">
                 {/* Like count */}
                 {liked ? (
-                    <h5>
+                    <h5 style={{ cursor: 'pointer' }} onClick={handleDislike}>
                         {likeCount}
-                        <FontAwesomeIcon
+                        <FontAwesomeIcon className='icons'
                             style={{
                                 color: 'red',
-                                cursor: 'pointer',
-                                scale: '120%',
-                                paddingLeft: '.5rem',
+                                padding: '0rem 0.5rem 0rem 1rem',
                             }}
-                            onClick={handleDislike}
                             icon={faHeartSolid}
                         />
+                        Dislike
                     </h5>
                 ) : (
-                    <h5>
+                    <h5 style={{ cursor: 'pointer' }} onClick={handleLike}>
                         {likeCount}
-                        <FontAwesomeIcon
+                        <FontAwesomeIcon className='icons'
                             style={{
-                                cursor: 'pointer',
-                                scale: '120%',
-                                paddingLeft: '.5rem',
+                                padding: '0rem 0.5rem 0rem 1rem',
                             }}
-                            onClick={handleLike}
                             icon={faHeartRegular}
                         />
+                        Like
                     </h5>
                 )}
 
@@ -299,7 +295,7 @@ export function PostCard({ postID }) {
                             paddingRight: '1rem',
                         }} icon={faClipboard}
                     />
-                    Copy to clipboard
+                    Copy
                 </h5>
             </div>
 
