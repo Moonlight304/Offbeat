@@ -3,6 +3,8 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { usernameState, isLoggedInState } from '../atoms'
 import { useRecoilState } from 'recoil';
+import { Bounce, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export function Login() {
     const [username, setUsername] = useState('');
@@ -14,21 +16,59 @@ export function Login() {
     async function handleSubmit(e) {
         e.preventDefault();
 
-        const response = await axios.post('http://localhost:3000/login',
-            { username, password },
-            { withCredentials: true }
-        );
-        const data = response.data;
-        console.log(data);
+        try {
+            const response = await axios.post('http://localhost:3000/login',
+                { username, password },
+                { withCredentials: true }
+            );
+            const data = response.data;
+            console.log(data);
 
-        if (data.status === 'success') {
-            setGlobalUsername(username);
-            setGlobalIsLoggedIn(true);
+            if (data.status === 'success') {
+                setGlobalUsername(username);
+                setGlobalIsLoggedIn(true);
+                toast.success(`${data.message}`, {
+                    position: "bottom-right",
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                    transition: Bounce,
+                });
 
-            navigate('/');
+                navigate('/');
+            }
+            else {
+                toast.error(`${data.message}`, {
+                    position: "bottom-right",
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                    transition: Bounce,
+                });
+                navigate('/login');
+            }
         }
-        else
-            navigate('/login');
+        catch (e) {
+            toast.error('Error logging in', {
+                position: "bottom-right",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+                transition: Bounce,
+            });
+        }
     }
 
     return (
@@ -48,6 +88,7 @@ export function Login() {
 
                 <input type="submit" value="Login" />
             </form>
+
         </>
     );
 }   

@@ -33,7 +33,7 @@ router.get('/check', authMiddle, (req, res) => {
     }
 })
 
-router.get('/:username', authMiddle, async (req, res) => {
+router.get('/:username', async (req, res) => {
     try {
         const { username } = req.params;
 
@@ -179,14 +179,14 @@ router.get('/deleteUser/:username', authMiddle, async (req, res) => {
         if (!username)
             return res.json({
                 status: 'fail',
-                message: 'no username found',
+                message: 'Username not found',
             })
 
         await User.deleteOne({ username });
 
         return res.json({
             status: 'success',
-            message: 'deleted user',
+            message: 'Deleted account',
         })
     }
     catch (e) {

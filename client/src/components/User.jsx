@@ -5,8 +5,10 @@ import { Link } from "react-router-dom";
 import { PostList } from "./PostList";
 import { usernameState } from '../atoms';
 import { useRecoilState } from "recoil";
-import {FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {faUser} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUser } from '@fortawesome/free-solid-svg-icons';
+import { Bounce, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import '../index.css'
 
@@ -35,13 +37,49 @@ export function User() {
             )
             const data = response.data;
 
-            if (data.status === 'success')
+            if (data.status === 'success') {
+                toast.success(`${data.message}`, {
+                    position: "bottom-right",
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                    transition: Bounce,
+                });
                 console.log('deleted account');
-            else
+            }
+            else {
+                toast.error(`${data.message}`, {
+                    position: "bottom-right",
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                    transition: Bounce,
+                });
                 console.log('account deletion failed : ' + data.message);
+            }
+            
             navigate('/logout');
         }
         catch (e) {
+            toast.error('Deletion failed', {
+                position: "bottom-right",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+                transition: Bounce,
+            });
             console.log('Error : ' + e);
         }
     }
@@ -101,24 +139,46 @@ export function User() {
                     setFollowingCount(data.userData.followingCount);
                 }
                 else {
+                    toast.error('User not found', {
+                        position: "bottom-right",
+                        autoClose: 2000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "dark",
+                        transition: Bounce,
+                    });
                     console.log('error fetching user : ' + data.message);
                     navigate('/');
                 }
             }
             catch (e) {
                 console.log('Error : ' + e);
+                toast.error('Error loading user profile', {
+                    position: "bottom-right",
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                    transition: Bounce,
+                });
             }
         }
 
         fetchUser();
-    }, [])
+    }, [username])
 
 
     return (
         <>
             {imageURL
                 ? <img className='userIcon' src={`data:image/jpeg;base64,${imageURL}`} alt="uploaded image" />
-                : <FontAwesomeIcon className='navbarIcon'  icon={faUser} />
+                : <FontAwesomeIcon className='navbarIcon' icon={faUser} />
             }
 
             <h1> {username} </h1>

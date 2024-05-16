@@ -5,8 +5,10 @@ import { Link } from "react-router-dom";
 import { usernameState } from '../atoms';
 import { useRecoilState } from "recoil";
 import { imageToBase64 } from "../helpers/imageToBase64";
-import {FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {faUser} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUser } from '@fortawesome/free-solid-svg-icons';
+import { Bounce, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export function EditUser() {
     const { username } = useParams();
@@ -18,11 +20,8 @@ export function EditUser() {
     const [gender, setGender] = useState('none');
     const navigate = useNavigate();
 
-
     async function handleAvatarChange(e) {
         e.preventDefault();
-
-        // console.log(e.target.files[0]);
 
         const file = e.target.files[0];
         const base64String = await imageToBase64(file);
@@ -38,12 +37,35 @@ export function EditUser() {
                 const url = URL.createObjectURL(file);
                 setImageURL(url);
             }
-            else
-                navigate(`/user/${username}`);
+            else {
+                toast.error('Error updating avatar', {
+                    position: "bottom-right",
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                    transition: Bounce,
+                });
+            }
 
+            // navigate(`/user/editUser/${username}`);
             window.location.reload();
         }
         catch (e) {
+            toast.error('Error updating avatar', {
+                position: "bottom-right",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+                transition: Bounce,
+            });
             console.log('Error : ' + e);
         }
     }
@@ -55,10 +77,23 @@ export function EditUser() {
             )
             const data = response.data;
 
-            if (data.status === 'success')
+            if (data.status === 'success') {
                 console.log('avatar deleted successfully');
-            else
+            }
+            else {
+                toast.error('Error deleting avatar', {
+                    position: "bottom-right",
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                    transition: Bounce,
+                });
                 console.log('avatar deletion failed : ' + data.message);
+            }
 
             console.log(data.user);
 
@@ -66,6 +101,17 @@ export function EditUser() {
             window.location.reload();
         }
         catch (e) {
+            toast.error('Error deleting avatar', {
+                position: "bottom-right",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+                transition: Bounce,
+            });
             console.log('Error : ' + e);
         }
     }
@@ -80,14 +126,49 @@ export function EditUser() {
             )
             const data = response.data;
 
-            if (data.status === 'success')
+            if (data.status === 'success') {
+                toast.success('Profile updated', {
+                    position: "bottom-right",
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                    transition: Bounce,
+                });
                 console.log('Updated profile');
-            else
+            }
+            else {
+                toast.error('Error updating profile', {
+                    position: "bottom-right",
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                    transition: Bounce,
+                });
                 console.log('Error : ' + data.message);
+            }
 
             navigate(`/user/${username}`);
         }
         catch (e) {
+            toast.error('Error updating profile', {
+                position: "bottom-right",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+                transition: Bounce,
+            });
             console.log('Error : ' + e);
         }
     }
@@ -108,11 +189,33 @@ export function EditUser() {
                     setGender(data.userData.gender || '');
                 }
                 else {
+                    toast.error('Error loading profile', {
+                        position: "bottom-right",
+                        autoClose: 2000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "dark",
+                        transition: Bounce,
+                    });
                     console.log('error fetching user : ' + data.message);
                     navigate('/');
                 }
             }
             catch (e) {
+                toast.error('Error loading profile', {
+                    position: "bottom-right",
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                    transition: Bounce,
+                });
                 console.log('Error : ' + e);
             }
         }
@@ -130,7 +233,7 @@ export function EditUser() {
                     <label htmlFor="avatar"> <img src={`data:image/jpeg;base64,${imageURL}`} alt="uploaded image" /> </label>
                     <button onClick={handleAvatarDelete}>Delete Avatar</button>
                 </>
-                : <label htmlFor="avatar"> <FontAwesomeIcon className='navbarIcon'  icon={faUser} /> </label>
+                : <label htmlFor="avatar"> <FontAwesomeIcon className='navbarIcon' icon={faUser} /> </label>
             }
 
             <form onSubmit={handleSubmit}>

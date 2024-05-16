@@ -1,8 +1,10 @@
+import axios from 'axios';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { usernameState, isLoggedInState } from '../atoms'
 import { useRecoilState } from 'recoil';
-import axios from 'axios';
+import { Bounce, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export function Signup() {
     const [username, setUsername] = useState('');
@@ -15,21 +17,59 @@ export function Signup() {
     async function handleSubmit(e) {
         e.preventDefault();
 
-        const response = await axios.post('http://localhost:3000/signup',
-            { username, password },
-            { withCredentials: true }
-        );
-        const data = response.data;
-        console.log(data);
+        try {
+            const response = await axios.post('http://localhost:3000/signup',
+                { username, password },
+                { withCredentials: true }
+            );
+            const data = response.data;
+            console.log(data);
 
-        if (data.status === 'success') {
-            setGlobalUsername(username);
-            setGlobalIsLoggedIn(true);
-            
-            navigate('/');
+            if (data.status === 'success') {
+                toast.success(`${data.message}`, {
+                    position: "bottom-right",
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                    transition: Bounce,
+                });
+                setGlobalUsername(username);
+                setGlobalIsLoggedIn(true);
+                navigate('/');
+            }
+            else {
+                toast.error(`${data.message}`, {
+                    position: "bottom-right",
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                    transition: Bounce,
+                });
+                navigate('/signup');
+            }
         }
-        else
-            navigate('/signup');
+        catch (e) {
+            toast.error('Signup failed', {
+                position: "bottom-right",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+                transition: Bounce,
+            });
+        }
+
     }
 
     return (

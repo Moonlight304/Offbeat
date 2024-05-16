@@ -6,6 +6,9 @@ import { Comment } from './Comment';
 import { Link } from 'react-router-dom';
 import { usernameState, isLoggedInState } from '../atoms';
 import { useRecoilState } from 'recoil';
+import { Bounce, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { handleClipboard } from '../helpers/Clipboard';
 
 export function Post() {
     const { postID } = useParams();
@@ -28,6 +31,17 @@ export function Post() {
                 setlikeCount(data.post.likeCount);
             }
             catch (e) {
+                toast.error('Error fetching post', {
+                    position: "bottom-right",
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                    transition: Bounce,
+                });
                 console.log('Error fetching post : ' + e);
             }
         }
@@ -52,13 +66,62 @@ export function Post() {
             const data = response.data;
 
             if (data.status === 'success') {
+                toast.success('Liked Post', {
+                    position: "bottom-right",
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                    transition: Bounce,
+                });
                 console.log('Liked post');
                 setlikeCount(data.newLikeCount);
             }
-            else
-                console.log('ERROR : ' + data.message);
+            else {
+                if (data.message === 'no token found') {
+                    toast.error('Login to like post', {
+                        position: "bottom-right",
+                        autoClose: 2000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "dark",
+                        transition: Bounce,
+                    });
+                }
+                else {
+                    toast.error('Error liking post', {
+                        position: "bottom-right",
+                        autoClose: 2000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "dark",
+                        transition: Bounce,
+                    });
+                    console.log('ERROR : ' + data.message);
+                }
+            }
         }
         catch (e) {
+            toast.error('Error liking post', {
+                position: "bottom-right",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+                transition: Bounce,
+            });
             console.log('Error during "like" operation : ' + e);
         }
     }
@@ -71,13 +134,47 @@ export function Post() {
             const data = response.data;
 
             if (data.status === 'success') {
+                toast.success('Disliked post', {
+                    position: "bottom-right",
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                    transition: Bounce,
+                });
                 console.log('disliked post');
                 setlikeCount(data.newLikeCount);
             }
-            else
+            else {
+                toast.error('Error disliking post', {
+                    position: "bottom-right",
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                    transition: Bounce,
+                });
                 console.log('ERROR : ' + data.message);
+            }
         }
         catch (e) {
+            toast.error('Error disliking post', {
+                position: "bottom-right",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+                transition: Bounce,
+            });
             console.log('Error during "dislike" operation : ' + e);
         }
     }
@@ -91,14 +188,47 @@ export function Post() {
             console.log(data);
 
             if (data.status === 'success') {
+                toast.success('Deleted post', {
+                    position: "bottom-right",
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                    transition: Bounce,
+                });
                 console.log('deleted post');
                 navigate('/');
             }
             else {
+                toast.error('Error deleting post', {
+                    position: "bottom-right",
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                    transition: Bounce,
+                });
                 console.log('ERROR : ' + data.message);
             }
         }
         catch (e) {
+            toast.error('Error deleting post', {
+                position: "bottom-right",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+                transition: Bounce,
+            });
             console.log('Error during "delete" operation : ' + e);
         }
     }
@@ -111,15 +241,50 @@ export function Post() {
             )
             const data = response.data;
 
-            if (data.status === 'success')
+            if (data.status === 'success') {
+                toast.success('Posted comment', {
+                    position: "bottom-right",
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                    transition: Bounce,
+                });
                 console.log('comment added');
-            else
+            }
+            else {
+                toast.error('Error posting comment', {
+                    position: "bottom-right",
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                    transition: Bounce,
+                });
                 console.log('comment added');
+            }
 
             // navigate(`/post/${postID}`);
             window.location.reload();
         }
         catch (e) {
+            toast.error('Error posting comment', {
+                position: "bottom-right",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+                transition: Bounce,
+            });
             console.log('Error during "newComment" : ' + e);
         }
     }
@@ -131,12 +296,47 @@ export function Post() {
             )
             const data = response.data;
 
-            if (data.status === 'success')
+            if (data.status === 'success') {
+                toast.success('Added to saved posts', {
+                    position: "bottom-right",
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                    transition: Bounce,
+                });
                 console.log('Saved Post');
-            else
+            }
+            else {
+                toast.error('Error adding to saved posts', {
+                    position: "bottom-right",
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                    transition: Bounce,
+                });
                 console.log('Error : ' + data.message);
+            }
         }
         catch (e) {
+            toast.error('Error adding to saved posts', {
+                position: "bottom-right",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+                transition: Bounce,
+            });
             console.log('Error saving post : ' + e);
         }
     }
@@ -148,36 +348,51 @@ export function Post() {
             )
             const data = response.data;
 
-            if (data.status === 'success')
+            if (data.status === 'success') {
+                toast.success('Removed from saved posts', {
+                    position: "bottom-right",
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                    transition: Bounce,
+                });
                 console.log('Removed post from saved items');
-            else
+            }
+            else {
+                toast.error('Error removing from saved posts', {
+                    position: "bottom-right",
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                    transition: Bounce,
+                });
                 console.log('Error : ' + data.message);
+            }
         }
         catch (e) {
+            toast.error('Error removing from saved posts', {
+                position: "bottom-right",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+                transition: Bounce,
+            });
             console.log('Error saving post : ' + e);
         }
     }
 
-    function handleClipboard() {
-        if (!navigator.clipboard) {
-            console.log('Clipboard API not supported');
-            return;
-        }
-
-        try {
-            const postID = post?._id;
-            if (!postID) {
-                console.log('Post ID is not defined');
-                return;
-            }
-            const copyURL = `${window.location.origin}/post/${post?._id}`;
-            navigator.clipboard.writeText(copyURL);
-            console.log('Copied to clipboard');
-        }
-        catch (e) {
-            console.log('Error copying to clipboard : ' + e);
-        }
-    }
 
     return (
         <>
@@ -186,7 +401,8 @@ export function Post() {
             <button onClick={handleSavePost}> Save Post </button>
             <button onClick={handleDeleteSavePost}> Remove from Saved </button>
             <br />
-            <button onClick={handleClipboard}> Copy to clipboard </button>
+
+            <button onClick={() => handleClipboard(post?._id)}> Copy to clipboard </button>
             {globalUsername === post?.username &&
                 <button onClick={handleDelete}> Delete Post </button>
             }
@@ -235,6 +451,7 @@ export function Post() {
                 :
                 <h4> No comments </h4>
             }
+
         </>
     );
 }

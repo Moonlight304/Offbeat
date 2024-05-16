@@ -59,13 +59,13 @@ app.post('/signup', async (req, res) => {
         if (!username)
             return res.json({
                 status: 'fail',
-                message: 'username required',
+                message: 'Username required',
             })
 
         if (!password)
             return res.json({
                 status: 'fail',
-                message: 'password required',
+                message: 'Password required',
             })
 
         const existingUser = await User.findOne({ username });
@@ -73,7 +73,7 @@ app.post('/signup', async (req, res) => {
         if (existingUser)
             return res.json({
                 status: 'fail',
-                message: 'User exists',
+                message: 'Username already exists',
             })
 
         // encrypting password
@@ -90,10 +90,10 @@ app.post('/signup', async (req, res) => {
         }, JWT_SECRET);
 
         //send cookie
-        const twoHourFromNow = new Date(Date.now() + 2 * 60 * 60 * 1000);
+        const twoHoursFromNow = new Date(Date.now() + 2 * 60 * 60 * 1000);
         return res.cookie('jwt_token', jwt_token, {
             secure: true,
-            expires: twoHourFromNow,
+            expires: twoHoursFromNow,
         }).json({
             status: 'success',
             message: 'Signed up',
@@ -115,13 +115,13 @@ app.post('/login', async (req, res) => {
         if (!username)
             return res.json({
                 status: 'fail',
-                message: 'username required',
+                message: 'Username required',
             })
 
         if (!password)
             return res.json({
                 status: 'fail',
-                message: 'password required',
+                message: 'Password required',
             })
 
         const existingUser = await User.findOne({ username: username });
@@ -129,7 +129,7 @@ app.post('/login', async (req, res) => {
         if (!existingUser)
             return res.json({
                 status: 'fail',
-                message: 'username or password invalid',
+                message: 'Username or Password invalid',
             })
 
         //password verification
@@ -138,7 +138,7 @@ app.post('/login', async (req, res) => {
         if (!passwordValid)
             return res.json({
                 status: 'fail',
-                message: 'username or password invalid',
+                message: 'Username or Password invalid',
             })
 
         //sign the token
@@ -148,13 +148,13 @@ app.post('/login', async (req, res) => {
         }, JWT_SECRET);
 
         //send cookie
-        const twoHourFromNow = new Date(Date.now() + 2 * 60 * 60 * 1000);
+        const twoHoursFromNow = new Date(Date.now() + 2 * 60 * 60 * 1000);
         return res.cookie('jwt_token', jwt_token, {
             secure: true,
-            expires: twoHourFromNow,
+            expires: twoHoursFromNow,
         }).json({
             status: 'success',
-            message: 'user logged in',
+            message: 'Logged in',
         })
     }
     catch (e) {
@@ -168,12 +168,11 @@ app.post('/login', async (req, res) => {
 //log out
 app.get('/logout', (req, res) => {
     try {
-        console.log('Called logout');
 
         if (!req.cookies.jwt_token)
             return res.json({
                 status: 'fail',
-                message: 'already logged out',
+                message: 'Already logged out',
             })
 
         res.clearCookie('jwt_token');

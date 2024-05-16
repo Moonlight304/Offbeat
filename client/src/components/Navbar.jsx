@@ -8,6 +8,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faPlus, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { faImage } from '@fortawesome/free-regular-svg-icons';
 import { Modal, Button } from "react-bootstrap";
+import { Bounce, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import '../index.css'
 
@@ -16,51 +18,109 @@ export function Navbar() {
     const [globalIsLoggedIn, setGlobalIsLoggedIn] = useRecoilState(isLoggedInState);
     const [avatarURL, setavatarURL] = useState('');
     const [show, setShow] = useState(false);
-    // const handleClose = () => ;
-    const handleShow = () => setShow(true);
     const [heading, setHeading] = useState('');
     const [body, setBody] = useState('');
     const [imageURL, setImageURL] = useState(null);
     const navigate = useNavigate();
-
+    const handleShow = () => setShow(true);
+    
     async function handleImageChange(e) {
         e.preventDefault();
 
-        console.log(e.target.files[0]);
+        try {
+            console.log(e.target.files[0]);
 
-        const file = e.target.files[0];
+            const file = e.target.files[0];
 
-        const url = URL.createObjectURL(file);
-        setImageURL(url);
+            const url = URL.createObjectURL(file);
+            setImageURL(url);
+        }
+        catch (e) {
+            toast.error('Error updating image', {
+                position: "bottom-right",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+                transition: Bounce,
+            });
+        }
+
     }
 
     async function handleSubmit(e) {
         e.preventDefault();
-        setShow(false);
 
-        let response;
-        if (imageURL) {
-            const file = e.target.image.files[0];
-            const base64String = await imageToBase64(file);
 
-            response = await axios.post('http://localhost:3000/post/newPost',
-                { heading, body, base64String },
-                { withCredentials: true },
-            )
+        try {
+            setShow(false);
+            let response;
+            if (imageURL) {
+                const file = e.target.image.files[0];
+                const base64String = await imageToBase64(file);
+
+                response = await axios.post('http://localhost:3000/post/newPost',
+                    { heading, body, base64String },
+                    { withCredentials: true },
+                )
+            }
+            else {
+                response = await axios.post('http://localhost:3000/post/newPost',
+                    { heading, body },
+                    { withCredentials: true },
+                )
+            }
+            const data = response.data;
+            setImageURL('');
+
+
+            if (data.status === 'success') {
+                toast.success('Posted successfully', {
+                    position: "bottom-right",
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                    transition: Bounce,
+                });
+                navigate(`/post/${data.postID}`);
+            }
+            else {
+                toast.error('Error posting', {
+                    position: "bottom-right",
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                    transition: Bounce,
+                });
+                navigate('/');
+            }
+
         }
-        else {
-            response = await axios.post('http://localhost:3000/post/newPost',
-                { heading, body },
-                { withCredentials: true },
-            )
+        catch (e) {
+            toast.success('Posted successfully', {
+                position: "bottom-right",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+                transition: Bounce,
+            });
+            console.log('Error : ' + e);
         }
-        const data = response.data;
-        setImageURL('');
-
-        if (data.status === 'success')
-            navigate(`/post/${data.postID}`);
-        else
-            navigate('/');
     }
 
     useEffect(() => {
@@ -200,11 +260,15 @@ export function Navbar() {
                                     display: 'flex',
                                     justifyContent: 'center',
                                     alignItems: 'center',
-                                    gap: '1rem',
+                                    gap: '2rem',
                                     cursor: 'pointer',
                                 }}
 
-                                htmlFor="image"><FontAwesomeIcon style={{ scale: '180%' }} icon={faImage} /> <h5>Upload Image</h5>
+                                htmlFor="image"><FontAwesomeIcon
+                                    style={{
+                                        scale: '180%',
+                                        marginBottom: '0.3rem',
+                                    }} icon={faImage} /> <h5>Upload Image</h5>
                             </label>
                         }
 
@@ -220,6 +284,7 @@ export function Navbar() {
                     </Modal.Footer>
                 </form>
             </Modal >
+
         </>
     );
 }
