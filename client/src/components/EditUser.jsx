@@ -258,7 +258,7 @@ export function EditUser() {
 
             <form onSubmit={handleSubmit} className="d-flex flex-column gap-5">
                 <div className="editProfileInputs">
-                    <label htmlFor="email"><h4> Edit email </h4></label>
+                    <label htmlFor="email"><h4> Email </h4></label>
                     <input type="email" name="email" id="email" value={email}
                         onChange={(e) => setEmail(e.target.value)}
                     />
@@ -276,7 +276,7 @@ export function EditUser() {
                 </div>
 
                 <div className="editProfileInputs">
-                    <label htmlFor="bio"><h4> Edit bio </h4></label>
+                    <label htmlFor="bio"><h4> Bio </h4></label>
                     <textarea cols='25' name="bio" id="bio" value={bio} onChange={(e) => setBio(e.target.value)}
                     ></textarea>
                 </div>
