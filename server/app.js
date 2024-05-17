@@ -105,6 +105,7 @@ app.post('/signup', async (req, res) => {
         //send cookie
         const twoHoursFromNow = new Date(Date.now() + 2 * 60 * 60 * 1000);
         return res.cookie('jwt_token', jwt_token, {
+            httpOnly: true,
             secure: true,
             expires: twoHoursFromNow,
             sameSite: 'None',
@@ -164,6 +165,7 @@ app.post('/login', async (req, res) => {
         //send cookie
         const twoHoursFromNow = new Date(Date.now() + 2 * 60 * 60 * 1000);
         return res.cookie('jwt_token', jwt_token, {
+            httpOnly: true,
             secure: true,
             expires: twoHoursFromNow,
             sameSite: 'None',
