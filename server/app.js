@@ -34,6 +34,7 @@ app.use('/user', userRoute);
 // list all posts
 app.get('/', async (req, res) => {
     try {
+        console.log(process.env.frontendURL);
         const allPosts = await Post.find({}).sort({ createdAt: -1 });
 
         return res.json({
