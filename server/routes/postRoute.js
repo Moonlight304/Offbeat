@@ -8,7 +8,7 @@ const mongoose = require('mongoose');
 
 router.use(express.json({ limit: '10mb' }));
 router.use(cookieParser());
-router.use(cors({ origin: 'http://localhost:5000', credentials: true }));
+router.use(cors({ origin: process.env.frontendURL, credentials: true }));
 
 const authMiddle = require('../middleware/authMiddle.js');
 const { User, Post } = require('../models/db.js');

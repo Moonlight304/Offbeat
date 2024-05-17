@@ -16,7 +16,7 @@ const postRoute = require('./routes/postRoute');
 const PORT = process.env.PORT || 3000;
 const JWT_SECRET = process.env.JWT_SECRET_CODE;
 
-mongoose.connect('mongodb://localhost:27017/offbeat')
+mongoose.connect(process.env.dbURL)
     .then(() => {
         console.log('DB connected');
     })
@@ -26,7 +26,7 @@ mongoose.connect('mongodb://localhost:27017/offbeat')
 
 app.use(express.json({ limit: '10mb' }));
 app.use(cookieParser());
-app.use(cors({ origin: 'http://localhost:5000', credentials: true }));
+app.use(cors({ origin: process.env.frontendURL, credentials: true }));
 
 app.use('/post', postRoute);
 app.use('/user', userRoute);
