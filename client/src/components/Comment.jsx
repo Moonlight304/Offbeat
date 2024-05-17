@@ -29,7 +29,7 @@ export function Comment({ index, comment, username, postID }) {
             try {
                 if (username === '') return;
 
-                const response = await axios.get(`http://localhost:3000/user/${username}`,
+                const response = await axios.get(`https://offbeat-qm21.onrender.com/user/${username}`,
                     { withCredentials: true },
                 )
                 const data = response.data;
@@ -54,7 +54,7 @@ export function Comment({ index, comment, username, postID }) {
 
     async function handleCommentDelete() {
         try {
-            const response = await axios.get(`http://localhost:3000/post/${postID}/deleteComment/${comment._id}`,
+            const response = await axios.get(`https://offbeat-qm21.onrender.com/post/${postID}/deleteComment/${comment._id}`,
                 { withCredentials: true },
             );
 

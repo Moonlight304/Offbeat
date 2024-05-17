@@ -3,7 +3,7 @@ import { Bounce, toast } from 'react-toastify';
 
 export async function handleDislike(postID, setlikeCount, setLiked) {
     try {
-        const response = await axios.get(`http://localhost:3000/post/disLike/${postID}`,
+        const response = await axios.get(`https://offbeat-qm21.onrender.com/post/disLike/${postID}`,
             { withCredentials: true },
         )
         const data = response.data;

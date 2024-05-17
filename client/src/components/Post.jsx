@@ -41,7 +41,7 @@ export function Post() {
 
         async function getSaved() {
             try {
-                const response = await axios.get(`http://localhost:3000/user/checkSaved/${postID}`,
+                const response = await axios.get(`https://offbeat-qm21.onrender.com/user/checkSaved/${postID}`,
                     { withCredentials: true },
                 )
                 const data = response.data;
@@ -74,7 +74,7 @@ export function Post() {
 
     async function handleDelete() {
         try {
-            const response = await axios.get(`http://localhost:3000/post/deletePost/${postID}`,
+            const response = await axios.get(`https://offbeat-qm21.onrender.com/post/deletePost/${postID}`,
                 { withCredentials: true },
             )
             const data = response.data;
@@ -146,7 +146,7 @@ export function Post() {
         }
 
         try {
-            const response = await axios.post(`http://localhost:3000/post/${postID}/newComment`,
+            const response = await axios.post(`https://offbeat-qm21.onrender.com/post/${postID}/newComment`,
                 { newComment },
                 { withCredentials: true },
             )

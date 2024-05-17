@@ -37,7 +37,7 @@ export function User() {
                 return;
             }
 
-            const response = await axios.get(`http://localhost:3000/user/deleteUser/${username}`,
+            const response = await axios.get(`https://offbeat-qm21.onrender.com/user/deleteUser/${username}`,
                 { withCredentials: true },
             )
             const data = response.data;
@@ -91,7 +91,7 @@ export function User() {
 
     async function handleFollow() {
         try {
-            const response = await axios.post('http://localhost:3000/user/follow',
+            const response = await axios.post('https://offbeat-qm21.onrender.com/user/follow',
                 { srcUsername: globalUsername, destUsername: username },
                 { withCredentials: true },
             )
@@ -146,7 +146,7 @@ export function User() {
 
     async function handleUnfollow() {
         try {
-            const response = await axios.post('http://localhost:3000/user/unfollow',
+            const response = await axios.post('https://offbeat-qm21.onrender.com/user/unfollow',
                 { srcUsername: globalUsername, destUsername: username },
                 { withCredentials: true },
             )
@@ -202,7 +202,7 @@ export function User() {
     useEffect(() => {
         async function getIsFollowing() {
             try {
-                const response = await axios.post('http://localhost:3000/user/getIsFollowing',
+                const response = await axios.post('https://offbeat-qm21.onrender.com/user/getIsFollowing',
                     { srcUsername: globalUsername, destUsername: username },
                     { withCredentials: true },
                 )

@@ -3,7 +3,7 @@ import { Bounce, toast } from 'react-toastify';
 
 export async function getLikeInclude(postID, setLiked) {
     try {
-        const response = await axios.get(`http://localhost:3000/post/${postID}/checkLiked`,
+        const response = await axios.get(`https://offbeat-qm21.onrender.com/post/${postID}/checkLiked`,
             { withCredentials: true },
         )
         const data = response.data;

@@ -31,13 +31,13 @@ export function NewPost() {
             const file = e.target.image.files[0];
             const base64String = await imageToBase64(file);
 
-            response = await axios.post('http://localhost:3000/post/newPost',
+            response = await axios.post('https://offbeat-qm21.onrender.com/post/newPost',
                 { heading, body, base64String },
                 { withCredentials: true },
             )
         }
         else {
-            response = await axios.post('http://localhost:3000/post/newPost',
+            response = await axios.post('https://offbeat-qm21.onrender.com/post/newPost',
                 { heading, body },
                 { withCredentials: true },
             )
