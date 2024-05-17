@@ -106,6 +106,7 @@ app.post('/signup', async (req, res) => {
         return res.cookie('jwt_token', jwt_token, {
             secure: true,
             expires: twoHoursFromNow,
+            sameSite: 'none',
         }).json({
             status: 'success',
             message: 'Signed up',
@@ -164,6 +165,7 @@ app.post('/login', async (req, res) => {
         return res.cookie('jwt_token', jwt_token, {
             secure: true,
             expires: twoHoursFromNow,
+            sameSite: 'none',
         }).json({
             status: 'success',
             message: 'Logged in',

@@ -1,8 +1,5 @@
 import axios from 'axios'
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { isLoggedInState } from '../atoms';
-import { useRecoilState } from 'recoil';
 import { PostCard } from './PostCard';
 import { Bounce, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -11,7 +8,6 @@ import '../index.css'
 export function Home() {
     const [allPosts, setAllPosts] = useState([]);
     const [postCount, setPostCount] = useState(0);
-    const [globalIsLoggedIn, setGlobalIsLoggedIn] = useRecoilState(isLoggedInState);
 
     useEffect(() => {
         try {

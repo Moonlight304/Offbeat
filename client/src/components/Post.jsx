@@ -4,15 +4,23 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { formatDistanceToNow, parseISO } from 'date-fns';
 import { Comment } from './Comment';
 import { Link } from 'react-router-dom';
-import { usernameState, isLoggedInState } from '../atoms';
+import { usernameState } from '../atoms';
 import { useRecoilState } from 'recoil';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart as faHeartSolid, faUser, faBookmark as faBookmarkSolid, faEllipsis, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { faHeart as faHeartRegular, faBookmark as faBookmarkRegular, faClipboard } from '@fortawesome/free-regular-svg-icons'
 import { Bounce, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import Dropdown from 'react-bootstrap/Dropdown';
 import { handleClipboard } from '../helpers/Clipboard';
+import { handleLike } from '../helpers/Like';
+import { handleDislike } from '../helpers/Dislike';
+import { handleSavePost } from '../helpers/SavePost';
+import { handleDeleteSavePost } from '../helpers/DeleteSavedPost';
+import { getPost } from '../helpers/GetPost';
+import { getLikeInclude } from '../helpers/LikeInclude';
+import { fetchUser } from '../helpers/FetchUser';
+
+import 'react-toastify/dist/ReactToastify.css';
 import '../index.css'
 
 export function Post() {
@@ -30,48 +38,6 @@ export function Post() {
 
     //fetching post with it's id
     useEffect(() => {
-        async function getPost() {
-            try {
-                const response = await axios.get(`http://localhost:3000/post/${postID}`);
-                const data = response.data;
-                console.log(data);
-
-                setPost(data.post);
-                setUsername(data.post.username);
-                setlikeCount(data.post.likeCount);
-            }
-            catch (e) {
-                toast.error('Error fetching post', {
-                    position: "bottom-right",
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "dark",
-                    transition: Bounce,
-                });
-                console.log('Error fetching post : ' + e);
-            }
-        }
-
-        async function getLikeInclude() {
-            try {
-                const response = await axios.get(`http://localhost:3000/post/${postID}/checkLiked`,
-                    { withCredentials: true },
-                )
-                const data = response.data;
-
-                if (data.status === 'success')
-                    setLiked(JSON.parse(data.message));
-                else
-                    console.log('Error : ' + data.message);
-            }
-            catch (e) {
-                console.log('Error : ' + e);
-            }
-        }
 
         async function getSaved() {
             try {
@@ -90,8 +56,8 @@ export function Post() {
             }
         }
 
-        getPost();
-        getLikeInclude();
+        getPost(postID, setPost, setUsername, setlikeCount);
+        getLikeInclude(postID, setLiked);
         getSaved();
     }, [postID]);
 
@@ -102,153 +68,9 @@ export function Post() {
             setTimeAgo(formattedTime);
         }
 
-        async function fetchUser() {
-            try {
-                if (username === '') return;
-
-                const response = await axios.get(`http://localhost:3000/user/${username}`,
-                    { withCredentials: true },
-                )
-                const data = response.data;
-
-                if (data.status === 'success') {
-                    setAvatarURL(data.userData.avatarString);
-                }
-                else {
-                    console.log('Error : ' + data.message);
-                    setAvatarURL('');
-                }
-            }
-            catch (e) {
-                console.log('Error : ' + e);
-            }
-        }
-
-        fetchUser();
+        fetchUser('POST' , username, setAvatarURL, null, null, null, null);
     }, [post]);
 
-    async function handleLike() {
-        try {
-            const response = await axios.get(`http://localhost:3000/post/like/${postID}`,
-                { withCredentials: true },
-            )
-            const data = response.data;
-
-            if (data.status === 'success') {
-                toast.success('Liked Post', {
-                    position: "bottom-right",
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "dark",
-                    transition: Bounce,
-                });
-                console.log('Liked post');
-                setlikeCount(data.newLikeCount);
-                setLiked(true);
-            }
-            else {
-                if (data.message === 'no token found') {
-                    toast.error('Login to like post', {
-                        position: "bottom-right",
-                        autoClose: 2000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: "dark",
-                        transition: Bounce,
-                    });
-                }
-                else {
-                    toast.error('Error liking post', {
-                        position: "bottom-right",
-                        autoClose: 2000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: "dark",
-                        transition: Bounce,
-                    });
-                    console.log('ERROR : ' + data.message);
-                }
-            }
-        }
-        catch (e) {
-            toast.error('Error liking post', {
-                position: "bottom-right",
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "dark",
-                transition: Bounce,
-            });
-            console.log('Error during "like" operation : ' + e);
-        }
-    }
-
-    async function handleDislike() {
-        try {
-            const response = await axios.get(`http://localhost:3000/post/disLike/${postID}`,
-                { withCredentials: true },
-            )
-            const data = response.data;
-
-            if (data.status === 'success') {
-                toast.success('Disliked post', {
-                    position: "bottom-right",
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "dark",
-                    transition: Bounce,
-                });
-                console.log('disliked post');
-                setlikeCount(data.newLikeCount);
-                setLiked(false);
-            }
-            else {
-                toast.error('Error disliking post', {
-                    position: "bottom-right",
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "dark",
-                    transition: Bounce,
-                });
-                console.log('ERROR : ' + data.message);
-            }
-        }
-        catch (e) {
-            toast.error('Error disliking post', {
-                position: "bottom-right",
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "dark",
-                transition: Bounce,
-            });
-            console.log('Error during "dislike" operation : ' + e);
-        }
-    }
 
     async function handleDelete() {
         try {
@@ -305,7 +127,24 @@ export function Post() {
     }
 
 
-    async function handleSubmit() {
+    async function handleCommentSubmit(e) {
+        e.preventDefault();
+
+        if (globalUsername === 'ACCOUNT_DEFAULT') {
+            toast.warn('Login to post comments', {
+                position: "bottom-right",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+                transition: Bounce,
+            });
+            return;
+        }
+
         try {
             const response = await axios.post(`http://localhost:3000/post/${postID}/newComment`,
                 { newComment },
@@ -350,140 +189,16 @@ export function Post() {
         }
     }
 
-    async function handleSavePost() {
-        try {
-            const response = await axios.get(`http://localhost:3000/user/savePost/${postID}`,
-                { withCredentials: true },
-            )
-            const data = response.data;
-
-            if (data.status === 'success') {
-                toast.success('Added to saved posts', {
-                    position: "bottom-right",
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "dark",
-                    transition: Bounce,
-                });
-                setSaved(true);
-                console.log('Saved Post');
-            }
-            else {
-                if (data.message === 'no token found') {
-                    toast.warn('Login to save post', {
-                        position: "bottom-right",
-                        autoClose: 2000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: "dark",
-                        transition: Bounce,
-                    });
-                }
-                else {
-                    toast.error('Error adding to saved posts', {
-                        position: "bottom-right",
-                        autoClose: 2000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: "dark",
-                        transition: Bounce,
-                    });
-                    console.log('Error : ' + data.message);
-                }
-            }
-        }
-        catch (e) {
-            toast.error('Error adding to saved posts', {
-                position: "bottom-right",
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "dark",
-                transition: Bounce,
-            });
-            console.log('Error saving post : ' + e);
-        }
-    }
-
-    async function handleDeleteSavePost() {
-        try {
-            const response = await axios.get(`http://localhost:3000/user/deleteSavedPost/${postID}`,
-                { withCredentials: true },
-            )
-            const data = response.data;
-
-            if (data.status === 'success') {
-                toast.success('Removed from saved posts', {
-                    position: "bottom-right",
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "dark",
-                    transition: Bounce,
-                });
-                setSaved(false);
-                console.log('Removed post from saved items');
-            }
-            else {
-                toast.error('Error removing from saved posts', {
-                    position: "bottom-right",
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "dark",
-                    transition: Bounce,
-                });
-                console.log('Error : ' + data.message);
-            }
-        }
-        catch (e) {
-            toast.error('Error removing from saved posts', {
-                position: "bottom-right",
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "dark",
-                transition: Bounce,
-            });
-            console.log('Error saving post : ' + e);
-        }
-    }
-
 
     return (
-        <div style={{
-            width: '70%',
-            marginLeft: '5rem',
-        }}>
+        <div className='showPost'>
             <div className='d-flex align-items-center'>
                 {avatarURL === ''
                     ? <FontAwesomeIcon style={{ marginRight: '1rem' }} icon={faUser} />
                     : <img className='profileImage' src={`data:image/jpeg;base64,${avatarURL}`} alt="profile avatar" />
                 }
 
-                <h5 className='usernameText'> <Link className='link' to={`/user/${post?.username}`}>{post?.username}</Link> </h5>
+                <h5> <Link className='link' to={`/user/${post?.username}`}>{post?.username}</Link> </h5>
             </div>
 
             <div className="d-flex justify-content-between align-items-center">
@@ -503,7 +218,7 @@ export function Post() {
                         <Dropdown.Item >
                             {saved
                                 ?
-                                <h6 onClick={handleDeleteSavePost}>
+                                <h6 onClick={() => handleDeleteSavePost(postID, setSaved)}>
                                     <FontAwesomeIcon className='icons'
                                         style={{
                                             paddingRight: '1rem',
@@ -512,7 +227,7 @@ export function Post() {
                                     Remove
                                 </h6>
                                 :
-                                <h6 onClick={handleSavePost}>
+                                <h6 onClick={() => handleSavePost(postID, setSaved)}>
                                     <FontAwesomeIcon className='icons'
                                         style={{
                                             paddingRight: '1rem',
@@ -563,14 +278,14 @@ export function Post() {
                     style={{
                         borderRadius: '15px',
                         width: '80%',
-                        maxHeight: '800px',
+                        maxHeight: '50rem',
                         margin: '2rem 0rem 2rem 0rem',
                     }} src={`data:image/jpeg;base64,${post.base64String}`} alt="uploaded image"
                 />
             }
 
             {liked ? (
-                <h5 style={{ cursor: 'pointer' }} onClick={handleDislike}>
+                <h5 style={{ cursor: 'pointer' }} onClick={() => handleDislike(postID, setlikeCount, setLiked)}>
                     {likeCount}
                     <FontAwesomeIcon className='icons'
                         style={{
@@ -582,7 +297,7 @@ export function Post() {
                     Dislike
                 </h5>
             ) : (
-                <h5 style={{ cursor: 'pointer' }} onClick={handleLike}>
+                <h5 style={{ cursor: 'pointer' }} onClick={() => handleLike(postID, setlikeCount, setLiked)}>
                     {likeCount}
                     <FontAwesomeIcon className='icons'
                         style={{
@@ -597,10 +312,10 @@ export function Post() {
             <div className="d-flex flex-column gap-3 mt-5">
                 <h4> Comments </h4>
 
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleCommentSubmit}>
                     <div>
                         <div>
-                            <textarea name="newComment" style={{ width: '50%' }} className="form-control" id="validationTextarea" placeholder="share your thoughts..." required
+                            <textarea name="newComment" className="commentBox" id="validationTextarea" placeholder="share your thoughts..." required
                                 onChange={(e) => setNewComment(e.target.value)}
                             ></textarea>
                             <div className="invalid-feedback">

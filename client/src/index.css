@@ -1,37 +1,44 @@
 /* Navbar */
 .plusIcon,
 .navbarIcon {
-    width: 25px;
-    height: 25px;
+    width: 1.5rem;
+    height: 1.5rem;
 }
 
-.navbarImage,
-.profileImage {
+.navbarImage {
     border-radius: 50%;
-    width: 50px;
-    height: 50px;
+    width: 3.5rem;
+    height: 3.5rem;
     object-fit: cover;
 }
 
 .profileImage {
     margin-right: 0.5rem;
     margin-bottom: 0.3rem;
-    width: 40px;
-    height: 40px;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.notImage {
+    padding: 0rem 2rem;
 }
 
 .link {
     text-decoration: none;
 }
 
+.icons {
+    scale: 120%;
+}
+
 nav {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 10px 10px 10px 10px;
-    border-bottom-right-radius: 5px;
-    border-bottom-left-radius: 5px;
-
+    padding: 0.5rem;
+    gap: 1rem;
 }
 
 .profileButton {
@@ -45,7 +52,6 @@ nav {
 
 .topRight {
     display: flex;
-    gap: 2rem;
 }
 
 .topRight button:hover {
@@ -64,21 +70,33 @@ nav {
 
 /* PostCard */
 .PostCard {
-    width: 800px;
-    /* height: 400px; */
-    max-width: 900px;
-    /* max-height: 500px; */
+    width: 55%;
+    margin-bottom: 2rem;
+    padding: 1.5rem;
 
     border: 2px solid black;
     border-radius: 15px;
     box-shadow: 5px 5px black;
-    margin-bottom: 2rem;
-    padding: 1.5rem;
+    transition: background-color 0.3s;
 }
 
+.PostCard:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+}
 
-.icons {
-    scale: 120%;
+.postBody {
+    height: 1.8rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.postLinks {
+    /* d-flex justify-content-between align-items-center */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0rem 1rem;
 }
 
 .dropdown-toggle::after {
@@ -92,14 +110,17 @@ nav {
     object-fit: cover;
     border: 2px solid black;
 }
-.editUser {
+
+/* .editUser {
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 5rem;
-}
+} */
+
 .editProfileInputs {
     display: flex;
+    width: 100%;
     align-items: center;
     gap: 1rem;
 }
@@ -111,7 +132,9 @@ nav {
     gap: 2rem;
     /* border: 2px solid black; */
 }
-.accountImageSettings button, label {
+
+.accountImageSettings button,
+label {
     border-radius: 10px;
     scale: 110%;
 }
@@ -128,9 +151,35 @@ nav {
     border: 2px solid black;
     border-radius: 15px;
 }
+
+.userInfo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 1rem 0rem;
+    gap: 5rem;
+}
+
+.userInfoText {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 5rem;
+}
+
+.showPost {
+    width: 70%;
+    margin-top: 2rem;
+}
+
+.commentBox {
+    width: 70%;
+}
+
 #signupText {
     font-size: 5rem;
 }
+
 #loginText {
     font-size: 3rem;
 }
@@ -138,8 +187,79 @@ nav {
 .register div label {
     margin-right: 1rem;
 }
+
 .register div input {
     width: 22rem;
     height: 2.5rem;
     letter-spacing: 0.1rem;
+}
+
+.newPostOverlay {
+    scale: 120%;
+    backdrop-filter: blur(2px);
+    padding-top: 5rem;
+}
+
+@media screen and (max-width: 1024px) {
+    .PostCard {
+        width: 80%;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .PostCard {
+        width: 90%;
+    }
+
+    .userInfo {
+        scale: 90%;
+    }
+
+    .showPost {
+        width: 90%;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    .postLinksText {
+        display: none;
+    }
+
+    .userInfo {
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    .userInfoText {
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    .usernameText {
+        font-size: 3rem;
+    }
+
+    .navbarImage {
+        width: 2.5rem;
+        height: 2.5rem;
+    }
+
+    .showPost,
+    .commentBox {
+        width: 97%;
+    }
+
+    .newPostOverlay {
+        scale: 90%;
+    }
+}
+
+@media screen and (max-width: 375px) {
+    .PostCard {
+        width: 100%;
+    }
+
+    #createText {
+        display: none;
+    }
 }

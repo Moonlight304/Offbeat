@@ -9,8 +9,9 @@ import { useRecoilState } from "recoil";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faGear } from '@fortawesome/free-solid-svg-icons';
 import { Bounce, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { fetchUser } from "../helpers/FetchUser";
 
+import 'react-toastify/dist/ReactToastify.css';
 import '../index.css'
 
 export function User() {
@@ -199,52 +200,6 @@ export function User() {
     }
 
     useEffect(() => {
-        async function fetchUser() {
-            try {
-                const response = await axios.get(`http://localhost:3000/user/${username}`,
-                    { withCredentials: true },
-                )
-                const data = response.data;
-
-                if (data.status === 'success') {
-                    setUserData(data.userData);
-                    setImageURL(data.userData.avatarString);
-                    setFollowersCount(data.userData.followersCount);
-                    setFollowingCount(data.userData.followingCount);
-                }
-                else {
-                    toast.error('User not found', {
-                        position: "bottom-right",
-                        autoClose: 2000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: "dark",
-                        transition: Bounce,
-                    });
-                    console.log('error fetching user : ' + data.message);
-                    navigate('/');
-                }
-            }
-            catch (e) {
-                console.log('Error : ' + e);
-                toast.error('Error loading user profile', {
-                    position: "bottom-right",
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "dark",
-                    transition: Bounce,
-                });
-            }
-        }
-
-
         async function getIsFollowing() {
             try {
                 const response = await axios.post('http://localhost:3000/user/getIsFollowing',
@@ -289,14 +244,14 @@ export function User() {
             }
         }
 
-        fetchUser();
+        fetchUser('USER', username, null, setUserData, setImageURL, setFollowersCount, setFollowingCount);
         getIsFollowing();
     }, [username])
 
 
     return (
         <>
-            <div className="mt-5 d-flex justify-content-center gap-5">
+            <div className="userInfo">
                 {imageURL
                     ? <img className="accountImage" src={`data:image/jpeg;base64,${imageURL}`} alt="uploaded image" />
                     : <FontAwesomeIcon style={{
@@ -305,9 +260,9 @@ export function User() {
                     }} className='navbarIcon' icon={faUser} />
                 }
 
-                <div className="ms-5 d-flex flex-column gap-3">
-                    <div className="d-flex gap-5 align-items-center justify-items-between">
-                        <h2> {username} </h2>
+                <div className="d-flex flex-column gap-3 notImage">
+                    <div className="userInfoText">
+                        <h1 className="usernameText"> {username} </h1>
 
                         {globalUsername !== username
                             ? (
@@ -316,18 +271,18 @@ export function User() {
                                     : <button className="btn btn-primary" onClick={handleFollow}>Follow</button>
                             )
                             :
-                            <>
+                            <div className="d-flex gap-5 justify-content-center align-items-center">
                                 <button className="btn btn-info" onClick={() => { navigate(`/user/editUser/${username}`) }}> Edit Profile </button>
                                 <FontAwesomeIcon style={{ scale: '150%', cursor: 'pointer' }} className="icons" onClick={handleShow} data-toggle="modal" data-target="#optionsModal" icon={faGear} />
-                            </>
+                            </div>
                         }
                     </div>
 
 
                     <div className="d-flex gap-5">
-                        <h5> {userData?.posts?.length} Posts </h5>
-                        <h5> {followersCount} Followers </h5>
-                        <h5> {followingCount} Following </h5>
+                        <h3> {userData?.posts?.length} Posts </h3>
+                        <h3> {followersCount} Followers </h3>
+                        <h3> {followingCount} Following </h3>
                     </div>
 
                     <h5> {userData?.bio} </h5>
@@ -350,13 +305,7 @@ export function User() {
             </div>
 
 
-            <Modal centered id='optionsModal' show={show} onHide={() => { setShow(false) }}
-                style={{
-                    display: 'block',
-                    backdropFilter: 'blur(3px)',
-                    width: '1500px',
-                }}
-            >
+            <Modal style={{backdropFilter: 'blur(2px)'}} centered id='optionsModal' show={show} onHide={() => { setShow(false) }}>
                 <div className="d-flex flex-column gap-2 p-2 justify-content-center align-items-center">
 
                     {globalUsername === username &&

@@ -1,15 +1,18 @@
-import axios from 'axios'
-import { useNavigate, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useEffect, useState } from "react";
 import { formatDistanceToNow, parseISO } from 'date-fns';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart as faHeartSolid, faUser } from '@fortawesome/free-solid-svg-icons';
 import { faHeart as faHeartRegular, faMessage, faClipboard } from '@fortawesome/free-regular-svg-icons';
-import { Bounce, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { handleClipboard } from '../helpers/Clipboard';
+import { handleLike } from '../helpers/Like';
+import { handleDislike } from '../helpers/Dislike';
+import { getLikeInclude } from '../helpers/LikeInclude';
+import { fetchUser } from '../helpers/FetchUser';
 
 import '../index.css'
+import { getPost } from '../helpers/GetPost';
 
 export function PostCard({ postID }) {
     const [post, setPost] = useState({});
@@ -21,40 +24,9 @@ export function PostCard({ postID }) {
 
     //fetching post with it's id
     useEffect(() => {
-        async function getPost() {
-            try {
-                const response = await axios.get(`http://localhost:3000/post/${postID}`);
-                const data = response.data;
-                console.log(data);
 
-                setPost(data.post);
-                setUsername(data.post.username);
-                setlikeCount(data.post.likeCount);
-            }
-            catch (e) {
-                console.log('Error fetching post : ' + e);
-            }
-        }
-
-        async function getLikeInclude() {
-            try {
-                const response = await axios.get(`http://localhost:3000/post/${postID}/checkLiked`,
-                    { withCredentials: true },
-                )
-                const data = response.data;
-
-                if (data.status === 'success')
-                    setLiked(JSON.parse(data.message));
-                else
-                    console.log('Error : ' + data.message);
-            }
-            catch (e) {
-                console.log('Error during "like" operation : ' + e);
-            }
-        }
-
-        getPost();
-        getLikeInclude();
+        getPost(postID, setPost, setUsername, setlikeCount);
+        getLikeInclude(postID, setLiked);
     }, [postID]);
 
     useEffect(() => {
@@ -64,165 +36,22 @@ export function PostCard({ postID }) {
             setTimeAgo(formattedTime);
         }
 
-        async function fetchUser() {
-            try {
-                if (username === '') return;
-
-                const response = await axios.get(`http://localhost:3000/user/${username}`,
-                    { withCredentials: true },
-                )
-                const data = response.data;
-
-                if (data.status === 'success') {
-                    setAvatarURL(data.userData.avatarString);
-                }
-                else {
-                    console.log('Error : ' + data.message);
-                    setAvatarURL('');
-                }
-            }
-            catch (e) {
-                console.log('Error : ' + e);
-            }
-        }
-
-        fetchUser();
+        fetchUser('POST', username, setAvatarURL, null, null, null, null);
     }, [post]);
 
-    async function handleLike() {
-        try {
-            const response = await axios.get(`http://localhost:3000/post/like/${postID}`,
-                { withCredentials: true },
-            )
-            const data = response.data;
-
-            if (data.status === 'success') {
-                toast.success('Liked Post', {
-                    position: "bottom-right",
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "dark",
-                    transition: Bounce,
-                });
-                console.log('Liked post');
-                setlikeCount(data.newLikeCount);
-                setLiked(true);
-            }
-            else {
-                if (data.message === 'no token found') {
-                    toast.warn('Login to like post', {
-                        position: "bottom-right",
-                        autoClose: 2000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: "dark",
-                        transition: Bounce,
-                    });
-                }
-                else {
-                    toast.error('Error liking post', {
-                        position: "bottom-right",
-                        autoClose: 2000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: "dark",
-                        transition: Bounce,
-                    });
-                    console.log('ERROR : ' + data.message);
-                }
-            }
-        }
-        catch (e) {
-            toast.error('Error liking post', {
-                position: "bottom-right",
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "dark",
-                transition: Bounce,
-            });
-            console.log('Error during "like" operation : ' + e);
-        }
-    }
-
-    async function handleDislike() {
-        try {
-            const response = await axios.get(`http://localhost:3000/post/disLike/${postID}`,
-                { withCredentials: true },
-            )
-            const data = response.data;
-
-            if (data.status === 'success') {
-                toast.success('Disliked post', {
-                    position: "bottom-right",
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "dark",
-                    transition: Bounce,
-                });
-                setlikeCount(data.newLikeCount);
-                setLiked(false);
-                console.log('disliked post');
-            }
-            else {
-                toast.error('Error disliking post', {
-                    position: "bottom-right",
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "dark",
-                    transition: Bounce,
-                });
-                console.log('ERROR : ' + data.message);
-            }
-        }
-        catch (e) {
-            toast.error('Error disliking post', {
-                position: "bottom-right",
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "dark",
-                transition: Bounce,
-            });
-            console.log('Error during "dislike" operation : ' + e);
-        }
-    }
 
     if (!post) return;
 
     return (
         <div className='PostCard'>
+
             <div className='d-flex align-items-center'>
                 {avatarURL === ''
-                    ? <FontAwesomeIcon style={{ marginRight: '1rem' }} icon={faUser} />
+                    ? <FontAwesomeIcon className='icons' style={{ marginRight: '1rem' }} icon={faUser} />
                     : <img className='profileImage' src={`data:image/jpeg;base64,${avatarURL}`} alt="profile avatar" />
                 }
-
-                <h5 className='usernameText'> <Link className='link' to={`/user/${post?.username}`}>{post?.username}</Link> </h5>
+    
+                <h5> <Link className='link' to={`/user/${post?.username}`}>{post?.username}</Link> </h5>
 
             </div>
             <h1> <Link className='link' to={`/post/${post?._id}`}> {post?.heading} </Link> </h1>
@@ -230,7 +59,7 @@ export function PostCard({ postID }) {
 
             <hr />
 
-            <h4 className='mb-3'> {post?.body} </h4>
+            <h4 className='mb-3 postBody'> {post?.body} </h4>
 
             {/* post image */}
             <div className='d-flex justify-content-center align-items-center mb-3'>
@@ -242,10 +71,10 @@ export function PostCard({ postID }) {
                     }} src={`data:image/jpeg;base64,${post?.base64String}`} alt="post image" />}
             </div>
 
-            <div className="d-flex justify-content-between align-items-center ps-3 pe-3">
+            <div className="postLinks">
                 {/* Like count */}
                 {liked ? (
-                    <h5 style={{ cursor: 'pointer' }} onClick={handleDislike}>
+                    <h5 style={{ cursor: 'pointer' }} onClick={() => handleDislike(postID, setlikeCount, setLiked)}>
                         {likeCount}
                         <FontAwesomeIcon className='icons'
                             style={{
@@ -254,10 +83,10 @@ export function PostCard({ postID }) {
                             }}
                             icon={faHeartSolid}
                         />
-                        Dislike
+                        <span className='postLinksText'> Dislike </span>
                     </h5>
                 ) : (
-                    <h5 style={{ cursor: 'pointer' }} onClick={handleLike}>
+                    <h5 style={{ cursor: 'pointer' }} onClick={() => handleLike(postID, setlikeCount, setLiked)}>
                         {likeCount}
                         <FontAwesomeIcon className='icons'
                             style={{
@@ -265,7 +94,7 @@ export function PostCard({ postID }) {
                             }}
                             icon={faHeartRegular}
                         />
-                        Like
+                        <span className='postLinksText'> Like </span>
                     </h5>
                 )}
 
@@ -279,7 +108,7 @@ export function PostCard({ postID }) {
                                 paddingRight: '1rem',
                             }} icon={faMessage}
                         />
-                        Comments
+                        <span className='postLinksText'> Comments </span>
                     </h5>
                 </Link>
 
@@ -295,7 +124,7 @@ export function PostCard({ postID }) {
                             paddingRight: '1rem',
                         }} icon={faClipboard}
                     />
-                    Copy
+                    <span className='postLinksText'> Copy </span>
                 </h5>
             </div>
 

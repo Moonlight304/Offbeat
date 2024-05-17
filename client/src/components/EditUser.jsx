@@ -1,7 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Link } from "react-router-dom";
 import { usernameState } from '../atoms';
 import { useRecoilState } from "recoil";
 import { imageToBase64 } from "../helpers/imageToBase64";
@@ -25,9 +24,9 @@ export function EditUser() {
     async function handleAvatarChange(e) {
         e.preventDefault();
 
-        const file = e.target.files[0];
-        const base64String = await imageToBase64(file);
         try {
+            const file = e.target.files[0];
+            const base64String = await imageToBase64(file);
             const response = await axios.post(`http://localhost:3000/user/uploadAvatar`,
                 { base64String },
                 { withCredentials: true },
@@ -226,7 +225,7 @@ export function EditUser() {
     }, [])
 
     return (
-        <div className="editUser">
+        <div className="userInfo">
             {globalUsername === username &&
                 <input style={{ display: 'none' }} type="file" name="avatar" id="avatar" accept=".png, .jpg" onChange={handleAvatarChange} />
             }

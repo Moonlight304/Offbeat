@@ -16,7 +16,7 @@ import '../index.css'
 export function Navbar() {
     const [globalUsername, setGlobalUsername] = useRecoilState(usernameState);
     const [globalIsLoggedIn, setGlobalIsLoggedIn] = useRecoilState(isLoggedInState);
-    const [avatarURL, setavatarURL] = useState('');
+    const [avatarURL, setAvatarURL] = useState('');
     const [show, setShow] = useState(false);
     const [heading, setHeading] = useState('');
     const [body, setBody] = useState('');
@@ -53,7 +53,6 @@ export function Navbar() {
 
     async function handleSubmit(e) {
         e.preventDefault();
-
 
         try {
             setShow(false);
@@ -135,7 +134,7 @@ export function Navbar() {
                 const data = response.data;
 
                 if (data.status === 'success') {
-                    setavatarURL(data.userData.avatarString);
+                    setAvatarURL(data.userData.avatarString);
                 }
                 else {
                     console.log('error fetching user : ' + data.message);
@@ -151,7 +150,6 @@ export function Navbar() {
     }, [globalUsername, navigate])
 
 
-
     return (
         <>
             <nav>
@@ -164,7 +162,7 @@ export function Navbar() {
                         {/* Create Post button */}
                         <button onClick={handleShow} className='btn profileButton' data-toggle="modal" data-target="#newPostModal">
                             <FontAwesomeIcon className='plusIcon' icon={faPlus} />
-                            <h4> Create </h4>
+                            <h4 id='createText' > Create </h4>
                         </button>
 
                         {/* go to user page */}
@@ -185,13 +183,6 @@ export function Navbar() {
                         <Link className='link' to={'/register'}>
                             <button className='btn profileButton'> <h4> Login / Signup </h4> </button>
                         </Link>
-
-                        {/* <Link className='link' to={'/login'}>
-                            <button className='btn profileButton'> <h4>Login</h4> </button>
-                        </Link>
-                        <Link className='link' to={'/signup'}>
-                            <button className='btn profileButton' > <h4>Signup</h4> </button>
-                        </Link> */}
                     </div>
                 }
 
@@ -199,13 +190,7 @@ export function Navbar() {
 
 
             {/* Create Post modal */}
-            <Modal id='newPostModal' show={show} onHide={() => { setShow(false); setImageURL('') }}
-                style={{
-                    paddingTop: '5rem',
-                    scale: '120%',
-                    backdropFilter: 'blur(3px)',
-                }}
-            >
+            <Modal className='newPostOverlay' id='newPostModal' show={show} onHide={() => { setShow(false); setImageURL('') }}>
                 <form className="row g-3 needs-validation" onSubmit={handleSubmit}>
                     <Modal.Header> <h4>Whats on your mind...</h4> </Modal.Header>
 
@@ -231,8 +216,6 @@ export function Navbar() {
 
                         <input style={{ display: 'none' }} type="file" name="image" id="image" accept=".png, .jpg" onChange={handleImageChange} />
 
-                        {/* {imageURL && <label htmlFor="image"><img src={imageURL} alt="post image" /></label>} */}
-
                         {imageURL
                             ? <>
                                 <FontAwesomeIcon onClick={() => setImageURL('')}
@@ -253,8 +236,8 @@ export function Navbar() {
                                     htmlFor="image">
                                     <img
                                         style={{
-                                            maxWidth: '100%',
-                                            maxHeight: '250px',
+                                            maxWidth: '80%',
+                                            maxHeight: '15rem',
                                             borderRadius: '15px',
                                         }} src={imageURL} alt="post image" />
                                 </label>

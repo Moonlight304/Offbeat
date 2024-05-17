@@ -105,9 +105,8 @@ export function Comment({ index, comment, username, postID }) {
                 }
 
                 <div className='d-flex gap-3 mt-3'>
-                    <h5 className='usernameText'> <Link className='link' to={`/user/${username}`}>{username}</Link> </h5>
+                    <h5> <Link className='link' to={`/user/${username}`}>{username}</Link> </h5>
                     <p> {timeAgo}</p>
-
                 </div>
 
                 {globalUsername === username &&
