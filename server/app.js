@@ -99,6 +99,7 @@ app.post('/signup', async (req, res) => {
         const jwt_token = jwt.sign({
             userID: savedUser._id,
             username: savedUser.username,
+    
         }, JWT_SECRET);
 
         //send cookie
@@ -106,7 +107,7 @@ app.post('/signup', async (req, res) => {
         return res.cookie('jwt_token', jwt_token, {
             secure: true,
             expires: twoHoursFromNow,
-            sameSite: 'none',
+            sameSite: 'None',
         }).json({
             status: 'success',
             message: 'Signed up',
@@ -165,7 +166,7 @@ app.post('/login', async (req, res) => {
         return res.cookie('jwt_token', jwt_token, {
             secure: true,
             expires: twoHoursFromNow,
-            sameSite: 'none',
+            sameSite: 'None',
         }).json({
             status: 'success',
             message: 'Logged in',
