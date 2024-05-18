@@ -3,7 +3,7 @@ import { Bounce, toast } from 'react-toastify';
 
 export async function handleSavePost(postID, setSaved) {
     try {
-        const response = await axios.get(`http://localhost:3000/user/savePost/${postID}`,
+        const response = await axios.get(`https://offbeat-qm21.onrender.com/user/savePost/${postID}`,
             {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('jwt_token')}`

@@ -3,7 +3,7 @@ import { Bounce, toast } from 'react-toastify';
 
 export async function handleDeleteSavePost(postID, setSaved) {
     try {
-        const response = await axios.get(`http://localhost:3000/user/deleteSavedPost/${postID}`,
+        const response = await axios.get(`https://offbeat-qm21.onrender.com/user/deleteSavedPost/${postID}`,
             {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('jwt_token')}`

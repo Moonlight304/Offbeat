@@ -61,7 +61,7 @@ export function Navbar() {
                 const file = e.target.image.files[0];
                 const base64String = await imageToBase64(file);
 
-                response = await axios.post('http://localhost:3000/post/newPost',
+                response = await axios.post('https://offbeat-qm21.onrender.com/post/newPost',
                     { heading, body, base64String },
                     {
                         headers: {
@@ -71,7 +71,7 @@ export function Navbar() {
                 )
             }
             else {
-                response = await axios.post('http://localhost:3000/post/newPost',
+                response = await axios.post('https://offbeat-qm21.onrender.com/post/newPost',
                     { heading, body },
                     {
                         headers: {
@@ -150,7 +150,7 @@ export function Navbar() {
             if (globalUsername === 'ACCOUNT_DEFAULT') return;
 
             try {
-                const response = await axios.get(`http://localhost:3000/user/${globalUsername}`,
+                const response = await axios.get(`https://offbeat-qm21.onrender.com/user/${globalUsername}`,
                     {
                         headers: {
                             Authorization: `Bearer ${localStorage.getItem('jwt_token')}`

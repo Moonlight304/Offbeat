@@ -6,16 +6,16 @@ export async function handleSubmit(operation, username, password, confirmPasswor
     try {
         let response;
         if (operation === 'login') {
-            response = await axios.post('http://localhost:3000/login',
+            response = await axios.post('https://offbeat-qm21.onrender.com/login',
                 { username, password },
             );
         } else if (operation === 'signup') {
-            response = await axios.post('http://localhost:3000/signup',
+            response = await axios.post('https://offbeat-qm21.onrender.com/signup',
                 { username, password, confirmPassword },
             );
         }
         else {
-            response = await axios.get('http://localhost:3000/logout',
+            response = await axios.get('https://offbeat-qm21.onrender.com/logout',
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('jwt_token')}`

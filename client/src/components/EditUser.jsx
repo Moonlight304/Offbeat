@@ -27,7 +27,7 @@ export function EditUser() {
         try {
             const file = e.target.files[0];
             const base64String = await imageToBase64(file);
-            const response = await axios.post(`http://localhost:3000/user/uploadAvatar`,
+            const response = await axios.post(`https://offbeat-qm21.onrender.com/user/uploadAvatar`,
                 { base64String },
                 {
                     headers: {
@@ -76,7 +76,7 @@ export function EditUser() {
 
     async function handleAvatarDelete() {
         try {
-            const response = await axios.get(`http://localhost:3000/user/deleteAvatar/${username}`,
+            const response = await axios.get(`https://offbeat-qm21.onrender.com/user/deleteAvatar/${username}`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('jwt_token')}`
@@ -126,7 +126,7 @@ export function EditUser() {
         e.preventDefault();
 
         try {
-            const response = await axios.post(`http://localhost:3000/user/editUser/${username}`,
+            const response = await axios.post(`https://offbeat-qm21.onrender.com/user/editUser/${username}`,
                 { email, bio, gender },
                 {
                     headers: {
@@ -186,7 +186,7 @@ export function EditUser() {
     useEffect(() => {
         async function fetchUser() {
             try {
-                const response = await axios.get(`http://localhost:3000/user/${username}`,
+                const response = await axios.get(`https://offbeat-qm21.onrender.com/user/${username}`,
                     {
                         headers: {
                             Authorization: `Bearer ${localStorage.getItem('jwt_token')}`
