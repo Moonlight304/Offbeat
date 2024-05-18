@@ -129,7 +129,6 @@ router.get('/deletePost/:postID', authMiddle, async (req, res) => {
 })
 
 router.get('/like/:postID', authMiddle, async (req, res) => {
-
     try {
         const userID = req.user.userID;
         const { postID } = req.params;

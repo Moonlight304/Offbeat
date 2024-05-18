@@ -56,6 +56,8 @@ const postSchema = new mongoose.Schema({
     ],
     comments: [commentSchema],
 }, { timestamps: true });
+postSchema.index({_id : 1, likes: 1})
+
 
 const userSchema = new mongoose.Schema({
     username: {
@@ -119,7 +121,7 @@ const userSchema = new mongoose.Schema({
         }
     ],
 })
-userSchema.index({ username: 1 });
+userSchema.index({ username: 1, savedPosts: 1, followers: 1, following: 1 });
 
 
 const User = mongoose.model('User', userSchema);

@@ -175,11 +175,12 @@ export function Navbar() {
         fetchUser();
     }, [globalUsername, navigate])
 
+    
 
     return (
         <>
             <nav>
-                <Link className='link' to={'/'}> <h1> Offbeat </h1> </Link>
+                <Link className='link text-black' to={'/'}> <h1> Offbeat </h1> </Link>
 
                 {/* Navbar profile */}
                 {globalIsLoggedIn

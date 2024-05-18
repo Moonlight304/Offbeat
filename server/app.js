@@ -15,7 +15,7 @@ const postRoute = require('./routes/postRoute');
 
 const PORT = process.env.PORT || 3000;
 const JWT_SECRET = process.env.JWT_SECRET_CODE;
-
+    
 mongoose.connect(process.env.dbURL)
     .then(() => {
         console.log('DB connected');

@@ -202,7 +202,7 @@ label {
 
 @media screen and (max-width: 1024px) {
     .PostCard {
-        width: 80%;
+        width: 85%;
     }
 }
 
@@ -221,6 +221,9 @@ label {
 }
 
 @media screen and (max-width: 500px) {
+    .PostCard {
+        width: 100%;
+    }
     .postLinksText {
         display: none;
     }
@@ -254,10 +257,10 @@ label {
     }
 }
 
-@media screen and (max-width: 375px) {
-    .PostCard {
+@media screen and (max-width: 400px) {
+    /* .PostCard {
         width: 100%;
-    }
+    } */
 
     #createText {
         display: none;

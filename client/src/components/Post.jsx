@@ -10,7 +10,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart as faHeartSolid, faUser, faBookmark as faBookmarkSolid, faEllipsis, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { faHeart as faHeartRegular, faBookmark as faBookmarkRegular, faClipboard } from '@fortawesome/free-regular-svg-icons'
 import { Bounce, toast } from 'react-toastify';
-import Dropdown from 'react-bootstrap/Dropdown';
+import { Dropdown, Spinner } from 'react-bootstrap';
 import { handleClipboard } from '../helpers/Clipboard';
 import { handleLike } from '../helpers/Like';
 import { handleDislike } from '../helpers/Dislike';
@@ -34,6 +34,7 @@ export function Post() {
     const [timeAgo, setTimeAgo] = useState('');
     const [newComment, setNewComment] = useState('');
     const [globalUsername, setGlobalUsername] = useRecoilState(usernameState);
+    const [isLoading, setIsLoading] = useState(true);
     const navigate = useNavigate();
 
     //fetching post with it's id
@@ -63,6 +64,7 @@ export function Post() {
         getPost(postID, setPost, setUsername, setlikeCount);
         getLikeInclude(postID, setLiked);
         getSaved();
+        setIsLoading(false);
     }, [postID]);
 
     useEffect(() => {
@@ -202,6 +204,21 @@ export function Post() {
     }
 
 
+    if (isLoading)
+        return (
+            <div className='d-flex justify-content-center align-items-center'
+                style={{
+                    height: '10rem',
+                }}
+            >
+
+                <Spinner animation="border" role="status">
+                    <span className="visually-hidden">Loading...</span>
+                </Spinner>
+            </div>
+        )
+
+
     return (
         <div className='showPost'>
             <div className='d-flex align-items-center'>
@@ -214,7 +231,11 @@ export function Post() {
             </div>
 
             <div className="d-flex justify-content-between align-items-center">
-                <h1> {post?.heading} </h1>
+                <div style={{
+                    wordWrap: 'break-word',
+                }}>
+                    <h1> {post?.heading} </h1>
+                </div>
 
                 <Dropdown>
                     <Dropdown.Toggle style={{
@@ -282,7 +303,12 @@ export function Post() {
 
             <hr />
 
-            <h4> {post?.body} </h4>
+            <div style={{
+                wordWrap: 'break-word',
+                marginBottom: '2rem',
+            }}>
+                <h4> {post?.body} </h4>
+            </div>
 
             {/* post image */}
             {post?.base64String &&
@@ -291,13 +317,12 @@ export function Post() {
                         borderRadius: '15px',
                         width: '80%',
                         maxHeight: '50rem',
-                        margin: '2rem 0rem 2rem 0rem',
                     }} src={`data:image/jpeg;base64,${post.base64String}`} alt="uploaded image"
                 />
             }
 
             {liked ? (
-                <h5 style={{ cursor: 'pointer' }} onClick={() => handleDislike(postID, setlikeCount, setLiked)}>
+                <h5 style={{ cursor: 'pointer', marginTop: '2rem' }} onClick={() => handleDislike(postID, setlikeCount, setLiked)}>
                     {likeCount}
                     <FontAwesomeIcon className='icons'
                         style={{
@@ -309,7 +334,7 @@ export function Post() {
                     Dislike
                 </h5>
             ) : (
-                <h5 style={{ cursor: 'pointer' }} onClick={() => handleLike(postID, setlikeCount, setLiked)}>
+                <h5 style={{ cursor: 'pointer', marginTop: '2rem' }} onClick={() => handleLike(postID, setlikeCount, setLiked)}>
                     {likeCount}
                     <FontAwesomeIcon className='icons'
                         style={{

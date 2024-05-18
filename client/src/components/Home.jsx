@@ -3,15 +3,17 @@ import { useEffect, useState } from 'react';
 import { PostCard } from './PostCard';
 import { Bounce, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Spinner from 'react-bootstrap/Spinner';
 import '../index.css'
 
 export function Home() {
     const [allPosts, setAllPosts] = useState([]);
     const [postCount, setPostCount] = useState(0);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        try {
-            async function getPosts() {
+        async function getPosts() {
+            try {
                 const response = await axios.get('https://offbeat-qm21.onrender.com/');
                 const data = response.data;
 
@@ -35,26 +37,42 @@ export function Home() {
                     setPostCount(0);
                 }
             }
-            
-            getPosts();
-
+            catch (e) {
+                toast.error('Error loading posts', {
+                    position: "bottom-right",
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                    transition: Bounce,
+                });
+                console.log('Error : ' + e);
+            }
+            finally {
+                setIsLoading(false);
+            }
         }
-        catch (e) {
-            toast.error('Error loading posts', {
-                position: "bottom-right",
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "dark",
-                transition: Bounce,
-            });
-            console.log('Error : ' + e);
-        }
 
+
+        getPosts();
     }, []);
+
+    if (isLoading)
+        return (
+            <div className='d-flex justify-content-center align-items-center'
+                style={{
+                    height: '10rem',
+                }}
+            >
+
+                <Spinner animation="border" role="status">
+                    <span className="visually-hidden">Loading...</span>
+                </Spinner>
+            </div>
+        )
 
     return (
         <div className='Home'>
