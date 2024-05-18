@@ -27,12 +27,15 @@ export function EditUser() {
         try {
             const file = e.target.files[0];
             const base64String = await imageToBase64(file);
-            const response = await axios.post(`https://offbeat-qm21.onrender.com/user/uploadAvatar`,
+            const response = await axios.post(`http://localhost:3000/user/uploadAvatar`,
                 { base64String },
-                { withCredentials: true },
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('jwt_token')}`
+                    }
+                }
             )
             const data = response.data;
-            console.log(data);
 
             if (data.status === 'success') {
                 const url = URL.createObjectURL(file);
@@ -73,13 +76,17 @@ export function EditUser() {
 
     async function handleAvatarDelete() {
         try {
-            const response = await axios.get(`https://offbeat-qm21.onrender.com/user/deleteAvatar/${username}`,
-                { withCredentials: true },
+            const response = await axios.get(`http://localhost:3000/user/deleteAvatar/${username}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('jwt_token')}`
+                    }
+                }
             )
             const data = response.data;
 
             if (data.status === 'success') {
-                console.log('avatar deleted successfully');
+                console.log('Avatar deleted successfully');
             }
             else {
                 toast.error('Error deleting avatar', {
@@ -93,10 +100,8 @@ export function EditUser() {
                     theme: "dark",
                     transition: Bounce,
                 });
-                console.log('avatar deletion failed : ' + data.message);
+                console.log('Avatar deletion failed : ' + data.message);
             }
-
-            console.log(data.user);
 
             // navigate(`/`);
             window.location.reload();
@@ -121,9 +126,13 @@ export function EditUser() {
         e.preventDefault();
 
         try {
-            const response = await axios.post(`https://offbeat-qm21.onrender.com/user/editUser/${username}`,
+            const response = await axios.post(`http://localhost:3000/user/editUser/${username}`,
                 { email, bio, gender },
-                { withCredentials: true },
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('jwt_token')}`
+                    }
+                }
             )
             const data = response.data;
 
@@ -177,8 +186,12 @@ export function EditUser() {
     useEffect(() => {
         async function fetchUser() {
             try {
-                const response = await axios.get(`https://offbeat-qm21.onrender.com/user/${username}`,
-                    { withCredentials: true },
+                const response = await axios.get(`http://localhost:3000/user/${username}`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem('jwt_token')}`
+                        }
+                    }
                 )
                 const data = response.data;
 
@@ -201,7 +214,7 @@ export function EditUser() {
                         theme: "dark",
                         transition: Bounce,
                     });
-                    console.log('error fetching user : ' + data.message);
+                    console.log('Error fetching user : ' + data.message);
                     navigate('/');
                 }
             }

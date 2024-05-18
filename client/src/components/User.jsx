@@ -37,8 +37,12 @@ export function User() {
                 return;
             }
 
-            const response = await axios.get(`https://offbeat-qm21.onrender.com/user/deleteUser/${username}`,
-                { withCredentials: true },
+            const response = await axios.get(`http://localhost:3000/user/deleteUser/${username}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('jwt_token')}`
+                    }
+                },
             )
             const data = response.data;
 
@@ -54,7 +58,7 @@ export function User() {
                     theme: "dark",
                     transition: Bounce,
                 });
-                console.log('deleted account');
+                console.log('Deleted account');
             }
             else {
                 toast.error(`${data.message}`, {
@@ -68,7 +72,7 @@ export function User() {
                     theme: "dark",
                     transition: Bounce,
                 });
-                console.log('account deletion failed : ' + data.message);
+                console.log('Account deletion failed : ' + data.message);
             }
 
             navigate('/logout');
@@ -91,9 +95,13 @@ export function User() {
 
     async function handleFollow() {
         try {
-            const response = await axios.post('https://offbeat-qm21.onrender.com/user/follow',
+            const response = await axios.post('http://localhost:3000/user/follow',
                 { srcUsername: globalUsername, destUsername: username },
-                { withCredentials: true },
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('jwt_token')}`
+                    }
+                }
             )
             const data = response.data;
 
@@ -111,7 +119,7 @@ export function User() {
                 });
                 setFollowersCount(followersCount + 1);
                 setIsFollowing(true);
-                console.log('followed user');
+                console.log('Followed user');
             }
             else {
                 toast.warn('Login to follow user', {
@@ -146,9 +154,13 @@ export function User() {
 
     async function handleUnfollow() {
         try {
-            const response = await axios.post('https://offbeat-qm21.onrender.com/user/unfollow',
+            const response = await axios.post('http://localhost:3000/user/unfollow',
                 { srcUsername: globalUsername, destUsername: username },
-                { withCredentials: true },
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('jwt_token')}`
+                    }
+                }
             )
             const data = response.data;
 
@@ -166,7 +178,7 @@ export function User() {
                 });
                 setFollowersCount(followersCount - 1);
                 setIsFollowing(false);
-                console.log('unfollowed user');
+                console.log('Unfollowed user');
             }
             else {
                 toast.error('Couldn\'t unfollow user', {
@@ -202,30 +214,35 @@ export function User() {
     useEffect(() => {
         async function getIsFollowing() {
             try {
-                const response = await axios.post('https://offbeat-qm21.onrender.com/user/getIsFollowing',
+                const response = await axios.post('http://localhost:3000/user/getIsFollowing',
                     { srcUsername: globalUsername, destUsername: username },
-                    { withCredentials: true },
+                    {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem('jwt_token')}`
+                        }
+                    }
                 )
                 const data = response.data;
-                console.log(data);
+                // console.log(data);
 
                 if (data.status === 'success') {
                     setIsFollowing(JSON.parse(data.message));
                 }
                 else {
                     console.log('Error : ' + data.message);
-                    if (data.message !== 'no token found')
-                        toast.error('Login to follow user', {
-                            position: "bottom-right",
-                            autoClose: 2000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: true,
-                            progress: undefined,
-                            theme: "dark",
-                            transition: Bounce,
-                        });
+                    if (data.message === 'Not authorised') return;
+                    
+                    toast.error('Login to follow user', {
+                        position: "bottom-right",
+                        autoClose: 2000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "dark",
+                        transition: Bounce,
+                    });
                 }
             }
             catch (e) {
@@ -305,7 +322,7 @@ export function User() {
             </div>
 
 
-            <Modal style={{backdropFilter: 'blur(2px)'}} centered id='optionsModal' show={show} onHide={() => { setShow(false) }}>
+            <Modal style={{ backdropFilter: 'blur(2px)' }} centered id='optionsModal' show={show} onHide={() => { setShow(false) }}>
                 <div className="d-flex flex-column gap-2 p-2 justify-content-center align-items-center">
 
                     {globalUsername === username &&

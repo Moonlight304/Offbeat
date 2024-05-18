@@ -6,23 +6,25 @@ export async function handleSubmit(operation, username, password, confirmPasswor
     try {
         let response;
         if (operation === 'login') {
-            response = await axios.post('https://offbeat-qm21.onrender.com/login',
+            response = await axios.post('http://localhost:3000/login',
                 { username, password },
-                { withCredentials: true }
             );
         } else if (operation === 'signup') {
-            response = await axios.post('https://offbeat-qm21.onrender.com/signup',
+            response = await axios.post('http://localhost:3000/signup',
                 { username, password, confirmPassword },
-                { withCredentials: true }
             );
         }
         else {
-            response = await axios.get('https://offbeat-qm21.onrender.com/logout',
-                { withCredentials: true }
+            response = await axios.get('http://localhost:3000/logout',
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('jwt_token')}`
+                    }
+                }
             )
         }
         const data = response.data;
-        console.log(data);
+        // console.log(data);
 
         if (data.status === 'success') {
             toast.success(`${data.message}`, {
@@ -38,10 +40,14 @@ export async function handleSubmit(operation, username, password, confirmPasswor
             });
 
             setGlobalUsername(username);
-            if (operation === 'logout')
+            if (operation === 'logout') {
                 setGlobalIsLoggedIn(false);
-            else
+                localStorage.removeItem('jwt_token');
+            }
+            else {
                 setGlobalIsLoggedIn(true);
+                localStorage.setItem('jwt_token', data.jwt_token);
+            }
             navigate('/');
         } else {
             toast.error(`${data.message}`, {

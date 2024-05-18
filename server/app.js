@@ -34,7 +34,6 @@ app.use('/user', userRoute);
 // list all posts
 app.get('/', async (req, res) => {
     try {
-        console.log(process.env.frontendURL);
         const allPosts = await Post.find({}).sort({ createdAt: -1 });
 
         return res.json({
@@ -96,23 +95,20 @@ app.post('/signup', async (req, res) => {
         const newUser = User({ username, passwordHash });
         const savedUser = await newUser.save();
 
-        //jwt tokens
-        const jwt_token = jwt.sign({
-            userID: savedUser._id,
-            username: savedUser.username,
-    
-        }, JWT_SECRET);
+        //sign the token
+        const jwt_token = jwt.sign(
+            {
+                userID: existingUser._id,
+                username: existingUser.username
+            },
+            JWT_SECRET,
+            { expiresIn: '2h' },
+        );
 
-        //send cookie
-        const twoHoursFromNow = new Date(Date.now() + 2 * 60 * 60 * 1000);
-        return res.cookie('jwt_token', jwt_token, {
-            httpOnly: true,
-            secure: true,
-            expires: twoHoursFromNow,
-            sameSite: 'None',
-        }).json({
+        return res.json({
             status: 'success',
-            message: 'Signed up',
+            message: 'Logged in',
+            jwt_token,
         })
     }
     catch (e) {
@@ -158,43 +154,32 @@ app.post('/login', async (req, res) => {
             })
 
         //sign the token
-        const jwt_token = jwt.sign({
-            userID: existingUser._id,
-            username: existingUser.username,
-        }, JWT_SECRET);
+        const jwt_token = jwt.sign(
+            {
+                userID: existingUser._id,
+                username: existingUser.username
+            },
+            JWT_SECRET,
+            { expiresIn: '2h' },
+        );
 
-        //send cookie
-        const twoHoursFromNow = new Date(Date.now() + 2 * 60 * 60 * 1000);
-        return res.cookie('jwt_token', jwt_token, {
-            httpOnly: true,
-            secure: true,
-            expires: twoHoursFromNow,
-            sameSite: 'None',
-        }).json({
+        return res.json({
             status: 'success',
             message: 'Logged in',
+            jwt_token,
         })
     }
     catch (e) {
         return res.json({
             status: 'fail',
-            message: 'Error : ' + e,
+            message: 'Error IN LOGIN : ' + e,
         })
     }
 })
 
 //log out
-app.get('/logout', (req, res) => {
+app.get('/logout', authMiddle, (req, res) => {
     try {
-
-        if (!req.cookies.jwt_token)
-            return res.json({
-                status: 'fail',
-                message: 'Already logged out',
-            })
-
-        res.clearCookie('jwt_token');
-
         return res.json({
             status: 'success',
             message: 'Logged out',

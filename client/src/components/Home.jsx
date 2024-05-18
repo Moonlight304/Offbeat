@@ -12,7 +12,7 @@ export function Home() {
     useEffect(() => {
         try {
             async function getPosts() {
-                const response = await axios.get('https://offbeat-qm21.onrender.com/');
+                const response = await axios.get('http://localhost:3000/');
                 const data = response.data;
 
                 if (data.status === 'success') {

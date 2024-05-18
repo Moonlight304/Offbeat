@@ -28,7 +28,7 @@ export function Navbar() {
         e.preventDefault();
 
         try {
-            console.log(e.target.files[0]);
+            // console.log(e.target.files[0]);
 
             const file = e.target.files[0];
 
@@ -61,15 +61,23 @@ export function Navbar() {
                 const file = e.target.image.files[0];
                 const base64String = await imageToBase64(file);
 
-                response = await axios.post('https://offbeat-qm21.onrender.com/post/newPost',
+                response = await axios.post('http://localhost:3000/post/newPost',
                     { heading, body, base64String },
-                    { withCredentials: true },
+                    {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem('jwt_token')}`
+                        }
+                    }
                 )
             }
             else {
-                response = await axios.post('https://offbeat-qm21.onrender.com/post/newPost',
+                response = await axios.post('http://localhost:3000/post/newPost',
                     { heading, body },
-                    { withCredentials: true },
+                    {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem('jwt_token')}`
+                        }
+                    }
                 )
             }
             const data = response.data;
@@ -91,6 +99,20 @@ export function Navbar() {
                 navigate(`/post/${data.postID}`);
             }
             else {
+                if (data.message === 'Not authorised') {
+                    toast.warn('Login to post', {
+                        position: "bottom-right",
+                        autoClose: 2000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "dark",
+                        transition: Bounce,
+                    });
+                }
+                
                 toast.error('Error posting', {
                     position: "bottom-right",
                     autoClose: 2000,
@@ -128,8 +150,12 @@ export function Navbar() {
             if (globalUsername === 'ACCOUNT_DEFAULT') return;
 
             try {
-                const response = await axios.get(`https://offbeat-qm21.onrender.com/user/${globalUsername}`,
-                    { withCredentials: true },
+                const response = await axios.get(`http://localhost:3000/user/${globalUsername}`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem('jwt_token')}`
+                        }
+                    }
                 )
                 const data = response.data;
 
@@ -137,7 +163,7 @@ export function Navbar() {
                     setAvatarURL(data.userData.avatarString);
                 }
                 else {
-                    console.log('error fetching user : ' + data.message);
+                    console.log('Error fetching user : ' + data.message);
                     navigate('/');
                 }
             }

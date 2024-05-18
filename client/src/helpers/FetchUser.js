@@ -5,8 +5,12 @@ export async function fetchUser(operation, username, setAvatarURL, setUserData, 
     try {
         if (username === '') return;
 
-        const response = await axios.get(`https://offbeat-qm21.onrender.com/user/${username}`,
-            { withCredentials: true },
+        const response = await axios.get(`http://localhost:3000/user/${username}`,
+            {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('jwt_token')}`
+                }
+            },
         )
         const data = response.data;
         const userData = data.userData;
@@ -35,7 +39,7 @@ export async function fetchUser(operation, username, setAvatarURL, setUserData, 
             });
             console.log('Error : ' + data.message);
             if (operation === 'POST')
-            setAvatarURL('');
+                setAvatarURL('');
         }
     }
     catch (e) {

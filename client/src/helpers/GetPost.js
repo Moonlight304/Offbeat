@@ -3,7 +3,7 @@ import { Bounce, toast } from 'react-toastify';
 
 export async function getPost(postID, setPost, setUsername, setlikeCount) {
     try {
-        const response = await axios.get(`https://offbeat-qm21.onrender.com/post/${postID}`);
+        const response = await axios.get(`http://localhost:3000/post/${postID}`);
         const data = response.data;
         
         setPost(data.post);

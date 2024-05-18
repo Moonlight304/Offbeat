@@ -3,8 +3,12 @@ import { Bounce, toast } from 'react-toastify';
 
 export async function handleDislike(postID, setlikeCount, setLiked) {
     try {
-        const response = await axios.get(`https://offbeat-qm21.onrender.com/post/disLike/${postID}`,
-            { withCredentials: true },
+        const response = await axios.get(`http://localhost:3000/post/disLike/${postID}`,
+            {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('jwt_token')}`
+                }
+            }
         )
         const data = response.data;
 
@@ -22,7 +26,7 @@ export async function handleDislike(postID, setlikeCount, setLiked) {
             });
             setlikeCount(data.newLikeCount);
             setLiked(false);
-            console.log('disliked post');
+            console.log('Disliked post');
         }
         else {
             toast.error('Error disliking post', {
@@ -36,7 +40,7 @@ export async function handleDislike(postID, setlikeCount, setLiked) {
                 theme: "dark",
                 transition: Bounce,
             });
-            console.log('ERROR : ' + data.message);
+            console.log('Error : ' + data.message);
         }
     }
     catch (e) {
@@ -51,6 +55,6 @@ export async function handleDislike(postID, setlikeCount, setLiked) {
             theme: "dark",
             transition: Bounce,
         });
-        console.log('Error during "dislike" operation : ' + e);
+        console.log('Error disliking post : ' + e);
     }
 }

@@ -16,7 +16,6 @@ export function Comment({ index, comment, username, postID }) {
     const [avatarURL, setAvatarURL] = useState('');
     const [globalUsername, setGlobalUsername] = useRecoilState(usernameState);
 
-    console.log(comment);
 
     useEffect(() => {
         if (comment?.createdAt) {
@@ -29,12 +28,15 @@ export function Comment({ index, comment, username, postID }) {
             try {
                 if (username === '') return;
 
-                const response = await axios.get(`https://offbeat-qm21.onrender.com/user/${username}`,
-                    { withCredentials: true },
+                const response = await axios.get(`http://localhost:3000/user/${username}`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem('jwt_token')}`
+                        }
+                    }
                 )
                 const data = response.data;
 
-                // console.log(data);
 
                 if (data.status === 'success') {
                     setAvatarURL(data.userData.avatarString);
@@ -54,13 +56,17 @@ export function Comment({ index, comment, username, postID }) {
 
     async function handleCommentDelete() {
         try {
-            const response = await axios.get(`https://offbeat-qm21.onrender.com/post/${postID}/deleteComment/${comment._id}`,
-                { withCredentials: true },
+            const response = await axios.get(`http://localhost:3000/post/${postID}/deleteComment/${comment._id}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('jwt_token')}`
+                    }
+                }
             );
 
             const data = response.data;
             if (data.status === 'success') {
-                console.log('deleted comment');
+                console.log('Deleted comment');
             }
             else {
                 toast.error('Error deleting comment', {
@@ -74,7 +80,7 @@ export function Comment({ index, comment, username, postID }) {
                     theme: "dark",
                     transition: Bounce,
                 });
-                console.log('failed to delete comment : ' + data.message);
+                console.log('Failed to delete comment : ' + data.message);
             }
 
             // navigate(`/post/${postID}`);

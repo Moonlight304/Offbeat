@@ -14,7 +14,7 @@ export function NewPost() {
     async function handleImageChange(e) {
         e.preventDefault();
 
-        console.log(e.target.files[0]);
+        // console.log(e.target.files[0]);
 
         const file = e.target.files[0];
 
@@ -31,15 +31,23 @@ export function NewPost() {
             const file = e.target.image.files[0];
             const base64String = await imageToBase64(file);
 
-            response = await axios.post('https://offbeat-qm21.onrender.com/post/newPost',
+            response = await axios.post('http://localhost:3000/post/newPost',
                 { heading, body, base64String },
-                { withCredentials: true },
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('jwt_token')}`
+                    }
+                }
             )
         }
         else {
-            response = await axios.post('https://offbeat-qm21.onrender.com/post/newPost',
+            response = await axios.post('http://localhost:3000/post/newPost',
                 { heading, body },
-                { withCredentials: true },
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('jwt_token')}`
+                    }
+                }
             )
         }
         const data = response.data;
@@ -50,7 +58,7 @@ export function NewPost() {
             navigate('/');
     }
 
-    
+
 
     return (
         <>

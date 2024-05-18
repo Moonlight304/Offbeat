@@ -3,8 +3,12 @@ import { Bounce, toast } from 'react-toastify';
 
 export async function handleSavePost(postID, setSaved) {
     try {
-        const response = await axios.get(`https://offbeat-qm21.onrender.com/user/savePost/${postID}`,
-            { withCredentials: true },
+        const response = await axios.get(`http://localhost:3000/user/savePost/${postID}`,
+            {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('jwt_token')}`
+                }
+            }
         )
         const data = response.data;
 
@@ -24,7 +28,7 @@ export async function handleSavePost(postID, setSaved) {
             console.log('Saved Post');
         }
         else {
-            if (data.message === 'no token found') {
+            if (data.message === 'Not authorised') {
                 toast.warn('Login to save post', {
                     position: "bottom-right",
                     autoClose: 2000,

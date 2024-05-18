@@ -41,8 +41,12 @@ export function Post() {
 
         async function getSaved() {
             try {
-                const response = await axios.get(`https://offbeat-qm21.onrender.com/user/checkSaved/${postID}`,
-                    { withCredentials: true },
+                const response = await axios.get(`http://localhost:3000/user/checkSaved/${postID}`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem('jwt_token')}`
+                        }
+                    }
                 )
                 const data = response.data;
 
@@ -68,17 +72,21 @@ export function Post() {
             setTimeAgo(formattedTime);
         }
 
-        fetchUser('POST' , username, setAvatarURL, null, null, null, null);
+        fetchUser('POST', username, setAvatarURL, null, null, null, null);
     }, [post]);
 
 
     async function handleDelete() {
         try {
-            const response = await axios.get(`https://offbeat-qm21.onrender.com/post/deletePost/${postID}`,
-                { withCredentials: true },
+            const response = await axios.get(`http://localhost:3000/post/deletePost/${postID}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('jwt_token')}`
+                    }
+                }
             )
             const data = response.data;
-            console.log(data);
+            // console.log(data);
 
             if (data.status === 'success') {
                 toast.success('Deleted post', {
@@ -92,7 +100,7 @@ export function Post() {
                     theme: "dark",
                     transition: Bounce,
                 });
-                console.log('deleted post');
+                console.log('Deleted post');
                 navigate('/');
             }
             else {
@@ -107,7 +115,7 @@ export function Post() {
                     theme: "dark",
                     transition: Bounce,
                 });
-                console.log('ERROR : ' + data.message);
+                console.log('Error : ' + data.message);
             }
         }
         catch (e) {
@@ -122,7 +130,7 @@ export function Post() {
                 theme: "dark",
                 transition: Bounce,
             });
-            console.log('Error during "delete" operation : ' + e);
+            console.log('Error deleting post : ' + e);
         }
     }
 
@@ -146,14 +154,18 @@ export function Post() {
         }
 
         try {
-            const response = await axios.post(`https://offbeat-qm21.onrender.com/post/${postID}/newComment`,
+            const response = await axios.post(`http://localhost:3000/post/${postID}/newComment`,
                 { newComment },
-                { withCredentials: true },
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('jwt_token')}`
+                    }
+                }
             )
             const data = response.data;
 
             if (data.status === 'success') {
-                console.log('comment added');
+                console.log('Comment added');
             }
             else {
                 toast.error('Error posting comment', {
@@ -167,7 +179,7 @@ export function Post() {
                     theme: "dark",
                     transition: Bounce,
                 });
-                console.log('comment added');
+                console.log('Comment added');
             }
 
             // navigate(`/post/${postID}`);
@@ -185,7 +197,7 @@ export function Post() {
                 theme: "dark",
                 transition: Bounce,
             });
-            console.log('Error during "newComment" : ' + e);
+            console.log('Error posting comment : ' + e);
         }
     }
 

@@ -3,8 +3,12 @@ import { Bounce, toast } from 'react-toastify';
 
 export async function handleLike(postID, setlikeCount, setLiked) {
     try {
-        const response = await axios.get(`https://offbeat-qm21.onrender.com/post/like/${postID}`,
-            { withCredentials: true },
+        const response = await axios.get(`http://localhost:3000/post/like/${postID}`,
+            {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('jwt_token')}`
+                }
+            }
         )
         const data = response.data;
 
@@ -25,8 +29,8 @@ export async function handleLike(postID, setlikeCount, setLiked) {
             setLiked(true);
         }
         else {
-            if (data.message === 'no token found') {
-                toast.error('Login to like post', {
+            if (data.message === 'Not authorised') {
+                toast.warn('Login to like post', {
                     position: "bottom-right",
                     autoClose: 2000,
                     hideProgressBar: false,
@@ -50,7 +54,7 @@ export async function handleLike(postID, setlikeCount, setLiked) {
                     theme: "dark",
                     transition: Bounce,
                 });
-                console.log('ERROR : ' + data.message);
+                console.log('Error : ' + data.message);
             }
         }
     }
@@ -66,6 +70,6 @@ export async function handleLike(postID, setlikeCount, setLiked) {
             theme: "dark",
             transition: Bounce,
         });
-        console.log('Error during "like" operation : ' + e);
+        console.log('Error liking post : ' + e);
     }
 }
