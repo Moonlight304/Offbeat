@@ -26,20 +26,20 @@ export function Login({ setWantLogin }) {
 
                 <div className='d-flex flex-column align-items-start pe-3 ps-3 gap-2'>
                     <label htmlFor="username"> <h4> Username </h4> </label>
-                    <input className='ps-3' placeholder='Username' type="text" name="username" id="username"
+                    <input autoComplete="true" className='ps-3' placeholder='Username' type="text" name="username" id="username"
                         onChange={(e) => setUsername(e.target.value)}
                     />
                 </div>
 
                 <div className='d-flex flex-column align-items-start pe-3 ps-3 gap-2'>
                     <label htmlFor="password"> <h4> Password </h4> </label>
-                    <input className='ps-3' placeholder='Password' type="password" name="password" id="password"
+                    <input autoComplete="true" className='ps-3' placeholder='Password' type="password" name="password" id="password"
                         onChange={(e) => setPassword(e.target.value)}
                     />
                 </div>
 
                 <h6> Dont have an account? <Link onClick={() => setWantLogin(false)}> Signup </Link> </h6>
-                <input className='btn btn-warning' type="submit" value="Login" />
+                <input autoComplete="true" className='btn btn-warning' type="submit" value="Login" />
             </form>
         </div>
     );

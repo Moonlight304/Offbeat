@@ -227,7 +227,7 @@ export function Navbar() {
                     <Modal.Body className='m-0'>
                         <div className='formInputs'>
                             <div className="mb-2">
-                                <input name="heading" type="text" placeholder="Title" className="form-control" id="validationCustomUsername" aria-describedby="inputGroupPrepend" required
+                                <input autoComplete="true" name="heading" type="text" placeholder="Title" className="form-control" id="validationCustomUsername" aria-describedby="inputGroupPrepend" required
                                     onChange={(e) => setHeading(e.target.value)} />
                                 <div className="invalid-feedback">
                                     Give a title...
@@ -244,7 +244,7 @@ export function Navbar() {
                             </div>
                         </div>
 
-                        <input style={{ display: 'none' }} type="file" name="image" id="image" accept=".png, .jpg" onChange={handleImageChange} />
+                        <input autoComplete="true" style={{ display: 'none' }} type="file" name="image" id="image" accept=".png, .jpg" onChange={handleImageChange} />
 
                         {imageURL
                             ? <>

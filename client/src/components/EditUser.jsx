@@ -240,7 +240,7 @@ export function EditUser() {
     return (
         <div className="userInfo">
             {globalUsername === username &&
-                <input style={{ display: 'none' }} type="file" name="avatar" id="avatar" accept=".png, .jpg" onChange={handleAvatarChange} />
+                <input autoComplete="true" style={{ display: 'none' }} type="file" name="avatar" id="avatar" accept=".png, .jpg" onChange={handleAvatarChange} />
             }
 
             <div>
@@ -271,7 +271,7 @@ export function EditUser() {
             <form onSubmit={handleSubmit} className="d-flex flex-column gap-5">
                 <div className="editProfileInputs">
                     <label htmlFor="email"><h4> Email </h4></label>
-                    <input type="email" name="email" id="email" value={email}
+                    <input autoComplete="true" type="email" name="email" id="email" value={email}
                         onChange={(e) => setEmail(e.target.value)}
                     />
                 </div>
