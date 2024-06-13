@@ -45,7 +45,7 @@ export function Post() {
                 const response = await axios.get(`https://offbeat-qm21.onrender.com/user/checkSaved/${postID}`,
                     {
                         headers: {
-                            Authorization: `Bearer ${localStorage.getItem('jwt_token')}`
+                            Authorization: `Bearer ${sessionStorage.getItem('jwt_token')}`
                         }
                     }
                 )
@@ -83,7 +83,7 @@ export function Post() {
             const response = await axios.get(`https://offbeat-qm21.onrender.com/post/deletePost/${postID}`,
                 {
                     headers: {
-                        Authorization: `Bearer ${localStorage.getItem('jwt_token')}`
+                        Authorization: `Bearer ${sessionStorage.getItem('jwt_token')}`
                     }
                 }
             )
@@ -160,7 +160,7 @@ export function Post() {
                 { newComment },
                 {
                     headers: {
-                        Authorization: `Bearer ${localStorage.getItem('jwt_token')}`
+                        Authorization: `Bearer ${sessionStorage.getItem('jwt_token')}`
                     }
                 }
             )
@@ -220,167 +220,169 @@ export function Post() {
 
 
     return (
-        <div className='showPost'>
-            <div className='d-flex align-items-center'>
-                {avatarURL === ''
-                    ? <FontAwesomeIcon style={{ marginRight: '1rem' }} icon={faUser} />
-                    : <img className='profileImage' src={`data:image/jpeg;base64,${avatarURL}`} alt="profile avatar" />
-                }
+        <div className='d-flex flex-column justify-content-center align-items-center'>
+            <div className='showPost'>
+                <div className='d-flex align-items-center'>
+                    {avatarURL === ''
+                        ? <FontAwesomeIcon style={{ marginRight: '1rem' }} icon={faUser} />
+                        : <img className='profileImage' src={`data:image/jpeg;base64,${avatarURL}`} alt="profile avatar" />
+                    }
 
-                <h5> <Link className='link' to={`/user/${post?.username}`}>{post?.username}</Link> </h5>
-            </div>
-
-            <div className="d-flex justify-content-between align-items-center">
-                <div style={{
-                    wordWrap: 'break-word',
-                }}>
-                    <h1> {post?.heading} </h1>
+                    <h5> <Link className='link' to={`/user/${post?.username}`}>{post?.username}</Link> </h5>
                 </div>
 
-                <Dropdown>
-                    <Dropdown.Toggle style={{
-                        scale: '75%',
-                        color: 'black',
-                        backgroundColor: 'transparent',
-                        borderRadius: '5px',
-                    }} id='dropdown'>
-                        <FontAwesomeIcon icon={faEllipsis} />
-                    </Dropdown.Toggle>
+                <div className="d-flex justify-content-between align-items-center">
+                    <div style={{
+                        wordWrap: 'break-word',
+                    }}>
+                        <h1> {post?.heading} </h1>
+                    </div>
 
-                    <Dropdown.Menu>
-                        <Dropdown.Item >
-                            {saved
-                                ?
-                                <h6 onClick={() => handleDeleteSavePost(postID, setSaved)}>
+                    <Dropdown>
+                        <Dropdown.Toggle style={{
+                            scale: '75%',
+                            color: 'black',
+                            backgroundColor: 'transparent',
+                            borderRadius: '5px',
+                        }} id='dropdown'>
+                            <FontAwesomeIcon icon={faEllipsis} />
+                        </Dropdown.Toggle>
+
+                        <Dropdown.Menu>
+                            <Dropdown.Item >
+                                {saved
+                                    ?
+                                    <h6 onClick={() => handleDeleteSavePost(postID, setSaved)}>
+                                        <FontAwesomeIcon className='icons'
+                                            style={{
+                                                paddingRight: '1rem',
+                                            }} icon={faBookmarkSolid}
+                                        />
+                                        Remove
+                                    </h6>
+                                    :
+                                    <h6 onClick={() => handleSavePost(postID, setSaved)}>
+                                        <FontAwesomeIcon className='icons'
+                                            style={{
+                                                paddingRight: '1rem',
+                                            }} icon={faBookmarkRegular}
+                                        />
+                                        Save
+                                    </h6>
+                                }
+                            </Dropdown.Item>
+
+                            <Dropdown.Item>
+                                <h6 onClick={() => handleClipboard(post?._id)}>
                                     <FontAwesomeIcon className='icons'
                                         style={{
                                             paddingRight: '1rem',
-                                        }} icon={faBookmarkSolid}
+                                        }} icon={faClipboard}
                                     />
-                                    Remove
+                                    Copy Link
                                 </h6>
-                                :
-                                <h6 onClick={() => handleSavePost(postID, setSaved)}>
-                                    <FontAwesomeIcon className='icons'
-                                        style={{
-                                            paddingRight: '1rem',
-                                        }} icon={faBookmarkRegular}
-                                    />
-                                    Save
-                                </h6>
-                            }
-                        </Dropdown.Item>
+                            </Dropdown.Item>
 
-                        <Dropdown.Item>
-                            <h6 onClick={() => handleClipboard(post?._id)}>
-                                <FontAwesomeIcon className='icons'
-                                    style={{
-                                        paddingRight: '1rem',
-                                    }} icon={faClipboard}
-                                />
-                                Copy Link
-                            </h6>
-                        </Dropdown.Item>
+                            <Dropdown.Item>
+                                {globalUsername === post?.username &&
+                                    <h6 onClick={handleDelete}>
+                                        <FontAwesomeIcon className='icons'
+                                            style={{
+                                                color: 'red',
+                                                paddingRight: '1rem',
+                                            }} icon={faTrash}
+                                        />
+                                        Delete Post
+                                    </h6>
+                                }
+                            </Dropdown.Item>
+                        </Dropdown.Menu>
+                    </Dropdown>
+                </div>
 
-                        <Dropdown.Item>
-                            {globalUsername === post?.username &&
-                                <h6 onClick={handleDelete}>
-                                    <FontAwesomeIcon className='icons'
-                                        style={{
-                                            color: 'red',
-                                            paddingRight: '1rem',
-                                        }} icon={faTrash}
-                                    />
-                                    Delete Post
-                                </h6>
-                            }
-                        </Dropdown.Item>
-                    </Dropdown.Menu>
-                </Dropdown>
-            </div>
+                <h5> {timeAgo} </h5>
 
-            <h5> {timeAgo} </h5>
+                <hr />
 
-            <hr />
+                <div style={{
+                    wordWrap: 'break-word',
+                    marginBottom: '2rem',
+                }}>
+                    <h4> {post?.body} </h4>
+                </div>
 
-            <div style={{
-                wordWrap: 'break-word',
-                marginBottom: '2rem',
-            }}>
-                <h4> {post?.body} </h4>
-            </div>
-
-            {/* post image */}
-            {post?.base64String &&
-                <img
-                    style={{
-                        borderRadius: '15px',
-                        width: '80%',
-                        maxHeight: '50rem',
-                    }} src={`data:image/jpeg;base64,${post.base64String}`} alt="uploaded image"
-                />
-            }
-
-            {liked ? (
-                <h5 style={{ cursor: 'pointer', marginTop: '2rem' }} onClick={() => handleDislike(postID, setlikeCount, setLiked)}>
-                    {likeCount}
-                    <FontAwesomeIcon className='icons'
+                {/* post image */}
+                {post?.base64String &&
+                    <img
                         style={{
-                            color: 'red',
-                            padding: '0rem 0.5rem 0rem 1rem',
-                        }}
-                        icon={faHeartSolid}
+                            borderRadius: '15px',
+                            width: '80%',
+                            maxHeight: '50rem',
+                        }} src={`data:image/jpeg;base64,${post.base64String}`} alt="uploaded image"
                     />
-                    Dislike
-                </h5>
-            ) : (
-                <h5 style={{ cursor: 'pointer', marginTop: '2rem' }} onClick={() => handleLike(postID, setlikeCount, setLiked)}>
-                    {likeCount}
-                    <FontAwesomeIcon className='icons'
-                        style={{
-                            padding: '0rem 0.5rem 0rem 1rem',
-                        }}
-                        icon={faHeartRegular}
-                    />
-                    Like
-                </h5>
-            )}
+                }
 
-            <div className="d-flex flex-column gap-3 mt-5">
-                <h4> Comments </h4>
+                {liked ? (
+                    <h5 style={{ cursor: 'pointer', marginTop: '2rem' }} onClick={() => handleDislike(postID, setlikeCount, setLiked)}>
+                        {likeCount}
+                        <FontAwesomeIcon className='icons'
+                            style={{
+                                color: 'red',
+                                padding: '0rem 0.5rem 0rem 1rem',
+                            }}
+                            icon={faHeartSolid}
+                        />
+                        Dislike
+                    </h5>
+                ) : (
+                    <h5 style={{ cursor: 'pointer', marginTop: '2rem' }} onClick={() => handleLike(postID, setlikeCount, setLiked)}>
+                        {likeCount}
+                        <FontAwesomeIcon className='icons'
+                            style={{
+                                padding: '0rem 0.5rem 0rem 1rem',
+                            }}
+                            icon={faHeartRegular}
+                        />
+                        Like
+                    </h5>
+                )}
 
-                <form onSubmit={handleCommentSubmit}>
-                    <div>
+                <div className="d-flex flex-column gap-3 mt-5">
+                    <h4> Comments </h4>
+
+                    <form onSubmit={handleCommentSubmit}>
                         <div>
-                            <textarea name="newComment" className="commentBox" id="validationTextarea" placeholder="share your thoughts..." required
-                                onChange={(e) => setNewComment(e.target.value)}
-                            ></textarea>
-                            <div className="invalid-feedback">
-                                cant be empty
+                            <div>
+                                <textarea name="newComment" className="commentBox ps-2 rounded" id="validationTextarea" placeholder="Share your thoughts..." required
+                                    onChange={(e) => setNewComment(e.target.value)}
+                                ></textarea>
+                                <div className="invalid-feedback">
+                                    cant be empty
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div className="mt-2 mb-2">
-                        <button className="btn btn-warning" type="submit"> Comment </button>
-                    </div>
-                </form>
+                        <div className="mt-2 mb-2">
+                            <button className="btn btn-warning" type="submit"> Comment </button>
+                        </div>
+                    </form>
 
-                {post?.comments
-                    ?
-                    post.comments.map((comment, index) => {
-                        return <Comment
-                            key={index}
-                            comment={comment}
-                            username={comment.username}
-                            postID={post._id}
-                        />
-                    })
-                    :
-                    <h4> No comments </h4>
-                }
+                    {post?.comments
+                        ?
+                        post.comments.map((comment, index) => {
+                            return <Comment
+                                key={index}
+                                comment={comment}
+                                username={comment.username}
+                                postID={post._id}
+                            />
+                        })
+                        :
+                        <h4> No comments </h4>
+                    }
+                </div>
+
             </div>
-
         </div>
     );
 }

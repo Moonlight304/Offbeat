@@ -31,7 +31,7 @@ export function EditUser() {
                 { base64String },
                 {
                     headers: {
-                        Authorization: `Bearer ${localStorage.getItem('jwt_token')}`
+                        Authorization: `Bearer ${sessionStorage.getItem('jwt_token')}`
                     }
                 }
             )
@@ -79,7 +79,7 @@ export function EditUser() {
             const response = await axios.get(`https://offbeat-qm21.onrender.com/user/deleteAvatar/${username}`,
                 {
                     headers: {
-                        Authorization: `Bearer ${localStorage.getItem('jwt_token')}`
+                        Authorization: `Bearer ${sessionStorage.getItem('jwt_token')}`
                     }
                 }
             )
@@ -130,7 +130,7 @@ export function EditUser() {
                 { email, bio, gender },
                 {
                     headers: {
-                        Authorization: `Bearer ${localStorage.getItem('jwt_token')}`
+                        Authorization: `Bearer ${sessionStorage.getItem('jwt_token')}`
                     }
                 }
             )
@@ -189,7 +189,7 @@ export function EditUser() {
                 const response = await axios.get(`https://offbeat-qm21.onrender.com/user/${username}`,
                     {
                         headers: {
-                            Authorization: `Bearer ${localStorage.getItem('jwt_token')}`
+                            Authorization: `Bearer ${sessionStorage.getItem('jwt_token')}`
                         }
                     }
                 )

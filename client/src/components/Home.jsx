@@ -81,7 +81,13 @@ export function Home() {
                     return <PostCard key={index} postID={post._id} />
                 })
                 :
-                <h1> No Posts </h1>
+                <div className='d-flex flex-column justify-content-center align-items-center mt-5'>
+                    <h1> No Posts  </h1>
+                    <img style={{
+                        width: '20rem',
+                        height: 'auto',
+                    }} src="/assets/cartoonBox.jpg" alt="Box" />
+                </div>
             }
         </div>
     );

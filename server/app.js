@@ -26,7 +26,7 @@ mongoose.connect(process.env.dbURL)
 
 app.use(express.json({ limit: '10mb' }));
 app.use(cookieParser());
-app.use(cors({ origin: process.env.frontendURL, credentials: true }));
+app.use(cors({ origin: process.env.frontendURL , credentials: true }));
 
 app.use('/post', postRoute);
 app.use('/user', userRoute);
@@ -98,11 +98,10 @@ app.post('/signup', async (req, res) => {
         //sign the token
         const jwt_token = jwt.sign(
             {
-                userID: existingUser._id,
-                username: existingUser.username
+                userID: savedUser._id,
+                username: savedUser.username
             },
-            JWT_SECRET,
-            { expiresIn: '2h' },
+            JWT_SECRET
         );
 
         return res.json({
@@ -114,7 +113,7 @@ app.post('/signup', async (req, res) => {
     catch (e) {
         res.json({
             status: 'fail',
-            message: 'Error : ' + e,
+            message: 'Error signing up: ' + e,
         })
     }
 })
@@ -159,8 +158,7 @@ app.post('/login', async (req, res) => {
                 userID: existingUser._id,
                 username: existingUser.username
             },
-            JWT_SECRET,
-            { expiresIn: '2h' },
+            JWT_SECRET
         );
 
         return res.json({
@@ -172,7 +170,7 @@ app.post('/login', async (req, res) => {
     catch (e) {
         return res.json({
             status: 'fail',
-            message: 'Error IN LOGIN : ' + e,
+            message: 'Error logging in : ' + e,
         })
     }
 })

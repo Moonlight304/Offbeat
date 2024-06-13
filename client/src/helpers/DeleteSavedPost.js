@@ -6,7 +6,7 @@ export async function handleDeleteSavePost(postID, setSaved) {
         const response = await axios.get(`https://offbeat-qm21.onrender.com/user/deleteSavedPost/${postID}`,
             {
                 headers: {
-                    Authorization: `Bearer ${localStorage.getItem('jwt_token')}`
+                    Authorization: `Bearer ${sessionStorage.getItem('jwt_token')}`
                 }
             }
         )

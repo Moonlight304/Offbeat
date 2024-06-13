@@ -65,7 +65,7 @@ export function Navbar() {
                     { heading, body, base64String },
                     {
                         headers: {
-                            Authorization: `Bearer ${localStorage.getItem('jwt_token')}`
+                            Authorization: `Bearer ${sessionStorage.getItem('jwt_token')}`
                         }
                     }
                 )
@@ -75,7 +75,7 @@ export function Navbar() {
                     { heading, body },
                     {
                         headers: {
-                            Authorization: `Bearer ${localStorage.getItem('jwt_token')}`
+                            Authorization: `Bearer ${sessionStorage.getItem('jwt_token')}`
                         }
                     }
                 )
@@ -112,7 +112,7 @@ export function Navbar() {
                         transition: Bounce,
                     });
                 }
-                
+
                 toast.error('Error posting', {
                     position: "bottom-right",
                     autoClose: 2000,
@@ -153,7 +153,7 @@ export function Navbar() {
                 const response = await axios.get(`https://offbeat-qm21.onrender.com/user/${globalUsername}`,
                     {
                         headers: {
-                            Authorization: `Bearer ${localStorage.getItem('jwt_token')}`
+                            Authorization: `Bearer ${sessionStorage.getItem('jwt_token')}`
                         }
                     }
                 )
@@ -175,12 +175,15 @@ export function Navbar() {
         fetchUser();
     }, [globalUsername, navigate])
 
-    
 
     return (
         <>
             <nav>
-                <Link className='link text-black' to={'/'}> <h1> Offbeat </h1> </Link>
+                <Link className='link text-black' to={'/'}>
+                    <img style={{
+                        width: '8rem',
+                    }} src="/assets/offbeat.png" alt="Offbeat" />
+                </Link>
 
                 {/* Navbar profile */}
                 {globalIsLoggedIn
@@ -248,11 +251,11 @@ export function Navbar() {
                                 <FontAwesomeIcon onClick={() => setImageURL('')}
                                     style={{
                                         position: 'relative',
-                                        right: '-440px',
-                                        top: '30px',
+                                        left: '0px',
+                                        top: '0px',
                                         scale: '120%',
                                         cursor: 'pointer',
-                                        color: 'white',
+                                        color: 'black',
                                     }} icon={faXmark} />
                                 <label
                                     style={{

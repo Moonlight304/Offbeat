@@ -121,7 +121,10 @@ const userSchema = new mongoose.Schema({
         }
     ],
 })
-userSchema.index({ username: 1, savedPosts: 1, followers: 1, following: 1 });
+userSchema.index({ username: 1 });
+userSchema.index({ savedPosts: 1 });
+userSchema.index({ followers: 1 });
+userSchema.index({ following: 1 });
 
 
 const User = mongoose.model('User', userSchema);

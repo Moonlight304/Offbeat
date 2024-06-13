@@ -48,6 +48,11 @@ nav {
     gap: 1rem;
     border: 2px solid black !important;
     scale: 80%;
+    transition: box-shadow .5s;
+}
+
+.profileButton:hover {
+    box-shadow: 5px 5px;
 }
 
 .topRight {

@@ -31,7 +31,7 @@ export function Comment({ index, comment, username, postID }) {
                 const response = await axios.get(`https://offbeat-qm21.onrender.com/user/${username}`,
                     {
                         headers: {
-                            Authorization: `Bearer ${localStorage.getItem('jwt_token')}`
+                            Authorization: `Bearer ${sessionStorage.getItem('jwt_token')}`
                         }
                     }
                 )
@@ -59,7 +59,7 @@ export function Comment({ index, comment, username, postID }) {
             const response = await axios.get(`https://offbeat-qm21.onrender.com/post/${postID}/deleteComment/${comment._id}`,
                 {
                     headers: {
-                        Authorization: `Bearer ${localStorage.getItem('jwt_token')}`
+                        Authorization: `Bearer ${sessionStorage.getItem('jwt_token')}`
                     }
                 }
             );

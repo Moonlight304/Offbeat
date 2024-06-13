@@ -8,7 +8,7 @@ export async function fetchUser(operation, username, setAvatarURL, setUserData, 
         const response = await axios.get(`https://offbeat-qm21.onrender.com/user/${username}`,
             {
                 headers: {
-                    Authorization: `Bearer ${localStorage.getItem('jwt_token')}`
+                    Authorization: `Bearer ${sessionStorage.getItem('jwt_token')}`
                 }
             },
         )

@@ -6,7 +6,7 @@ export async function handleDislike(postID, setlikeCount, setLiked) {
         const response = await axios.get(`https://offbeat-qm21.onrender.com/post/disLike/${postID}`,
             {
                 headers: {
-                    Authorization: `Bearer ${localStorage.getItem('jwt_token')}`
+                    Authorization: `Bearer ${sessionStorage.getItem('jwt_token')}`
                 }
             }
         )

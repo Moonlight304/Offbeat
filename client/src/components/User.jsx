@@ -40,7 +40,7 @@ export function User() {
             const response = await axios.get(`https://offbeat-qm21.onrender.com/user/deleteUser/${username}`,
                 {
                     headers: {
-                        Authorization: `Bearer ${localStorage.getItem('jwt_token')}`
+                        Authorization: `Bearer ${sessionStorage.getItem('jwt_token')}`
                     }
                 },
             )
@@ -99,7 +99,7 @@ export function User() {
                 { srcUsername: globalUsername, destUsername: username },
                 {
                     headers: {
-                        Authorization: `Bearer ${localStorage.getItem('jwt_token')}`
+                        Authorization: `Bearer ${sessionStorage.getItem('jwt_token')}`
                     }
                 }
             )
@@ -158,7 +158,7 @@ export function User() {
                 { srcUsername: globalUsername, destUsername: username },
                 {
                     headers: {
-                        Authorization: `Bearer ${localStorage.getItem('jwt_token')}`
+                        Authorization: `Bearer ${sessionStorage.getItem('jwt_token')}`
                     }
                 }
             )
@@ -218,7 +218,7 @@ export function User() {
                     { srcUsername: globalUsername, destUsername: username },
                     {
                         headers: {
-                            Authorization: `Bearer ${localStorage.getItem('jwt_token')}`
+                            Authorization: `Bearer ${sessionStorage.getItem('jwt_token')}`
                         }
                     }
                 )

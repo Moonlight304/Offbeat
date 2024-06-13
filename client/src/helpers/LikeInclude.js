@@ -6,7 +6,7 @@ export async function getLikeInclude(postID, setLiked) {
         const response = await axios.get(`https://offbeat-qm21.onrender.com/post/${postID}/checkLiked`,
             {
                 headers: {
-                    Authorization: `Bearer ${localStorage.getItem('jwt_token')}`
+                    Authorization: `Bearer ${sessionStorage.getItem('jwt_token')}`
                 }
             }
         )

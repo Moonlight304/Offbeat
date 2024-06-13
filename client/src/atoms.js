@@ -3,7 +3,7 @@ import { jwtDecode } from 'jwt-decode';
 
 function getKey() {
     try {
-        const jwt_token = localStorage.getItem('jwt_token');
+        const jwt_token = sessionStorage.getItem('jwt_token');
         if (!jwt_token) {
             return null;
         }

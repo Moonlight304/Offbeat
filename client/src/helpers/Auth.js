@@ -18,7 +18,7 @@ export async function handleSubmit(operation, username, password, confirmPasswor
             response = await axios.get('https://offbeat-qm21.onrender.com/logout',
                 {
                     headers: {
-                        Authorization: `Bearer ${localStorage.getItem('jwt_token')}`
+                        Authorization: `Bearer ${sessionStorage.getItem('jwt_token')}`
                     }
                 }
             )
@@ -42,14 +42,15 @@ export async function handleSubmit(operation, username, password, confirmPasswor
             setGlobalUsername(username);
             if (operation === 'logout') {
                 setGlobalIsLoggedIn(false);
-                localStorage.removeItem('jwt_token');
+                sessionStorage.removeItem('jwt_token');
             }
             else {
                 setGlobalIsLoggedIn(true);
-                localStorage.setItem('jwt_token', data.jwt_token);
+                sessionStorage.setItem('jwt_token', data.jwt_token);
             }
             navigate('/');
         } else {
+            console.log(data.message);
             toast.error(`${data.message}`, {
                 position: "bottom-right",
                 autoClose: 2000,
@@ -64,6 +65,7 @@ export async function handleSubmit(operation, username, password, confirmPasswor
             navigate('/register');
         }
     } catch (e) {
+        console.log(e.message);
         toast.error(`Error while ${operation}`, {
             position: "bottom-right",
             autoClose: 2000,
