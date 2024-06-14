@@ -1,14 +1,14 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useNavigate, useParams, useRouteLoaderData } from "react-router-dom";
-import { Link } from "react-router-dom";
-import { Modal, Button } from "react-bootstrap";
+import { useNavigate, useParams, Link } from "react-router-dom";
+import { Modal } from "react-bootstrap";
 import { PostList } from "./PostList";
 import { usernameState } from '../atoms';
 import { useRecoilState } from "recoil";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faGear } from '@fortawesome/free-solid-svg-icons';
 import { Bounce, toast } from 'react-toastify';
+
 import { fetchUser } from "../helpers/FetchUser";
 
 import 'react-toastify/dist/ReactToastify.css';

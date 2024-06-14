@@ -1,18 +1,19 @@
-import { Link } from 'react-router-dom';
 import { useEffect, useState } from "react";
+import { Link } from 'react-router-dom';
 import { formatDistanceToNow, parseISO } from 'date-fns';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart as faHeartSolid, faUser } from '@fortawesome/free-solid-svg-icons';
 import { faHeart as faHeartRegular, faMessage, faClipboard } from '@fortawesome/free-regular-svg-icons';
-import 'react-toastify/dist/ReactToastify.css';
+
 import { handleClipboard } from '../helpers/Clipboard';
 import { handleLike } from '../helpers/Like';
 import { handleDislike } from '../helpers/Dislike';
 import { getLikeInclude } from '../helpers/LikeInclude';
 import { fetchUser } from '../helpers/FetchUser';
-
-import '../index.css'
 import { getPost } from '../helpers/GetPost';
+
+import 'react-toastify/dist/ReactToastify.css';
+import '../index.css'
 
 export function PostCard({ postID }) {
     const [post, setPost] = useState({});

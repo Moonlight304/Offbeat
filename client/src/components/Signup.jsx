@@ -2,9 +2,9 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { usernameState, isLoggedInState } from '../atoms'
 import { useRecoilState } from 'recoil';
-import 'react-toastify/dist/ReactToastify.css';
 import { handleSubmit } from '../helpers/Auth';
 
+import 'react-toastify/dist/ReactToastify.css';
 import '../index.css'
 
 export function Signup({ setWantLogin }) {

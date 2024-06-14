@@ -1,16 +1,16 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { formatDistanceToNow, parseISO } from 'date-fns';
 import { Comment } from './Comment';
-import { Link } from 'react-router-dom';
 import { usernameState } from '../atoms';
 import { useRecoilState } from 'recoil';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHeart as faHeartSolid, faUser, faBookmark as faBookmarkSolid, faEllipsis, faTrash } from '@fortawesome/free-solid-svg-icons';
-import { faHeart as faHeartRegular, faBookmark as faBookmarkRegular, faClipboard } from '@fortawesome/free-regular-svg-icons'
+import { faHeart as faHeartSolid, faUser, faBookmark as faBookmarkSolid, faEllipsis, faTrash, faPenToSquare } from '@fortawesome/free-solid-svg-icons';
+import { faHeart as faHeartRegular, faBookmark as faBookmarkRegular, faClipboard, faImage } from '@fortawesome/free-regular-svg-icons'
 import { Bounce, toast } from 'react-toastify';
-import { Dropdown, Spinner } from 'react-bootstrap';
+import { Dropdown, DropdownItem, Spinner } from 'react-bootstrap';
+
 import { handleClipboard } from '../helpers/Clipboard';
 import { handleLike } from '../helpers/Like';
 import { handleDislike } from '../helpers/Dislike';
@@ -76,7 +76,6 @@ export function Post() {
 
         fetchUser('POST', username, setAvatarURL, null, null, null, null);
     }, [post]);
-
 
     async function handleDelete() {
         try {
@@ -283,19 +282,33 @@ export function Post() {
                                 </h6>
                             </Dropdown.Item>
 
-                            <Dropdown.Item>
-                                {globalUsername === post?.username &&
-                                    <h6 onClick={handleDelete}>
-                                        <FontAwesomeIcon className='icons'
-                                            style={{
-                                                color: 'red',
-                                                paddingRight: '1rem',
-                                            }} icon={faTrash}
-                                        />
-                                        Delete Post
-                                    </h6>
-                                }
-                            </Dropdown.Item>
+                            {globalUsername === post?.username &&
+                                <>
+                                    <DropdownItem>
+                                        <h6 onClick={() => navigate(`/post/editPost/${postID}`)}>
+                                            <FontAwesomeIcon
+                                                style={{
+                                                    paddingRight: '1rem',
+                                                }} icon={faPenToSquare}
+                                            />
+                                            Edit Post
+                                        </h6>
+                                    </DropdownItem>
+
+                                    <Dropdown.Item>
+
+                                        <h6 onClick={handleDelete}>
+                                            <FontAwesomeIcon className='icons'
+                                                style={{
+                                                    color: 'red',
+                                                    paddingRight: '1rem',
+                                                }} icon={faTrash}
+                                            />
+                                            Delete Post
+                                        </h6>
+                                    </Dropdown.Item>
+                                </>
+                            }
                         </Dropdown.Menu>
                     </Dropdown>
                 </div>

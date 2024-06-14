@@ -1,9 +1,9 @@
 import axios from 'axios'
 import { useEffect, useState } from 'react';
-import { PostCard } from './PostCard';
 import { Bounce, toast } from 'react-toastify';
+import { Spinner } from 'react-bootstrap';
 import 'react-toastify/dist/ReactToastify.css';
-import Spinner from 'react-bootstrap/Spinner';
+import { PostCard } from './PostCard';
 import '../index.css'
 
 export function Home() {

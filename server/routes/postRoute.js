@@ -83,6 +83,62 @@ router.post('/newPost', authMiddle, async (req, res) => {
     }
 })
 
+router.post('/editPost/:postID', authMiddle, async (req, res) => {
+    try {
+        const userID = req.user.userID;
+        const { postID } = req.params;
+        const { newHeading, newBody, newBase64String } = req.body;
+
+        if (!newHeading || !newBody) {
+            return res.json({
+                status: 'fail',
+                message: 'Incomplete atrributes',
+            })
+        }
+
+        if (!postID)
+            return res.json({
+                status: 'fail',
+                message: 'postID is required',
+            })
+
+        const post = await Post.findById(postID);
+
+        if (!post)
+            return res.json({
+                status: 'fail',
+                message: 'post not found',
+            })
+
+        if (userID !== post.userID._id.toString())
+            return res.json({
+                status: 'fail',
+                message: 'cannot edit others posts',
+            });
+
+            
+        post.heading = newHeading;
+        post.body = newBody;
+
+        if (newBase64String !== post.base64String) {            
+            post.base64String = newBase64String;
+        }
+
+        await post.save();
+
+        return res.json({
+            status: 'success',
+            message: 'Edited Post',
+        });
+    }
+    catch (e) {
+        return res.json({
+            status: 'fail',
+            message: 'Error : ' + e,
+        })
+    }
+})
+
 router.get('/deletePost/:postID', authMiddle, async (req, res) => {
     try {
         const userID = req.user.userID;

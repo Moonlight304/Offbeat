@@ -1,5 +1,4 @@
 import { PostCard } from "./PostCard";
-import { Bounce, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 export function PostList({ title, posts }) {

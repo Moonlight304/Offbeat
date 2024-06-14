@@ -48,7 +48,6 @@ export function Navbar() {
                 transition: Bounce,
             });
         }
-
     }
 
     async function handleSubmit(e) {
