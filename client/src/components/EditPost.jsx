@@ -6,6 +6,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faImage, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { Button, Spinner } from 'react-bootstrap';
 
+import { imageToBase64 } from '../helpers/imageToBase64';
+
 export function EditPost() {
     const { postID } = useParams();
     const [post, setPost] = useState({});
