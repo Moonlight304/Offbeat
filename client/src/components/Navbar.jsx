@@ -179,7 +179,7 @@ export function Navbar() {
         <>
             <nav>
                 <Link className='link text-black' to={'/'}>
-                    <img className="offbeatLogo" src="/assets/offbeat.png" alt="Offbeat" />
+                    <h1 >OFFBEAT</h1>
                 </Link>
 
                 {/* Navbar profile */}

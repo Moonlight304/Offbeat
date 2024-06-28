@@ -1,9 +1,4 @@
 /* Navbar */
-.offbeatLogo {
-    width: 8rem;
-    height: auto;
-}
-
 .plusIcon,
 .navbarIcon {
     width: 1.5rem;
@@ -49,6 +44,7 @@ nav {
 .profileButton {
     display: flex !important;
     align-items: center;
+    justify-content: center;
     border-radius: 15px !important;
     gap: 1rem;
     border: 2px solid black !important;
@@ -62,6 +58,7 @@ nav {
 
 .topRight {
     display: flex;
+    justify-content: center;
 }
 
 .topRight button:hover {
@@ -222,10 +219,6 @@ label {
 }
 
 @media screen and (max-width: 500px) {
-    .offbeatLogo {
-        width: 7rem;
-    }
-
     .PostCard {
         width: 100%;
     }
@@ -267,10 +260,6 @@ label {
 }
 
 @media screen and (max-width: 400px) {
-    .offbeatLogo {
-        width: 6rem;
-    }
-
     #createText {
         display: none;
     }
