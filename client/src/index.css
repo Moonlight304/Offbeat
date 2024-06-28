@@ -1,4 +1,9 @@
 /* Navbar */
+.offbeatLogo {
+    width: 8rem;
+    height: auto;
+}
+
 .plusIcon,
 .navbarIcon {
     width: 1.5rem;
@@ -97,7 +102,6 @@ nav {
 }
 
 .postLinks {
-    /* d-flex justify-content-between align-items-center */
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -116,13 +120,6 @@ nav {
     border: 2px solid black;
 }
 
-/* .editUser {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 5rem;
-} */
-
 .editProfileInputs {
     display: flex;
     width: 100%;
@@ -135,7 +132,6 @@ nav {
     margin-top: 3rem;
     display: flex;
     gap: 2rem;
-    /* border: 2px solid black; */
 }
 
 .accountImageSettings button,
@@ -150,7 +146,7 @@ label {
     justify-content: center;
     align-items: center;
     gap: 1.5rem;
-    padding: 2rem 2rem 2rem 2rem;
+    padding: 2rem;
     letter-spacing: 0.1rem;
 
     border: 2px solid black;
@@ -226,6 +222,10 @@ label {
 }
 
 @media screen and (max-width: 500px) {
+    .offbeatLogo {
+        width: 7rem;
+    }
+
     .PostCard {
         width: 100%;
     }
@@ -260,14 +260,22 @@ label {
     .newPostOverlay {
         scale: 90%;
     }
+
+    .register {
+        padding: 0.5rem;
+    }
 }
 
 @media screen and (max-width: 400px) {
-    /* .PostCard {
-        width: 100%;
-    } */
+    .offbeatLogo {
+        width: 6rem;
+    }
 
     #createText {
         display: none;
+    }
+
+    .register {
+        padding: 0rem;
     }
 }

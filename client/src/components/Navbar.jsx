@@ -179,9 +179,7 @@ export function Navbar() {
         <>
             <nav>
                 <Link className='link text-black' to={'/'}>
-                    <img style={{
-                        width: '8rem',
-                    }} src="/assets/offbeat.png" alt="Offbeat" />
+                    <img className="offbeatLogo" src="/assets/offbeat.png" alt="Offbeat" />
                 </Link>
 
                 {/* Navbar profile */}
