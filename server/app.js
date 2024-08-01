@@ -194,6 +194,10 @@ app.get('/logout', authMiddle, (req, res) => {
 app.post('/adminAuth', (req, res) => {
     try {
         const { username, password } = req.body;
+
+        console.log("Username : " + username);
+        console.log("Password : " + password);
+
         if (!username || !password)
             return res.json({
                 status: 'fail',
