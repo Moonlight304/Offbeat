@@ -15,7 +15,7 @@ const postRoute = require('./routes/postRoute');
 
 const PORT = process.env.PORT || 3000;
 const JWT_SECRET = process.env.JWT_SECRET_CODE;
-    
+
 mongoose.connect(process.env.dbURL)
     .then(() => {
         console.log('DB connected');
@@ -26,7 +26,7 @@ mongoose.connect(process.env.dbURL)
 
 app.use(express.json({ limit: '10mb' }));
 app.use(cookieParser());
-app.use(cors({ origin: process.env.frontendURL , credentials: true }));
+app.use(cors({ origin: process.env.frontendURL, credentials: true }));
 
 app.use('/post', postRoute);
 app.use('/user', userRoute);
@@ -191,7 +191,64 @@ app.get('/logout', authMiddle, (req, res) => {
     }
 })
 
+app.post('/adminAuth', (req, res) => {
+    try {
+        const { username, password } = req.body;
+        if (!username || !password)
+            return res.json({
+                status: 'fail',
+                message: 'No username or password',
+            })
 
+        if (username === process.env.adminUsername && password === process.env.adminPassword)
+            return res.json({
+                status: 'success',
+                message: 'Authenticated',
+            })
+        else
+            return res.json({
+                status: 'fail',
+                message: 'Authentication failed!',
+            })
+    }
+    catch (e) {
+        return res.json({
+            status: 'fail',
+            message: 'Error : ' + e,
+        })
+    }
+})
+
+app.post('/dropDB', async (req, res) => {
+    try {
+        const { key } = req.body;
+
+        if (!key)
+            return res.json({
+                status: 'fail',
+                message: 'No key provided!',
+            })
+
+        if (key === process.env.dropKey) {
+            await mongoose.connection.db.dropDatabase();
+            return res.json({
+                status: 'success',
+                message: 'Deleted Database!',
+            })
+        }
+        else
+            return res.json({
+                status: 'fail',
+                message: 'Wrong Key!!',
+            })
+    }
+    catch (e) {
+        return res.json({
+            status: 'fail',
+            message: 'Error : ' + e,
+        })
+    }
+})
 
 app.listen(PORT, () => {
     console.log(`Running on Port ${PORT}...`);
