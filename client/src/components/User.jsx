@@ -1,4 +1,5 @@
 import axios from "axios";
+const backendURL = import.meta.env.VITE_backendURL;
 import { useEffect, useState } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import { Modal } from "react-bootstrap";
@@ -37,7 +38,7 @@ export function User() {
                 return;
             }
 
-            const response = await axios.get(`https://offbeat-qm21.onrender.com/user/deleteUser/${username}`,
+            const response = await axios.get(`${backendURL}/user/deleteUser/${username}`,
                 {
                     headers: {
                         Authorization: `Bearer ${sessionStorage.getItem('jwt_token')}`
@@ -95,7 +96,7 @@ export function User() {
 
     async function handleFollow() {
         try {
-            const response = await axios.post('https://offbeat-qm21.onrender.com/user/follow',
+            const response = await axios.post(`${backendURL}/user/follow`,
                 { srcUsername: globalUsername, destUsername: username },
                 {
                     headers: {
@@ -154,7 +155,7 @@ export function User() {
 
     async function handleUnfollow() {
         try {
-            const response = await axios.post('https://offbeat-qm21.onrender.com/user/unfollow',
+            const response = await axios.post(`${backendURL}/user/unfollow`,
                 { srcUsername: globalUsername, destUsername: username },
                 {
                     headers: {
@@ -214,7 +215,7 @@ export function User() {
     useEffect(() => {
         async function getIsFollowing() {
             try {
-                const response = await axios.post('https://offbeat-qm21.onrender.com/user/getIsFollowing',
+                const response = await axios.post(`${backendURL}/user/getIsFollowing`,
                     { srcUsername: globalUsername, destUsername: username },
                     {
                         headers: {

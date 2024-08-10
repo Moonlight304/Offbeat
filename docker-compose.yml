@@ -1,0 +1,41 @@
+version: "3.8"
+services:
+    server:
+        build:
+            context: ./server
+        ports:
+            - "3000:3000"
+        env_file:
+            - ./server/.env
+        networks:
+            - mynetwork
+        depends_on:
+            - mongo
+    
+    client:
+        build:
+            context: ./client
+        ports:
+            - "5173:5173"
+        env_file:
+            - ./client/.env
+        networks:
+            - mynetwork
+        depends_on:
+            - server
+
+    mongo:
+        image: mongo:latest
+        ports:
+            - "27017:27017"
+        networks:
+            - mynetwork
+        volumes:
+            - mongo-data:/data/db 
+
+networks:
+    mynetwork:
+        driver: bridge
+
+volumes:
+    mongo-data:

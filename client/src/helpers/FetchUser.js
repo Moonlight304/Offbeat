@@ -1,11 +1,12 @@
 import axios from "axios";
 import { Bounce, toast } from 'react-toastify';
+const backendURL = import.meta.env.VITE_backendURL;
 
 export async function fetchUser(operation, username, setAvatarURL, setUserData, setImageURL, setFollowersCount, setFollowingCount) {
     try {
         if (username === '') return;
 
-        const response = await axios.get(`https://offbeat-qm21.onrender.com/user/${username}`,
+        const response = await axios.get(`${backendURL}/user/${username}`,
             {
                 headers: {
                     Authorization: `Bearer ${sessionStorage.getItem('jwt_token')}`

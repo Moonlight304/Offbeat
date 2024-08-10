@@ -1,4 +1,5 @@
 import axios from "axios";
+const backendURL = import.meta.env.VITE_backendURL;
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Bounce, toast } from 'react-toastify';
@@ -22,7 +23,7 @@ export function EditPost() {
     useEffect(() => {
         async function getPost() {
             try {
-                const response = await axios.get(`https://offbeat-qm21.onrender.com/post/${postID}`);
+                const response = await axios.get(`${backendURL}/post/${postID}`);
                 const data = response.data;
 
                 setPost(data.post);
@@ -76,7 +77,7 @@ export function EditPost() {
                 newBase64String = imageURL;
 
 
-            const response = await axios.post(`https://offbeat-qm21.onrender.com/post/editPost/${postID}`,
+            const response = await axios.post(`${backendURL}/post/editPost/${postID}`,
                 { newHeading, newBody, newBase64String },
                 {
                     headers: {

@@ -1,4 +1,5 @@
 import axios from 'axios';
+const backendURL = import.meta.env.VITE_backendURL;
 import { Link, useNavigate } from "react-router-dom";
 import { usernameState, isLoggedInState } from '../atoms'
 import { useRecoilState } from "recoil";
@@ -60,7 +61,7 @@ export function Navbar() {
                 const file = e.target.image.files[0];
                 const base64String = await imageToBase64(file);
 
-                response = await axios.post('https://offbeat-qm21.onrender.com/post/newPost',
+                response = await axios.post(`${backendURL}/post/newPost`,
                     { heading, body, base64String },
                     {
                         headers: {
@@ -70,7 +71,7 @@ export function Navbar() {
                 )
             }
             else {
-                response = await axios.post('https://offbeat-qm21.onrender.com/post/newPost',
+                response = await axios.post(`${backendURL}/post/newPost`,
                     { heading, body },
                     {
                         headers: {
@@ -149,7 +150,7 @@ export function Navbar() {
             if (globalUsername === 'ACCOUNT_DEFAULT') return;
 
             try {
-                const response = await axios.get(`https://offbeat-qm21.onrender.com/user/${globalUsername}`,
+                const response = await axios.get(`${backendURL}/user/${globalUsername}`,
                     {
                         headers: {
                             Authorization: `Bearer ${sessionStorage.getItem('jwt_token')}`

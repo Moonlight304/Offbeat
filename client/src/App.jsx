@@ -10,7 +10,6 @@ import { User } from './components/User'
 import { EditUser } from './components/EditUser';
 import { NotFound } from './components/NotFound';
 import { Register } from './components/Register';
-import { Admin } from './components/Admin'
 
 function App() {
 
@@ -27,8 +26,6 @@ function App() {
                     <Route path='/post/editPost/:postID' element={<EditPost />} />
                     <Route path='/user/:username' element={<User />} />
                     <Route path='/user/editUser/:username' element={<EditUser />} />
-
-                    <Route path='/admin' element={<Admin />} />
 
                     <Route path='*' element={<NotFound />} />
                 </Routes>

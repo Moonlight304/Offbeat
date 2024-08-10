@@ -1,9 +1,10 @@
 import axios from "axios";
 import { Bounce, toast } from 'react-toastify';
+const backendURL = import.meta.env.VITE_backendURL;
 
 export async function getLikeInclude(postID, setLiked) {
     try {
-        const response = await axios.get(`https://offbeat-qm21.onrender.com/post/${postID}/checkLiked`,
+        const response = await axios.get(`${backendURL}/post/${postID}/checkLiked`,
             {
                 headers: {
                     Authorization: `Bearer ${sessionStorage.getItem('jwt_token')}`

@@ -1,9 +1,10 @@
 import axios from "axios";
 import { Bounce, toast } from 'react-toastify';
+const backendURL = import.meta.env.VITE_backendURL;
 
 export async function getPost(postID, setPost, setUsername, setlikeCount) {
     try {
-        const response = await axios.get(`https://offbeat-qm21.onrender.com/post/${postID}`);
+        const response = await axios.get(`${backendURL}/post/${postID}`);
         const data = response.data;
         
         setPost(data.post);

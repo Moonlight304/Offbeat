@@ -1,4 +1,5 @@
 import axios from 'axios'
+const backendURL = import.meta.env.VITE_backendURL;
 import { useEffect, useState } from "react";
 import { formatDistanceToNow, parseISO } from 'date-fns';
 import { Link } from 'react-router-dom';
@@ -28,7 +29,7 @@ export function Comment({ index, comment, username, postID }) {
             try {
                 if (username === '') return;
 
-                const response = await axios.get(`https://offbeat-qm21.onrender.com/user/${username}`,
+                const response = await axios.get(`${backendURL}/user/${username}`,
                     {
                         headers: {
                             Authorization: `Bearer ${sessionStorage.getItem('jwt_token')}`
@@ -56,7 +57,7 @@ export function Comment({ index, comment, username, postID }) {
 
     async function handleCommentDelete() {
         try {
-            const response = await axios.get(`https://offbeat-qm21.onrender.com/post/${postID}/deleteComment/${comment._id}`,
+            const response = await axios.get(`${backendURL}/post/${postID}/deleteComment/${comment._id}`,
                 {
                     headers: {
                         Authorization: `Bearer ${sessionStorage.getItem('jwt_token')}`

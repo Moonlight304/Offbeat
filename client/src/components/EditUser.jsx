@@ -1,4 +1,5 @@
 import axios from "axios";
+const backendURL = import.meta.env.VITE_backendURL;
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { usernameState } from '../atoms';
@@ -27,7 +28,7 @@ export function EditUser() {
         try {
             const file = e.target.files[0];
             const base64String = await imageToBase64(file);
-            const response = await axios.post(`https://offbeat-qm21.onrender.com/user/uploadAvatar`,
+            const response = await axios.post(`${backendURL}/user/uploadAvatar`,
                 { base64String },
                 {
                     headers: {
@@ -76,7 +77,7 @@ export function EditUser() {
 
     async function handleAvatarDelete() {
         try {
-            const response = await axios.get(`https://offbeat-qm21.onrender.com/user/deleteAvatar/${username}`,
+            const response = await axios.get(`${backendURL}/user/deleteAvatar/${username}`,
                 {
                     headers: {
                         Authorization: `Bearer ${sessionStorage.getItem('jwt_token')}`
@@ -126,7 +127,7 @@ export function EditUser() {
         e.preventDefault();
 
         try {
-            const response = await axios.post(`https://offbeat-qm21.onrender.com/user/editUser/${username}`,
+            const response = await axios.post(`${backendURL}/user/editUser/${username}`,
                 { email, bio, gender },
                 {
                     headers: {
@@ -186,7 +187,7 @@ export function EditUser() {
     useEffect(() => {
         async function fetchUser() {
             try {
-                const response = await axios.get(`https://offbeat-qm21.onrender.com/user/${username}`,
+                const response = await axios.get(`${backendURL}/user/${username}`,
                     {
                         headers: {
                             Authorization: `Bearer ${sessionStorage.getItem('jwt_token')}`

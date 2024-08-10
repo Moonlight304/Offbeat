@@ -1,4 +1,5 @@
 import axios from 'axios'
+const backendURL = import.meta.env.VITE_backendURL;
 import { useEffect, useState } from 'react';
 import { Bounce, toast } from 'react-toastify';
 import { Spinner } from 'react-bootstrap';
@@ -14,7 +15,7 @@ export function Home() {
     useEffect(() => {
         async function getPosts() {
             try {
-                const response = await axios.get('https://offbeat-qm21.onrender.com/');
+                const response = await axios.get(`${backendURL}/`);
                 const data = response.data;
 
                 if (data.status === 'success') {
@@ -22,6 +23,7 @@ export function Home() {
                     setPostCount(data.count);
                 }
                 else {
+                    console.log(data.message);
                     toast.error('Error loading posts', {
                         position: "bottom-right",
                         autoClose: 2000,
@@ -38,6 +40,7 @@ export function Home() {
                 }
             }
             catch (e) {
+                console.log(e.message);
                 toast.error('Error loading posts', {
                     position: "bottom-right",
                     autoClose: 2000,

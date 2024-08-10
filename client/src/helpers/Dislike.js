@@ -1,9 +1,10 @@
 import axios from 'axios';
 import { Bounce, toast } from 'react-toastify';
+const backendURL = import.meta.env.VITE_backendURL;
 
 export async function handleDislike(postID, setlikeCount, setLiked) {
     try {
-        const response = await axios.get(`https://offbeat-qm21.onrender.com/post/disLike/${postID}`,
+        const response = await axios.get(`${backendURL}/post/disLike/${postID}`,
             {
                 headers: {
                     Authorization: `Bearer ${sessionStorage.getItem('jwt_token')}`

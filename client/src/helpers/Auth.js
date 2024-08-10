@@ -1,21 +1,23 @@
 import axios from "axios";
 import { toast, Bounce } from "react-toastify";
+const backendURL = import.meta.env.VITE_backendURL;
+
 
 export async function handleSubmit(operation, username, password, confirmPassword, setGlobalIsLoggedIn, setGlobalUsername, navigate) {
 
     try {
         let response;
         if (operation === 'login') {
-            response = await axios.post('https://offbeat-qm21.onrender.com/login',
+            response = await axios.post(`${backendURL}/login`,
                 { username, password },
             );
         } else if (operation === 'signup') {
-            response = await axios.post('https://offbeat-qm21.onrender.com/signup',
+            response = await axios.post(`${backendURL}/signup`,
                 { username, password, confirmPassword },
             );
         }
         else {
-            response = await axios.get('https://offbeat-qm21.onrender.com/logout',
+            response = await axios.get(`${backendURL}/logout`,
                 {
                     headers: {
                         Authorization: `Bearer ${sessionStorage.getItem('jwt_token')}`

@@ -1,20 +1,24 @@
 # Offbeat
 A social media app powerd by MongoDB, Express, ReactJS, NodeJS.
 
-# Running the app
+## Running locally with Docker
 
-## Server
-```
-cd server
-npm i
-npm start
-```
+1. Install Docker
+2. ``` git clone https://github.com/Moonlight304/Offbeat.git ```
+3. ``` cd Offbeat ```
+4. Create environment variables
 
-## Client
-```
-cd client
-npm i
-npm run dev
-```
+### .env in /server:
+    ```
+    PORT=3000
+    frontendURL=http://localhost:5173
+    dbURL=mongodb://127.0.0.1:27017/offbeat
+    JWT_SECRET_CODE=TEST_SECRET_CODE
+    ```
 
-Server starts at localhost:5000
+### .env in /client:
+    ```
+    VITE_backendURL=http://localhost:3000
+    ```
+
+Website starts at ```http://localhost:5173```

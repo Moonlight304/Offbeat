@@ -1,4 +1,5 @@
 import axios from 'axios';
+const backendURL = import.meta.env.VITE_backendURL;
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { formatDistanceToNow, parseISO } from 'date-fns';
@@ -42,7 +43,7 @@ export function Post() {
 
         async function getSaved() {
             try {
-                const response = await axios.get(`https://offbeat-qm21.onrender.com/user/checkSaved/${postID}`,
+                const response = await axios.get(`${backendURL}/user/checkSaved/${postID}`,
                     {
                         headers: {
                             Authorization: `Bearer ${sessionStorage.getItem('jwt_token')}`
@@ -79,7 +80,7 @@ export function Post() {
 
     async function handleDelete() {
         try {
-            const response = await axios.get(`https://offbeat-qm21.onrender.com/post/deletePost/${postID}`,
+            const response = await axios.get(`${backendURL}/post/deletePost/${postID}`,
                 {
                     headers: {
                         Authorization: `Bearer ${sessionStorage.getItem('jwt_token')}`
@@ -155,7 +156,7 @@ export function Post() {
         }
 
         try {
-            const response = await axios.post(`https://offbeat-qm21.onrender.com/post/${postID}/newComment`,
+            const response = await axios.post(`${backendURL}/post/${postID}/newComment`,
                 { newComment },
                 {
                     headers: {
