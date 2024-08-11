@@ -21,4 +21,6 @@ A social media app powerd by MongoDB, Express, ReactJS, NodeJS.
     VITE_backendURL=http://localhost:3000
     ```
 
+5. Run ``` docker-compose up ```
+
 Website starts at ```http://localhost:5173```
