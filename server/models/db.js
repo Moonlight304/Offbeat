@@ -59,6 +59,27 @@ const postSchema = new mongoose.Schema({
 postSchema.index({_id : 1, likes: 1})
 
 
+const notificationSchema = new mongoose.Schema({
+    typeOfNotification : {
+        type : String,
+        enum : ['like', 'new post', 'comment', 'follow'],
+        required : true,
+    },
+    message : {
+        type : String,
+        required : true,
+    },
+    action_url : {
+        type : String,
+    },
+    createdAt : {
+        type : Date,
+        default : Date.now,
+    }
+})
+notificationSchema.index({ createdAt: 1 }, { expireAfterSeconds: 604800 });
+
+
 const userSchema = new mongoose.Schema({
     username: {
         type: String,
@@ -100,7 +121,7 @@ const userSchema = new mongoose.Schema({
     ],
     followersCount: {
         type: Number,
-        default: 0,
+        default: 0, 
         required: true,
     },
     followers: [
@@ -120,6 +141,7 @@ const userSchema = new mongoose.Schema({
             ref: 'User',
         }
     ],
+    notifications : [notificationSchema],
 })
 userSchema.index({ username: 1 });
 userSchema.index({ savedPosts: 1 });

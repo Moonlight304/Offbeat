@@ -11,7 +11,7 @@ router.use(cookieParser());
 router.use(cors({ origin: process.env.frontendURL, credentials: true }));
 
 const authMiddle = require('../middleware/authMiddle.js');
-const { User, Post } = require('../models/db.js');
+const { User, Post, Notification } = require('../models/db.js');
 
 router.get('/:postID', async (req, res) => {
     try {
@@ -46,7 +46,7 @@ router.get('/:postID', async (req, res) => {
 
 router.post('/newPost', authMiddle, async (req, res) => {
     try {
-        const userID = req.user.userID;
+        const { userID, username } = req.user;
         const { heading, body, base64String } = req.body;
 
         if (!heading)
@@ -61,13 +61,27 @@ router.post('/newPost', authMiddle, async (req, res) => {
                 message: 'no body',
             })
 
-        const username = req.user.username;
         const newPost = Post({ userID, username, heading, body, base64String });
         const savedPost = await newPost.save();
 
         const user = await User.findById(userID);
         user.posts.push(savedPost._id);
         await user.save();
+
+        
+        const notification = {
+            _id: new mongoose.mongo.ObjectId(),
+            typeOfNotification: 'new post',
+            message: `${username} just posted!`,
+            action_url: `/post/${savedPost._id}`
+        };
+
+        for (const followerID of user.followers) {
+            const follower = await User.findById(followerID);
+            follower.notifications.unshift(notification);
+            await follower.save();
+        }
+        
 
         return res.json({
             status: 'success',
@@ -186,7 +200,7 @@ router.get('/deletePost/:postID', authMiddle, async (req, res) => {
 
 router.get('/like/:postID', authMiddle, async (req, res) => {
     try {
-        const userID = req.user.userID;
+        const { userID, username} = req.user;
         const { postID } = req.params;
 
         if (!postID)
@@ -218,6 +232,19 @@ router.get('/like/:postID', authMiddle, async (req, res) => {
                 $inc: { likeCount: 1 },
             }
         );
+
+        if (post?.username != username) {
+            const notification = {
+                _id: new mongoose.mongo.ObjectId(),
+                typeOfNotification: 'like',
+                message: `${username} liked your post!`,
+                action_url: `/post/${post?._id}`
+            };
+
+            const user = await User.findById(post?.userID);
+            user.notifications.unshift(notification);
+            await user.save();
+        }
 
         return res.json({
             status: 'success',
@@ -361,7 +388,7 @@ router.get('/:postID/comments', authMiddle, async (req, res) => {
 
 router.post('/:postID/newComment', authMiddle, async (req, res) => {
     try {
-        const userID = req.user.userID;
+        const { userID, username } = req.user;
         const { postID } = req.params;
         const { newComment } = req.body;
 
@@ -385,17 +412,31 @@ router.post('/:postID/newComment', authMiddle, async (req, res) => {
                 message: 'post not found',
             })
 
-        console.log(req.user);
-
         const comment = {
             _id: new mongoose.mongo.ObjectId(),
             author: userID,
-            username: req.user.username,
+            username: username,
             content: newComment,
         };
 
         post.comments.unshift(comment);
         await post.save();
+
+
+        if (post?.username != username) {
+            const notification = {
+                _id: new mongoose.mongo.ObjectId(),
+                typeOfNotification: 'comment',
+                message: `${username} commented on your post!`,
+                action_url: `/post/${post?._id}`
+            };
+            
+            const user = await User.findById(post?.userID);
+
+            user.notifications.unshift(notification);
+            await user.save();
+        }
+
 
         return res.json({
             status: 'success',

@@ -11,7 +11,7 @@ router.use(cookieParser());
 router.use(cors({ origin: process.env.frontendURL, credentials: true }));
 
 const authMiddle = require('../middleware/authMiddle.js');
-const { User, Post } = require('../models/db.js');
+const { User, Post, Notification } = require('../models/db.js');
 
 router.get('/check', authMiddle, (req, res) => {
     try {
@@ -380,6 +380,17 @@ router.post('/follow', authMiddle, async (req, res) => {
             }
         )
 
+        const notification = {
+            _id: new mongoose.mongo.ObjectId(),
+            typeOfNotification: 'follow',
+            message: `${srcUsername} started following you!`,
+            action_url: `/user/${srcUsername}`
+        };
+
+        destUser.notifications.unshift(notification);
+        await destUser.save();
+
+
         res.json({
             status: 'success',
             message: 'followed user',
@@ -475,7 +486,97 @@ router.post('/getIsFollowing', authMiddle, async (req, res) => {
     catch (e) {
         res.json({
             status: 'fail',
-            message: 'Error : ' + e,
+            message: 'Error : ' + e.message,
+        })
+    }
+})
+
+
+// Notifications
+
+router.get('/:userID/notifications', authMiddle, async (req, res) => {
+    try {
+        const { userID } = req.params;
+
+        if (!userID)
+            return res.status(400).json({
+                status: 'fail',
+                message: 'userID not found'
+            })
+
+        const user = await User.findById(userID);
+
+        if (!user)
+            return res.status(404).json({
+                status: 'fail',
+                message: 'user not found'
+            })
+
+
+        return res.status(200).json({
+            status: 'success',
+            notifications : user.notifications,
+        })
+    }
+    catch (e) {
+        res.json({
+            status: 'fail',
+            message: 'Error : ' + e.message,
+        })
+    }
+})
+
+router.get('/:userID/notifications/:notificationID/delete', authMiddle, async (req, res) => {
+    try {
+        const { userID, notificationID } = req.params;
+
+        if (!userID)
+            return res.json({
+                status: 'fail',
+                message: 'userID not found'
+            })
+
+        if (!notificationID)
+            return res.json({
+                status: 'fail',
+                message: 'notificationID not found'
+            })
+
+        const user = await User.findById(userID);
+
+        if (!user) {
+            return res.json({
+                status: 'fail',
+                message: 'user not found'
+            });
+        }
+
+        const notification = user.notifications.id(notificationID);
+
+        if (!notification) {
+            return res.json({
+                status: 'fail',
+                message: 'notification not found'
+            });
+        }
+    
+        user.notifications = user.notifications.filter(
+            (notif) => notif._id.toString() !== notificationID
+        );
+
+        await user.save();
+    
+        await user.save();
+
+        return res.json({
+            status: 'success',
+            message: 'Notification deleted successfully',
+        });
+    }
+    catch (e) {
+        res.json({
+            status: 'fail',
+            message: 'Error : ' + e.message,
         })
     }
 })

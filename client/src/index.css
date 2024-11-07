@@ -59,6 +59,7 @@ nav {
 .topRight {
     display: flex;
     justify-content: center;
+    align-items: center;
 }
 
 .topRight button:hover {

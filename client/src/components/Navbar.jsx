@@ -6,7 +6,7 @@ import { useRecoilState } from "recoil";
 import { useEffect, useState } from "react";
 import { imageToBase64 } from '../helpers/imageToBase64';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser, faPlus, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { faUser, faPlus, faXmark, faBell, faCheck } from '@fortawesome/free-solid-svg-icons';
 import { faImage } from '@fortawesome/free-regular-svg-icons';
 import { Modal, Button } from "react-bootstrap";
 import { Bounce, toast } from 'react-toastify';
@@ -17,6 +17,7 @@ import '../index.css'
 export function Navbar() {
     const [globalUsername, setGlobalUsername] = useRecoilState(usernameState);
     const [globalIsLoggedIn, setGlobalIsLoggedIn] = useRecoilState(isLoggedInState);
+    const [userID, setUserID] = useState('');
     const [avatarURL, setAvatarURL] = useState('');
     const [show, setShow] = useState(false);
     const [heading, setHeading] = useState('');
@@ -24,6 +25,10 @@ export function Navbar() {
     const [imageURL, setImageURL] = useState(null);
     const navigate = useNavigate();
     const handleShow = () => setShow(true);
+
+    const [notificationsArray, setNotificationsArray] = useState([]);
+    const [notificationLength, setNotificationLength] = useState();
+    const [showNotifications, setShowNotifications] = useState(false);
 
     async function handleImageChange(e) {
         e.preventDefault();
@@ -35,6 +40,55 @@ export function Navbar() {
 
             const url = URL.createObjectURL(file);
             setImageURL(url);
+        }
+        catch (e) {
+            toast.error('Error updating image', {
+                position: "bottom-right",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+                transition: Bounce,
+            });
+        }
+    }
+
+    async function handleMarkRead(notificationID) {
+        try {
+            const response = await axios.get(`${backendURL}/user/${userID}/notifications/${notificationID}/delete`, 
+                {
+                    headers: {
+                        Authorization: `Bearer ${sessionStorage.getItem('jwt_token')}`
+                    }
+                }
+            );
+
+            const data = response.data;
+
+            if (data.status == 'success') {
+                const updatedNotifications = notificationsArray.filter(
+                    (notification) => notification._id !== notificationID
+                );
+        
+                setNotificationsArray(updatedNotifications);
+                setNotificationLength(updatedNotifications.length);
+            }
+            else {
+                toast.warn(data.message, {
+                    position: "bottom-right",
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                    transition: Bounce,
+                });
+            }
         }
         catch (e) {
             toast.error('Error updating image', {
@@ -124,6 +178,7 @@ export function Navbar() {
                     theme: "dark",
                     transition: Bounce,
                 });
+                console.log(data.message)
                 navigate('/');
             }
 
@@ -161,6 +216,9 @@ export function Navbar() {
 
                 if (data.status === 'success') {
                     setAvatarURL(data.userData.avatarString);
+                    setNotificationsArray(data.userData.notifications);
+                    setNotificationLength(data.userData.notifications.length);
+                    setUserID(data.userData._id);
                 }
                 else {
                     console.log('Error fetching user : ' + data.message);
@@ -192,6 +250,88 @@ export function Navbar() {
                             <FontAwesomeIcon className='plusIcon' icon={faPlus} />
                             <h4 id='createText' > Create </h4>
                         </button>
+
+                        {/* Notifications */}
+                        
+                        {/* Notification button */}
+                        <div style={{ position: 'relative' }} >
+
+                            <button
+                                onClick={() => setShowNotifications(!showNotifications)}
+                                className='btn topRight'
+                                style={{
+                                    height: '100%',
+                                    border: '2px solid black',
+                                    borderRadius: '15px'
+                                }}
+                            >
+                                <FontAwesomeIcon
+                                    icon={faBell}
+                                    style={{ scale: '140%' }}
+                                />
+                                {notificationLength > 0 && (
+                                    <span
+                                        style={{
+                                            position: 'absolute',
+                                            top: '-5px',
+                                            right: '-5px',
+                                            backgroundColor: 'red',
+                                            color: 'white',
+                                            borderRadius: '50%',
+                                            padding: '3px 6px',
+                                            fontSize: '12px',
+                                        }}
+                                    >
+                                        {notificationLength}
+                                    </span>
+                                )}
+                            </button>
+
+                            {/* Notification dropdown */}
+                            {showNotifications && (
+                                <div
+                                    style={{
+                                        scale: '130%',
+                                        position: 'absolute',
+                                        top: '5rem',
+                                        transform: 'translateX(-50%)',
+                                        backgroundColor: 'white',
+                                        border: '1px solid #ddd',
+                                        borderRadius: '5px',
+                                        boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
+                                        marginTop: '10px',
+                                        zIndex: 10,
+                                        padding: '0.8rem',
+                                        width: '15rem',
+                                    }}
+                                >
+                                    {notificationLength > 0 ? (
+                                        notificationsArray.map((notification, index) => (
+                                            <div
+                                                key={index}
+                                                style={{
+                                                    padding: '0.5rem 0.1rem',
+                                                    borderBottom: index !== notificationLength - 1 ? '1px solid #aaa' : 'none',
+                                                    fontSize: '0.8rem',
+                                                    color: '#333',
+                                                    display: 'flex',
+                                                    justifyContent: 'space-between',
+                                                    alignItems: 'center',
+                                                }}
+                                            >
+                                                <a className='link' style={{color: 'black'}} href={notification.action_url}> {notification.message} </a>
+                                                <FontAwesomeIcon style={{scale: '150%', cursor: 'pointer'}} icon={faCheck} onClick={() => {handleMarkRead(notification._id)}} />  
+
+                                            </div>
+                                        ))
+                                    ) : (
+                                        <div style={{ fontSize: '14px', color: '#888' }}> No notifications </div>
+                                    )}
+                                </div>
+                            )}
+                        </div>
+
+
 
                         {/* go to user page */}
                         <Link className='link' to={`/user/${globalUsername}`}>
