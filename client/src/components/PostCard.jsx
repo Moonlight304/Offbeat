@@ -11,6 +11,8 @@ import { handleDislike } from '../helpers/Dislike';
 import { getLikeInclude } from '../helpers/LikeInclude';
 import { fetchUser } from '../helpers/FetchUser';
 import { getPost } from '../helpers/GetPost';
+import { toastConfig } from './toastConfig';
+
 
 import 'react-toastify/dist/ReactToastify.css';
 import '../index.css'

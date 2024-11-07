@@ -20,6 +20,8 @@ import { handleDeleteSavePost } from '../helpers/DeleteSavedPost';
 import { getPost } from '../helpers/GetPost';
 import { getLikeInclude } from '../helpers/LikeInclude';
 import { fetchUser } from '../helpers/FetchUser';
+import { toastConfig } from './toastConfig';
+
 
 import 'react-toastify/dist/ReactToastify.css';
 import '../index.css'
@@ -91,47 +93,17 @@ export function Post() {
             // console.log(data);
 
             if (data.status === 'success') {
-                toast.success('Deleted post', {
-                    position: "bottom-right",
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "dark",
-                    transition: Bounce,
-                });
+                toast.success('Deleted post', toastConfig);
                 console.log('Deleted post');
                 navigate('/');
             }
             else {
-                toast.error('Error deleting post', {
-                    position: "bottom-right",
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "dark",
-                    transition: Bounce,
-                });
+                toast.error('Error deleting post', toastConfig);
                 console.log('Error : ' + data.message);
             }
         }
         catch (e) {
-            toast.error('Error deleting post', {
-                position: "bottom-right",
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "dark",
-                transition: Bounce,
-            });
+            toast.error('Error deleting post', toastConfig);
             console.log('Error deleting post : ' + e);
         }
     }
@@ -141,17 +113,7 @@ export function Post() {
         e.preventDefault();
 
         if (globalUsername === 'ACCOUNT_DEFAULT') {
-            toast.warn('Login to post comments', {
-                position: "bottom-right",
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "dark",
-                transition: Bounce,
-            });
+            toast.warn('Login to post comments', toastConfig);
             return;
         }
 
@@ -170,17 +132,7 @@ export function Post() {
                 console.log('Comment added');
             }
             else {
-                toast.error('Error posting comment', {
-                    position: "bottom-right",
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "dark",
-                    transition: Bounce,
-                });
+                toast.error('Error posting comment', toastConfig);
                 console.log('Comment added');
             }
 
@@ -188,17 +140,7 @@ export function Post() {
             window.location.reload();
         }
         catch (e) {
-            toast.error('Error posting comment', {
-                position: "bottom-right",
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "dark",
-                transition: Bounce,
-            });
+            toast.error('Error posting comment', toastConfig);
             console.log('Error posting comment : ' + e);
         }
     }

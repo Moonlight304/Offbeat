@@ -1,5 +1,7 @@
 import axios from "axios";
 import { toast, Bounce } from "react-toastify";
+import { toastConfig } from '../components/toastConfig';
+
 const backendURL = import.meta.env.VITE_backendURL;
 
 
@@ -29,17 +31,7 @@ export async function handleSubmit(operation, username, password, confirmPasswor
         // console.log(data);
 
         if (data.status === 'success') {
-            toast.success(`${data.message}`, {
-                position: "bottom-right",
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "dark",
-                transition: Bounce,
-            });
+            toast.success(`${data.message}`, toastConfig);
 
             setGlobalUsername(username);
             if (operation === 'logout') {
@@ -53,31 +45,11 @@ export async function handleSubmit(operation, username, password, confirmPasswor
             navigate('/');
         } else {
             console.log(data.message);
-            toast.error(`${data.message}`, {
-                position: "bottom-right",
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "dark",
-                transition: Bounce,
-            });
+            toast.error(`${data.message}`, toastConfig);
             navigate('/register');
         }
     } catch (e) {
         console.log(e.message);
-        toast.error(`Error while ${operation}`, {
-            position: "bottom-right",
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "dark",
-            transition: Bounce,
-        });
+        toast.error(`Error while ${operation}`, toastConfig);
     }
 }

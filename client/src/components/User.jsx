@@ -11,6 +11,8 @@ import { faUser, faGear } from '@fortawesome/free-solid-svg-icons';
 import { Bounce, toast } from 'react-toastify';
 
 import { fetchUser } from "../helpers/FetchUser";
+import { toastConfig } from './toastConfig';
+
 
 import 'react-toastify/dist/ReactToastify.css';
 import '../index.css'
@@ -48,48 +50,18 @@ export function User() {
             const data = response.data;
 
             if (data.status === 'success') {
-                toast.success(`${data.message}`, {
-                    position: "bottom-right",
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "dark",
-                    transition: Bounce,
-                });
+                toast.success(`${data.message}`, toastConfig);
                 console.log('Deleted account');
             }
             else {
-                toast.error(`${data.message}`, {
-                    position: "bottom-right",
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "dark",
-                    transition: Bounce,
-                });
+                toast.error(`${data.message}`, toastConfig);
                 console.log('Account deletion failed : ' + data.message);
             }
 
             navigate('/logout');
         }
         catch (e) {
-            toast.error('Deletion failed', {
-                position: "bottom-right",
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "dark",
-                transition: Bounce,
-            });
+            toast.error('Deletion failed', toastConfig);
             console.log('Error : ' + e);
         }
     }
@@ -107,48 +79,18 @@ export function User() {
             const data = response.data;
 
             if (data.status === 'success') {
-                toast.success(`Following ${username}`, {
-                    position: "bottom-right",
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "dark",
-                    transition: Bounce,
-                });
+                toast.success(`Following ${username}`, toastConfig);
                 setFollowersCount(followersCount + 1);
                 setIsFollowing(true);
                 console.log('Followed user');
             }
             else {
-                toast.warn('Login to follow user', {
-                    position: "bottom-right",
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "dark",
-                    transition: Bounce,
-                });
+                toast.warn('Login to follow user', toastConfig);
                 console.log('Error : ' + data.message);
             }
         }
         catch (e) {
-            toast.error('Error following user', {
-                position: "bottom-right",
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "dark",
-                transition: Bounce,
-            });
+            toast.error('Error following user', toastConfig);
             console.log('Error : ' + e);
         }
     }
@@ -166,48 +108,18 @@ export function User() {
             const data = response.data;
 
             if (data.status === 'success') {
-                toast.success(`Unfollowed ${username}`, {
-                    position: "bottom-right",
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "dark",
-                    transition: Bounce,
-                });
+                toast.success(`Unfollowed ${username}`, toastConfig);
                 setFollowersCount(followersCount - 1);
                 setIsFollowing(false);
                 console.log('Unfollowed user');
             }
             else {
-                toast.error('Couldn\'t unfollow user', {
-                    position: "bottom-right",
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "dark",
-                    transition: Bounce,
-                });
+                toast.error('Couldn\'t unfollow user', toastConfig);
                 console.log('Error : ' + data.message);
             }
         }
         catch (e) {
-            toast.error('Error unfollowing user', {
-                position: "bottom-right",
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "dark",
-                transition: Bounce,
-            });
+            toast.error('Error unfollowing user', toastConfig);
             console.log('Error : ' + e);
         }
     }
@@ -233,32 +145,12 @@ export function User() {
                     console.log('Error : ' + data.message);
                     if (data.message === 'Not authorised') return;
                     
-                    toast.error('Login to follow user', {
-                        position: "bottom-right",
-                        autoClose: 2000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: "dark",
-                        transition: Bounce,
-                    });
+                    toast.error('Login to follow user', toastConfig);
                 }
             }
             catch (e) {
                 console.log('Error : ' + e);
-                toast.error('Error following', {
-                    position: "bottom-right",
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "dark",
-                    transition: Bounce,
-                });
+                toast.error('Error following', toastConfig);
             }
         }
 

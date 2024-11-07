@@ -1,5 +1,7 @@
 import axios from 'axios';
 import { Bounce, toast } from 'react-toastify';
+import { toastConfig } from '../components/toastConfig';
+
 const backendURL = import.meta.env.VITE_backendURL;
 
 export async function handleDislike(postID, setlikeCount, setLiked) {
@@ -14,48 +16,18 @@ export async function handleDislike(postID, setlikeCount, setLiked) {
         const data = response.data;
 
         if (data.status === 'success') {
-            toast.success('Disliked post', {
-                position: "bottom-right",
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "dark",
-                transition: Bounce,
-            });
+            toast.success('Disliked post', toastConfig);
             setlikeCount(data.newLikeCount);
             setLiked(false);
             console.log('Disliked post');
         }
         else {
-            toast.error('Error disliking post', {
-                position: "bottom-right",
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "dark",
-                transition: Bounce,
-            });
+            toast.error('Error disliking post', toastConfig);
             console.log('Error : ' + data.message);
         }
     }
     catch (e) {
-        toast.error('Error disliking post', {
-            position: "bottom-right",
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "dark",
-            transition: Bounce,
-        });
+        toast.error('Error disliking post', toastConfig);
         console.log('Error disliking post : ' + e);
     }
 }

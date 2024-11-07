@@ -5,6 +5,8 @@ import { Bounce, toast } from 'react-toastify';
 import { Spinner } from 'react-bootstrap';
 import 'react-toastify/dist/ReactToastify.css';
 import { PostCard } from './PostCard';
+import { toastConfig } from './toastConfig';
+
 import '../index.css'
 
 export function Home() {
@@ -24,34 +26,14 @@ export function Home() {
                 }
                 else {
                     console.log(data.message);
-                    toast.error('Error loading posts', {
-                        position: "bottom-right",
-                        autoClose: 2000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: "dark",
-                        transition: Bounce,
-                    });
+                    toast.error('Error loading posts', toastConfig);
                     setAllPosts(['ERROR']);
                     setPostCount(0);
                 }
             }
             catch (e) {
                 console.log(e.message);
-                toast.error('Error loading posts', {
-                    position: "bottom-right",
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "dark",
-                    transition: Bounce,
-                });
+                toast.error('Error loading posts', toastConfig);
                 console.log('Error : ' + e);
             }
             finally {

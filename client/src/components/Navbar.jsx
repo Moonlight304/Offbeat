@@ -11,6 +11,7 @@ import { faImage } from '@fortawesome/free-regular-svg-icons';
 import { Modal, Button } from "react-bootstrap";
 import { Bounce, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { toastConfig } from './toastConfig';
 
 import '../index.css'
 
@@ -42,17 +43,7 @@ export function Navbar() {
             setImageURL(url);
         }
         catch (e) {
-            toast.error('Error updating image', {
-                position: "bottom-right",
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "dark",
-                transition: Bounce,
-            });
+            toast.error('Error updating image', toastConfig);
         }
     }
 
@@ -77,31 +68,11 @@ export function Navbar() {
                 setNotificationLength(updatedNotifications.length);
             }
             else {
-                toast.warn(data.message, {
-                    position: "bottom-right",
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "dark",
-                    transition: Bounce,
-                });
+                toast.warn(data.message, toastConfig);
             }
         }
         catch (e) {
-            toast.error('Error updating image', {
-                position: "bottom-right",
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "dark",
-                transition: Bounce,
-            });
+            toast.error('Error updating image', toastConfig);
         }
     }
 
@@ -139,62 +110,22 @@ export function Navbar() {
 
 
             if (data.status === 'success') {
-                toast.success('Posted successfully', {
-                    position: "bottom-right",
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "dark",
-                    transition: Bounce,
-                });
+                toast.success('Posted successfully', toastConfig);
                 navigate(`/post/${data.postID}`);
             }
             else {
                 if (data.message === 'Not authorised') {
-                    toast.warn('Login to post', {
-                        position: "bottom-right",
-                        autoClose: 2000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: "dark",
-                        transition: Bounce,
-                    });
+                    toast.warn('Login to post', toastConfig);
                 }
 
-                toast.error('Error posting', {
-                    position: "bottom-right",
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "dark",
-                    transition: Bounce,
-                });
+                toast.error('Error posting', toastConfig);
                 console.log(data.message)
                 navigate('/');
             }
 
         }
         catch (e) {
-            toast.success('Posted successfully', {
-                position: "bottom-right",
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "dark",
-                transition: Bounce,
-            });
+            toast.success('Posted successfully', toastConfig);
             console.log('Error : ' + e);
         }
     }

@@ -1,5 +1,7 @@
 import axios from "axios";
 import { Bounce, toast } from 'react-toastify';
+import { toastConfig } from '../components/toastConfig';
+
 const backendURL = import.meta.env.VITE_backendURL;
 
 export async function getLikeInclude(postID, setLiked) {
@@ -18,32 +20,12 @@ export async function getLikeInclude(postID, setLiked) {
         else {
             if (data.message === 'Not authorised') return;
 
-            toast.error(`${data.message}`, {
-                position: "bottom-right",
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "dark",
-                transition: Bounce,
-            });
+            toast.error(`${data.message}`, toastConfig);
             console.log('Error : ' + data.message);
         }
     }
     catch (e) {
-        toast.error(`${e.message}`, {
-            position: "bottom-right",
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "dark",
-            transition: Bounce,
-        });
+        toast.error(`${e.message}`, toastConfig);
         console.log('Error : ' + e);
     }
 }

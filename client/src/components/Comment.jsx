@@ -9,6 +9,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { Bounce, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { toastConfig } from './toastConfig';
 
 import '../index.css'
 
@@ -70,17 +71,7 @@ export function Comment({ index, comment, username, postID }) {
                 console.log('Deleted comment');
             }
             else {
-                toast.error('Error deleting comment', {
-                    position: "bottom-right",
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "dark",
-                    transition: Bounce,
-                });
+                toast.error('Error deleting comment', toastConfig);
                 console.log('Failed to delete comment : ' + data.message);
             }
 
@@ -89,17 +80,7 @@ export function Comment({ index, comment, username, postID }) {
         }
         catch (e) {
             console.log('Error in deleting comment : ' + e);
-            toast.error('Error deleting comment', {
-                position: "bottom-right",
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "dark",
-                transition: Bounce,
-            });
+            toast.error('Error deleting comment', toastConfig);
         }
     }
 

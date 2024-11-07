@@ -3,6 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { usernameState, isLoggedInState } from '../atoms'
 import { useRecoilState } from 'recoil';
 import { handleSubmit } from '../helpers/Auth';
+import { toastConfig } from './toastConfig';
+
 import 'react-toastify/dist/ReactToastify.css';
 
 import '../index.css'

@@ -1,5 +1,7 @@
 import axios from "axios";
 import { Bounce, toast } from 'react-toastify';
+import { toastConfig } from '../components/toastConfig';
+
 const backendURL = import.meta.env.VITE_backendURL;
 
 export async function handleDeleteSavePost(postID, setSaved) {
@@ -14,47 +16,17 @@ export async function handleDeleteSavePost(postID, setSaved) {
         const data = response.data;
 
         if (data.status === 'success') {
-            toast.success('Removed from saved posts', {
-                position: "bottom-right",
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "dark",
-                transition: Bounce,
-            });
+            toast.success('Removed from saved posts', toastConfig);
             setSaved(false);
             console.log('Removed post from saved items');
         }
         else {
-            toast.error('Error removing from saved posts', {
-                position: "bottom-right",
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "dark",
-                transition: Bounce,
-            });
+            toast.error('Error removing from saved posts', toastConfig);
             console.log('Error : ' + data.message);
         }
     }
     catch (e) {
-        toast.error('Error removing from saved posts', {
-            position: "bottom-right",
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "dark",
-            transition: Bounce,
-        });
+        toast.error('Error removing from saved posts', toastConfig);
         console.log('Error saving post : ' + e);
     }
 }

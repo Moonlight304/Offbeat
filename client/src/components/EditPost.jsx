@@ -6,6 +6,8 @@ import { Bounce, toast } from 'react-toastify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faImage, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { Button, Spinner } from 'react-bootstrap';
+import { toastConfig } from './toastConfig';
+
 
 import { imageToBase64 } from '../helpers/imageToBase64';
 
@@ -32,17 +34,7 @@ export function EditPost() {
                 setImageURL(data.post.base64String);
                 setIsLoading(false);
             } catch (e) {
-                toast.error('Error fetching post', {
-                    position: "bottom-right",
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "dark",
-                    transition: Bounce,
-                });
+                toast.error('Error fetching post', toastConfig);
                 console.log('Error fetching post: ' + e);
                 setIsLoading(false);
             }
@@ -88,45 +80,15 @@ export function EditPost() {
             const data = response.data;
 
             if (data.status === 'success') {
-                toast.success('Edited post', {
-                    position: "bottom-right",
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "dark",
-                    transition: Bounce,
-                });
+                toast.success('Edited post', toastConfig);
                 navigate(`/post/${postID}`);
             } else {
                 console.log('Error updating post: ' + data.message);
-                toast.error('Error updating post', {
-                    position: "bottom-right",
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "dark",
-                    transition: Bounce,
-                });
+                toast.error('Error updating post', toastConfig);
             }
         } catch (e) {
             console.log(e.message);
-            toast.error('Error updating post', {
-                position: "bottom-right",
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "dark",
-                transition: Bounce,
-            });
+            toast.error('Error updating post', toastConfig);
         }
     }
 

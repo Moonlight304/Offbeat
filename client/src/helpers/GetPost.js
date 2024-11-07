@@ -1,5 +1,7 @@
 import axios from "axios";
 import { Bounce, toast } from 'react-toastify';
+import { toastConfig } from '../components/toastConfig';
+
 const backendURL = import.meta.env.VITE_backendURL;
 
 export async function getPost(postID, setPost, setUsername, setlikeCount) {
@@ -12,17 +14,7 @@ export async function getPost(postID, setPost, setUsername, setlikeCount) {
         setlikeCount(data.post.likeCount);
     }
     catch (e) {
-        toast.error('Error fetching post', {
-            position: "bottom-right",
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "dark",
-            transition: Bounce,
-        });
+        toast.error('Error fetching post', toastConfig);
         console.log('Error fetching post : ' + e);
     }
 }
