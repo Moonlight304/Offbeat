@@ -29,7 +29,7 @@ export async function fetchUser(operation, username, setAvatarURL, setUserData, 
                 setAvatarURL(data.userData.avatarString);
         }
         else {
-            toast.error(`${data.message}`, toastConfig);
+            // toast.error(`${data.message}`, toastConfig);
             console.log('Error : ' + data.message);
             if (operation === 'POST')
                 setAvatarURL('');
