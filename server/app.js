@@ -31,6 +31,12 @@ app.use(cors({ origin: process.env.frontendURL, credentials: true }));
 app.use('/post', postRoute);
 app.use('/user', userRoute);
 
+app.get('/test', (req, res) => {
+    res.json({
+        message: "Welcome to Offbeat"
+    })
+})
+
 // list all posts
 app.get('/', async (req, res) => {
     try {
